@@ -30,6 +30,9 @@ DAL/
 └── week1/
     ├── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
     └── inventory/   # 실습: 재고관리 앱 → Skill화 → 에이전트 연결
+└── week2/
+    ├── week2.html   # 2주차 스터디 슬라이드 (AI는 어떻게 배우는가)
+    └── practice/    # 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
 ```
 
 매주 스터디 자료가 `weekN/` 폴더로 추가됩니다.
@@ -47,7 +50,17 @@ DAL/
 3. **VS Code · Git · Hermes 기초 설정** — 설치 → Hermes 설정·데이터 보호 → 계정·초대 확인 → DAL 저장소 Clone → Git Pull → 막힐 때 확인할 것
 
 4. **실습: 재고관리 Agent 만들기** — 부품 3,000개 재고관리 앱 → Skill화 → Hermes 연결 → 자연어로 요청해 보기 → 시연: 거래명세서(엑셀·PDF)로 자동 입고 ([week1/inventory](week1/inventory/README.md))
-5. **정리** — 문제 정의(DB 스키마 설계) → CRUD 앱 작성 → Skill화
+5. **스터디 목표: 내 업무를 Agent로** — 어떤 업무든 문제 정의(DB 스키마 설계) → CRUD 앱 작성 → Skill화 순서로 만듭니다
+
+## 2주차 — AI는 어떻게 배우는가
+
+[week2/week2.html](week2/week2.html) · 60분 (설명 25 · 휴식 10 · 실습 25) · 슬라이드 23장
+
+1. **학습의 정의** — AI ⊃ ML ⊃ DL ⊃ LLM · Mitchell의 T·E·P · 함수 근사 f<sub>θ</sub> : X → Y · 경험적 위험 최소화와 일반화
+2. **고전 머신러닝** — 선형회귀(정규방정식) · 손실 함수(MSE · 교차 엔트로피) · 경사하강법 · 결정 트리(Gini · 엔트로피 · 정보 이득)
+3. **딥러닝과 언어 모델** — 신경망 · 역전파 · CNN(국소 연결 · 가중치 공유) · 합성곱 연산 · 언어 모델 · Self-Attention · GPT-3와 스케일링
+4. **정리 · 참고 문헌** — 가설 공간 · 손실 · 최적화로 본 네 가지 방법, 교과서와 주요 논문 12편
+5. **실습** ([week2/practice](week2/practice/README.md)) — 경사하강법 · 합성곱 필터 · 다음 토큰 확률 분포
 
 ### 슬라이드 보는 법
 
@@ -84,7 +97,7 @@ python -m pip install pypdf   # PDF 거래명세서 읽기용
 ### Hermes 설정 · 데이터 보호
 
 1. 첫 실행 온보딩에서 **Choose provider later** 선택
-2. **Settings → Providers → Custom Endpoints** — Base URL `http://25.25.25.116:11434/v1`, API Key는 비움
+2. **Settings → Providers → Custom Endpoints** — Base URL `http://25.25.25.201:11435/v1`, API Key는 비움
 3. **Settings → Model → Main model** — `gemma4:31b` 선택 후 Apply
 
 데이터가 밖으로 나가지 않도록 다음을 확인합니다.

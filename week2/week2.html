@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#111214" name="theme-color"/>
+<meta content="AI 스터디 2주차 | AI > ML > DL > LLM · 선형회귀 · 손실 함수 · 경사하강법 · 결정 트리 · CNN · Transformer · GPT-3 · 실습" name="description"/>
+<title>AI STUDY / WEEK 02 — AI는 어떻게 배우는가</title>
+<style>
+/* ─────────────────────────────────────────────────────────────────────────────
+   DORCO DARK — charcoal slides with heritage red accents
+   ───────────────────────────────────────────────────────────────────────────── */
+:root {
+  --red:#E10800;
+  --ink:#F3F3F4;
+  --line:#414348;
+  --page:#0D0E10;
+  --slide:#1D1E21;
+  --surface:#27292D;
+  --code:#111317;
+  --mono:'Cascadia Code','Consolas',monospace;
+  --sans:'Pretendard Variable','Pretendard','SUIT','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif;
+}
+* {box-sizing:border-box}
+html,body {width:100%;height:100%;margin:0;background:var(--page);color:var(--ink)}
+body {font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+button,a {font:inherit}
+button {cursor:pointer}
+button:focus-visible,a:focus-visible {outline:3px solid var(--red);outline-offset:4px}
+h1,h2,h3,h4,p {margin:0}
+h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
+
+/* DECK & SLIDE CHROME */
+.viewport {position:fixed;inset:0 0 64px;overflow:hidden}
+.deck {position:absolute;width:1440px;height:810px;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,0.8));transform-origin:center center;background:#1B1C1F;box-shadow:0 22px 100px rgba(0,0,0,.52);overflow:hidden}
+.slide {position:absolute;inset:0;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide);color:var(--ink)}
+.slide.active {visibility:visible;opacity:1;pointer-events:auto}
+.slide:not(.dark)::before {content:"";position:absolute;left:0;top:0;width:100%;height:4px;background:var(--red);z-index:3}
+.slide-inner {padding:63px 82px 62px;height:100%;position:relative;z-index:1}
+.topline {position:absolute;left:82px;right:82px;top:39px;display:flex;align-items:center;justify-content:space-between;letter-spacing:.17em;font-weight:600;font-size:15px;color:#A9ACB2}
+.topline strong {font-weight:650;color:var(--red)}
+.topline .sep {display:inline-block;width:20px;height:1px;background:currentColor;vertical-align:middle;margin:0 12px;opacity:.5}
+.subline {position:absolute;bottom:39px;left:82px;right:82px;border-top:1px solid #44464B;padding-top:17px;display:flex;justify-content:space-between;align-items:center;color:#9699A1;font-weight:550;font-size:15px;letter-spacing:.02em}
+.subline .page {font-variant-numeric:tabular-nums;color:var(--red);letter-spacing:.08em}
+.headline {padding-top:46px}
+.section-tag {font-size:17px;color:var(--red);font-weight:650;letter-spacing:.09em;margin-bottom:14px}
+.slide h2 {color:#F6F6F7;letter-spacing:-.038em;line-height:1.24}
+.slide h3 {letter-spacing:-.023em}
+.lede {margin-top:17px;color:#BBBFC6;font-size:24px;line-height:1.55;letter-spacing:-.012em}
+.note {font-size:17px;color:#ADB0B7;line-height:1.5}
+.copy {border:1px solid #686B72;background:transparent;color:#EBECED;padding:11px 20px;font-size:16px;font-weight:560;border-radius:2px;cursor:pointer}
+.copy:hover {background:#2D3035}
+
+/* 01 COVER */
+.cover {background:linear-gradient(115deg,#18191C 0%,#202124 68%,#292021 100%)}
+.cover::before,.next::before {content:"";position:absolute;top:0;left:0;width:100%;height:6px;background:var(--red);z-index:3}
+.cover .topline {color:#BEC1C7}
+.cover .slide-inner {display:flex;flex-direction:column;justify-content:center}
+.cover .edition {font-size:18px;color:#C5C7CD;font-weight:580;letter-spacing:.11em}
+.cover .edition:before {content:'';display:inline-block;width:32px;height:5px;background:var(--red);vertical-align:middle;margin-right:15px}
+.cover h1 {font-size:87px;line-height:1.24;letter-spacing:-.046em;margin-top:40px;font-weight:700;color:#F9FAFB}
+.cover h1 .accent {color:var(--red)}
+.cover .deckdesc {font-size:28px;color:#C5C7CD;margin-top:35px}
+.cover .field {position:absolute;width:440px;height:440px;right:-128px;top:143px;border:1px solid rgba(255,94,85,.22);transform:rotate(30deg)}
+.cover .field:before,.cover .field:after {content:'';position:absolute;border:1px solid rgba(255,94,85,.22);inset:60px}
+.cover .field:after {inset:130px;background:rgba(225,8,0,.035)}
+.cover .subline {display:none}
+
+/* 02 AGENDA */
+.today-agenda .topline {color:#B8BBC0}
+.today-agenda .subline {color:#B7BAC0}
+.today-agenda .headline {padding-top:45px}
+.today-agenda .headline h2 {font-size:64px;line-height:1.16;color:#FBFBFC}
+.today-agenda .headline .lede {font-size:22px;color:#C4C6CA;margin-top:18px}
+.today-items {margin-top:51px;border-top:1px solid #55575C}
+.today-item {display:grid;grid-template-columns:98px minmax(0,1fr) 160px;align-items:center;gap:16px;min-height:126px;border-bottom:1px solid #45474C}
+.today-number {font-size:42px;font-weight:680;letter-spacing:-.05em;color:var(--red)}
+.today-agenda .today-description h3 {font-size:31px;line-height:1.28;letter-spacing:-.045em;color:#F7F7F8;font-weight:650}
+.today-description p {font-size:20px;color:#BABDC4;margin-top:10px;line-height:1.42}
+.today-hint {font-size:25px;color:#DDDFE2;font-weight:560}
+.today-en {justify-self:end;font-size:14px;letter-spacing:.1em;color:#9CA0A8;font-weight:620}
+
+/* 03 GOAL */
+.statement {margin-top:52px;background:var(--surface);padding:35px 50px 33px;border-left:6px solid var(--red)}
+.statement strong {display:block;font-size:36px;line-height:1.48;letter-spacing:-.04em;font-weight:680;color:#FAFAFB}
+.statement span {display:block;margin-top:14px;color:#ADB1B7;font-size:19px}
+.triple {display:grid;grid-template-columns:repeat(3,1fr);margin-top:24px;border-top:1px solid var(--line)}
+.triple .item {padding:18px 26px 15px 0}
+.triple .item:not(:first-child) {border-left:1px solid var(--line);padding-left:35px}
+.triple .small-index {color:var(--red);font-size:15px;font-weight:650;margin-bottom:9px}
+.triple .item strong {display:block;font-size:23px;letter-spacing:-.025em}
+.triple .item span {display:block;font-size:18px;color:#B5B7BC;margin-top:5px}
+
+/* 04 CURRICULUM */
+.curriculum {display:grid;grid-template-columns:repeat(3,1fr);margin-top:47px;border:1px solid var(--line);background:#242629}
+.course-col {min-height:425px;display:flex;flex-direction:column}
+.course-col:not(:last-child) {border-right:1px solid var(--line)}
+.course-head {padding:20px 28px;background:#2C2E31;border-bottom:1px solid var(--line)}
+.course-head b {font-size:19px;color:#F4F5F5}
+.course-head span {float:right;color:#AEB1B7;font-size:15px;font-weight:550}
+.course-item {padding:23px 27px;display:grid;grid-template-columns:55px 1fr;gap:5px;align-items:start;min-height:101px;border-bottom:1px solid var(--line)}
+.course-item:last-child {border-bottom:none}
+.course-item .n {font-size:20px;font-weight:680;color:var(--red)}
+.course-item strong {font-size:21px;font-weight:640;letter-spacing:-.03em;display:block;color:#F4F5F5}
+.course-item span {font-size:15px;color:#AEB1B7;margin-top:5px;display:block;line-height:1.4}
+
+/* 05 FIELD CASES */
+.example-overview {display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:53px}
+.example {background:var(--surface);border-top:5px solid var(--red);border-bottom:1px solid var(--line);padding:30px 35px 35px;min-height:330px;display:flex;flex-direction:column}
+.example .kicker {font-size:17px;font-weight:680;letter-spacing:.12em;color:var(--red)}
+.example h3 {font-size:31px;margin-top:10px;line-height:1.35;color:#F7F7F8}
+.example .type {font-size:19px;color:#C4C6CA;margin-top:24px}
+.example .prompt {font-size:31px;font-weight:600;letter-spacing:-.05em;margin-top:33px;color:#F7F7F8}
+.example .desc {font-size:18px;color:#AEB1B8;margin-top:auto;padding-top:23px}
+
+/* 06–07 CASE SCREENS */
+.case-photo-slide .headline h2 {font-size:54px;line-height:1.15}
+.case-photo-slide .headline .lede {font-size:21px;margin-top:13px}
+.case-photo-layout {display:grid;grid-template-columns:900px 1fr;gap:28px;margin-top:30px}
+.case-shot {border:1px solid #4B4D52;background:#131518;height:390px;display:flex;flex-direction:column;overflow:hidden}
+.case-shot-head {display:flex;align-items:center;min-height:52px;padding:0 16px 0 20px;border-bottom:1px solid #43464B;background:var(--surface)}
+.case-shot-head .eyebrow {font-size:16px;letter-spacing:.025em;font-weight:600;color:#D3D5D9}
+.live-square {display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--red);margin-right:9px}
+.shot-visual {flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative;background:#0F1114}
+.user-shot {display:block;max-width:100%;width:100%;height:100%;object-fit:contain}
+.shot-bottom {display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-top:1px solid #43464B;font-size:13px;color:#9EA4AE;letter-spacing:.01em}
+.case-details {padding-top:3px;display:flex;flex-direction:column}
+.case-details-tag {font-size:15px;color:var(--red);letter-spacing:.08em;font-weight:680;margin-bottom:17px}
+.case-detail {display:grid;grid-template-columns:38px 1fr;gap:8px;border-top:1px solid #46494E;padding:17px 0}
+.case-detail .detail-n {font-size:17px;color:var(--red);font-weight:680}
+.case-detail strong {display:block;color:#F8F8FA;font-size:22px;line-height:1.3}
+.case-detail p {margin-top:5px;color:#B7BCC3;font-size:16px;line-height:1.4}
+.case-details.stack .case-detail {padding:11px 0}
+.case-details.stack .case-detail strong {font-size:20px}
+.case-detail-foot {font-size:15px;line-height:1.4;color:#B5BAC3;padding:13px 14px;background:#282A2F;border-left:3px solid var(--red)}
+
+/* 08 THREE STEPS */
+.step-overview .headline h2 {font-size:56px;letter-spacing:-.056em}
+.step-overview .headline .lede {font-size:23px}
+.step-overview-map {margin-top:74px;display:grid;grid-template-columns:minmax(0,1fr) 39px minmax(0,1fr) 39px minmax(0,1fr);gap:10px;align-items:stretch}
+.step-overview-item {min-width:0;border-top:3px solid var(--red);padding:28px 18px 30px 2px;position:relative;min-height:248px}
+.step-overview-n {display:flex;align-items:center;gap:19px;color:var(--red);font-size:47px;font-weight:680;letter-spacing:-.04em;line-height:1}
+.step-overview-n span {font-size:15px;font-weight:650;letter-spacing:.19em;color:#C4C6C9}
+.step-overview-item h3 {font-size:27px;line-height:1.25;font-weight:670;margin-top:28px;color:#FAFAFB;white-space:nowrap}
+.step-overview-item p {color:#C6C7CA;font-size:17px;margin-top:12px;line-height:1.45}
+.step-overview-tech {position:absolute;bottom:12px;left:2px;right:0;color:var(--red);font-size:15px;font-weight:600;white-space:nowrap;letter-spacing:-.025em}
+.step-overview-tech span {color:#999B9F}
+.step-overview-arrow {align-self:center;color:var(--red);font-size:32px;font-weight:640;text-align:center;line-height:1}
+.step-overview-note {margin-top:18px;padding:19px 21px;border-left:3px solid var(--red);background:var(--surface);display:flex;align-items:center;gap:22px;color:#D6D8DC;font-size:17px;line-height:1.4}
+.step-overview-note .note-label {color:var(--red);font-weight:650;white-space:nowrap;font-size:16px}
+
+/* SKILL AS THE BUNDLE */
+.bundle-map {margin-top:40px;display:grid;grid-template-columns:1fr 52px 1.1fr 52px .8fr;align-items:center;gap:8px}
+.bundle-parts {display:flex;flex-direction:column;gap:10px}
+.bundle-part {display:grid;grid-template-columns:172px 1fr;align-items:center;gap:10px;background:var(--surface);border:1px solid #42454A;padding:13px 18px}
+.bundle-part b {font-size:19px;color:#F6F6F7;font-weight:650}
+.bundle-part span {font-size:15px;color:#B7BABF}
+.bundle-arrow {color:var(--red);font-size:32px;font-weight:640;text-align:center;line-height:1}
+.bundle-skill {background:#3B2528;border:1px solid #7E3B3C;border-top:4px solid var(--red);padding:22px 26px;min-height:236px}
+.bundle-skill .meta,.bundle-agent .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.bundle-skill h3 {font-size:34px;margin-top:12px;color:#FAFAFB}
+.bundle-skill ul {list-style:none;margin:14px 0 0;padding:0;font-size:18px;line-height:1.75;color:#E6D4D5}
+.bundle-skill li:before {content:'✓';color:var(--red);margin-right:10px}
+.bundle-agent {background:var(--surface);border:1px solid #45474D;padding:22px 24px;min-height:236px;display:flex;flex-direction:column}
+.bundle-agent h3 {font-size:28px;line-height:1.2;margin-top:12px;color:#F6F6F8}
+.bundle-agent p {font-size:16px;line-height:1.5;margin-top:auto;color:#B8BBC1}
+.bundle-cases {margin-top:24px;border-top:1px solid var(--line)}
+.bundle-case {display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);font-size:18px;color:#B6B9C0}
+.bundle-case b {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.bundle-case strong {color:#F6F6F7;font-weight:600}
+
+/* 09 BUILD */
+.service-map {margin-top:49px;display:grid;grid-template-columns:220px 50px 252px 50px 252px 50px 1fr;align-items:stretch;gap:6px}
+.service-map .node {background:var(--surface);border:1px solid #42454A;color:#F8F8FA;padding:27px 21px;min-height:257px;display:flex;flex-direction:column}
+.service-map .node.emphasis {background:#3B2528;border-color:#7E3B3C}
+.service-map .node .step {font-size:15px;letter-spacing:.13em;font-weight:680;color:var(--red)}
+.service-map .node h3 {font-size:28px;line-height:1.2;letter-spacing:-.055em;margin-top:30px;color:#F7F7F9}
+.service-map .node p {font-size:16px;line-height:1.55;margin-top:auto;color:#B7BABF}
+.service-map .arrow {display:grid;place-items:center;color:#A4A7AC;font-size:32px}
+.system-layer {margin-top:38px;border-top:1px solid var(--line);padding-top:25px;display:grid;grid-template-columns:155px 1fr;gap:20px;font-size:20px}
+.system-layer strong {color:var(--red)}
+.system-layer span {color:#BDC0C6}
+
+/* 10 SKILL */
+.skill-layout {display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:33px}
+.skill-steps {display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.skill-step {display:grid;grid-template-columns:55px 1fr;gap:17px;min-height:94px;padding:17px 0;border-bottom:1px solid var(--line)}
+.skill-step .n {font-size:21px;color:var(--red);font-weight:680}
+.skill-step strong {font-size:23px;display:block;letter-spacing:-.04em;color:#F4F4F6}
+.skill-step p {font-size:17px;margin-top:7px;color:#B6B9BF}
+.codepage {background:var(--code);padding:22px 28px;color:#fff;min-height:310px;border-top:5px solid #41434A}
+.codepage .codebar {display:flex;justify-content:space-between;border-bottom:1px solid #45474D;padding-bottom:12px;margin-bottom:14px;color:#C1C3C8;font-weight:620;letter-spacing:.09em;font-size:16px}
+.codepage pre {white-space:pre-wrap;font:500 18px/1.56 var(--mono);color:#EEEEF0;letter-spacing:-.025em}
+.codepage .code-accent {color:var(--red)}
+.skill-bottom {padding:12px 20px;margin-top:13px;border-left:4px solid var(--red);background:#342426;font-size:16px;color:#DFB9B9}
+
+/* 11 AGENTS */
+.agents {margin-top:55px;display:grid;grid-template-columns:1fr 55px 1.05fr 55px 1.22fr;gap:12px;align-items:center}
+.agents .box {min-height:315px;border:1px solid #45474D;background:var(--surface);color:#F6F6F7;padding:32px 30px;display:flex;flex-direction:column}
+.agents .box .meta {color:var(--red);letter-spacing:.1em;font-size:15px;font-weight:650}
+.agents .box h3 {font-size:34px;line-height:1.16;letter-spacing:-.055em;margin-top:24px;color:#F6F6F8}
+.agents .box p {font-size:19px;line-height:1.52;margin-top:auto;color:#B8BBC1}
+.agents .box.ink {background:#3C2528;border-color:#784244}
+.agents .box.ink p {color:#D1BEC0}
+.agents .arrow {font-size:38px;color:#B0B3BB;text-align:center}
+.agent-tags {display:flex;gap:13px;flex-wrap:wrap;margin-top:31px}
+.agent-tags span {border:1px solid #55575E;background:#2B2D31;padding:11px 17px;font-size:18px;font-weight:580;color:#E4E5E7}
+
+/* 12 HANDS-ON OPENING */
+.setup-opening::before {content:"";position:absolute;top:0;left:0;height:100%;width:7px;background:var(--red)}
+.setup-opening .setup-accent {position:absolute;left:82px;top:190px;width:64px;height:3px;background:var(--red)}
+.setup-opening .opening-label {font-size:20px;color:var(--red);letter-spacing:.17em;font-weight:550;margin-top:176px}
+.setup-opening h2 {font-size:84px;letter-spacing:-.049em;line-height:1.19;font-weight:650;color:#FAFAFB;margin-top:28px}
+.setup-opening .opening-subtitle {font-size:31px;line-height:1.55;font-weight:430;color:#CED0D4;margin-top:25px;letter-spacing:-.019em}
+.setup-opening .opening-divider {width:100%;height:1px;background:#484A50;margin-top:56px}
+.setup-opening .opening-phases {display:flex;align-items:center;gap:24px;margin-top:23px;color:#BEC1C5;font-size:20px;font-weight:470}
+.setup-opening .opening-phases b {font-weight:580;color:#F0F1F3}
+.setup-opening .opening-phases .chev {color:var(--red);font-size:23px;font-weight:470}
+.setup-opening .subline {border-color:#484A50}
+
+/* WORKSPACE */
+.architecture {display:grid;grid-template-columns:1fr 225px 1fr;align-items:center;margin-top:55px;gap:5px}
+.arch-node {min-height:293px;border:1px solid #62656B;padding:34px 33px;position:relative}
+.arch-node .meta {font-size:16px;color:#B4B7BD;letter-spacing:.09em;font-weight:640}
+.arch-node h3 {font-size:42px;line-height:1.12;margin-top:28px;color:#F8F8F9}
+.arch-node p {font-size:20px;color:#C0C3C9;line-height:1.45;margin-top:18px}
+.arch-node .tag {position:absolute;bottom:28px;left:33px;font-size:15px;letter-spacing:.04em;color:var(--red)}
+.sync-box {position:relative;height:274px;display:flex;flex-direction:column;justify-content:center;gap:16px;align-items:center}
+.sync-line {width:175px;height:2px;background:#A4A7AE;position:relative}
+.sync-line:after {content:'';position:absolute;right:1px;top:-5px;width:12px;height:12px;border-top:2px solid #A4A7AE;border-right:2px solid #A4A7AE;transform:rotate(45deg)}
+.sync-label {font-size:19px;font-weight:640;color:#F5F5F6}
+.architecture-foot {margin-top:34px;padding-top:23px;border-top:1px solid #505257;font-size:19px;color:#C1C4C8}
+.architecture-foot strong {color:#FBFBFB}
+.architecture-foot a {color:#f2f6f7;text-decoration:none;border-bottom:1px solid #8d9ca9}
+
+/* SETUP */
+.software-rows {margin-top:30px;border-top:1px solid var(--line)}
+.software-row {display:grid;grid-template-columns:120px 230px 1fr auto;align-items:center;min-height:64px;border-bottom:1px solid var(--line);gap:20px}
+.software-row .no {font-size:25px;font-weight:640;color:var(--red)}
+.software-row strong {font-size:26px;letter-spacing:-.03em;color:#F3F3F4}
+.software-row span {font-size:19px;color:#B0B4BA}
+.software-row a {font-size:17px;color:var(--red);text-decoration:none;border-bottom:1px solid #A04F4D;padding-bottom:4px}
+.code-strip {display:flex;align-items:center;justify-content:space-between;padding:16px 32px;margin-top:20px;background:var(--code);color:#f3f3f3}
+.code-strip pre {font:500 25px/1.5 var(--mono);margin:0;letter-spacing:-.025em}
+.code-strip + .note {margin-top:17px}
+.prompt-sign {color:#ff9da3}
+
+/* HERMES SETUP */
+.hermes-grid {display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:36px}
+.hermes-grid .lab-step {min-height:84px}
+.hermes-grid code {font:500 16px var(--mono);color:#F6F6F7;background:#2D2F33;padding:2px 6px}
+.privacy {background:var(--code);border-top:4px solid var(--red);padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.privacy .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.privacy ul {list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.privacy li {display:grid;grid-template-columns:24px 1fr;font-size:17px;line-height:1.45;color:#D6D8DC}
+.privacy li:before {content:'✓';color:var(--red);font-weight:700}
+.privacy li b {color:#F6F6F7;font-weight:600}
+.privacy li small {display:block;font-size:14px;color:#9699A1;margin-top:2px}
+.privacy .foot {margin-top:auto;font-size:14px;color:#9699A1;border-top:1px solid #33353A;padding-top:12px}
+
+/* CLONE */
+.lab-grid {display:grid;grid-template-columns:1.06fr .94fr;gap:32px;margin-top:36px}
+.lab-list {border-top:1px solid var(--line)}
+.lab-step {display:grid;grid-template-columns:54px 1fr;min-height:88px;gap:13px;padding:20px 5px;border-bottom:1px solid var(--line);align-items:center}
+.lab-step .index {color:var(--red);font-size:23px;font-weight:650}
+.lab-step strong {font-size:21px;line-height:1.4;letter-spacing:-.025em;color:#F3F3F4}
+.lab-step em {font-size:17px;font-style:normal;color:#ADB1B8;display:block;margin-top:5px}
+.terminal {background:var(--code);color:#ededed;padding:28px 32px;display:flex;flex-direction:column;gap:17px;min-height:391px;overflow:hidden}
+.terminal .term-top {font-size:15px;color:#9c9c9c;font-weight:580;letter-spacing:.12em;display:flex;justify-content:space-between;align-items:center}
+.terminal .term-top:after {content:'●  ●  ●';font-size:13px;color:#7e7e7e;letter-spacing:.2em}
+.terminal .term-rule {height:1px;background:#494949}
+.terminal .cmd {font-family:var(--mono);font-size:21px;line-height:1.58;word-break:break-word;overflow-wrap:anywhere;color:#fff}
+.terminal .cmd .prefix {color:var(--red)}
+.terminal .hint {font-size:16px;color:#B8BBC1;line-height:1.55}
+.terminal .terminal-footer {margin-top:auto;display:flex;gap:12px;flex-wrap:wrap}
+.terminal a {color:var(--red);font-size:15px;text-decoration:none;border-bottom:1px solid var(--red)}
+
+/* EXPLORER */
+.file-layout {display:grid;grid-template-columns:.83fr 1.17fr;gap:35px;margin-top:40px}
+.explorer {background:#25272B;border:1px solid var(--line)}
+.explorer-bar {background:#2E3034;border-bottom:1px solid var(--line);padding:18px 24px;color:#DEE0E4;font-weight:640;font-size:17px}
+.tree {padding:24px 27px;font:600 22px/2 var(--mono);color:#E3E4E7}
+.tree .sub {padding-left:35px;font-size:20px;color:#BABCC2}
+.tree .foldericon {color:var(--red);margin-right:12px}
+.tree .fileicon {color:#AFB2BA;margin-right:12px}
+.file-actions {display:flex;flex-direction:column;justify-content:space-between;gap:18px}
+.checkline {border-bottom:1px solid var(--line);padding:8px 0 20px}
+.checkline .q {font-size:17px;color:var(--red);font-weight:640;letter-spacing:.1em}
+.checkline strong {font-size:23px;line-height:1.45;display:block;margin-top:13px;letter-spacing:-.035em;color:#F6F7F8}
+.callout {background:#342326;border-left:4px solid var(--red);padding:20px 24px;color:#E3B9B9;font-size:17px;line-height:1.55}
+
+/* PULL */
+.pull-steps {display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px}
+.pull-panel {min-height:170px;border:1px solid var(--line);padding:24px 33px;background:var(--surface)}
+.pull-panel .meta {color:var(--red);font-size:17px;font-weight:680;letter-spacing:.12em}
+.pull-panel h3 {font-size:33px;margin-top:16px;color:#F5F5F6}
+.pull-panel p {font-size:21px;color:#B7BAC0;line-height:1.45;margin-top:16px}
+.pull-panel b {display:block;margin-top:14px;color:#E6E8EA;font-size:19px}
+.pull-code {margin-top:20px;display:flex;align-items:center;justify-content:space-between;background:var(--code);color:#fff;padding:20px 32px}
+.pull-code code {font-family:var(--mono);font-size:28px}
+.pull-result {margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:18px;color:#B0B3BA}
+.pull-result b {color:#E0E2E5}
+
+.tree .sub.deep {padding-left:70px}
+
+/* TROUBLESHOOTING */
+.trouble-list {margin-top:50px;border-top:1px solid var(--line)}
+.trouble-row {display:grid;grid-template-columns:480px 1fr;gap:36px;min-height:92px;padding:16px 12px;border-bottom:1px solid var(--line);align-items:center}
+.trouble-row code {display:block;font:500 18px/1.45 var(--mono);color:#F6F6F7}
+.trouble-row strong {display:block;font-size:19px;font-weight:600;color:#F6F6F7}
+.trouble-row small {display:block;font-size:15px;color:#9699A1;margin-top:4px}
+.trouble-row > span {font-size:19px;color:#B6B9C0;line-height:1.45}
+.trouble-row > span b {color:#F6F6F7;font-weight:600}
+
+/* LAB: INVENTORY AGENT */
+.lab3 {display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.lab3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:24px 26px;min-height:270px;display:flex;flex-direction:column}
+.lab3 .card.mid {background:#3B2528;border-color:#7E3B3C;border-top-color:var(--red)}
+.lab3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.lab3 h3 {font-size:30px;margin-top:14px;color:#F7F7F9}
+.lab3 code {align-self:flex-start;margin-top:12px;font:500 15px var(--mono);color:#F6F6F7;background:#1B1C1F;padding:4px 8px}
+.lab3 p {margin-top:auto;font-size:17px;line-height:1.55;color:#C3C6CC}
+.lab-path {margin-top:24px;display:flex;align-items:center;gap:16px;font-size:18px;color:#B6B9C0;border-top:1px solid var(--line);padding-top:20px}
+.lab-path code {font:500 17px var(--mono);color:#F6F6F7;background:var(--surface);padding:6px 10px}
+.lab-path b {color:var(--red)}
+.lab-grid.lab-setup {grid-template-columns:.86fr 1.14fr}
+.lab-cmd {background:var(--code);padding:22px 26px;display:flex;flex-direction:column;gap:12px}
+.lab-cmd .term-top {font-size:15px;color:#9c9c9c;font-weight:580;letter-spacing:.12em}
+.lab-cmd pre {margin:0;font:500 14px/1.75 var(--mono);color:#EEEEF0;white-space:pre-wrap;word-break:break-all}
+.lab-cmd pre .c {color:#8F949C}
+.lab-cmd .copy {align-self:flex-start;margin-top:auto}
+.try-list {margin-top:34px}
+.try-list .trouble-row {grid-template-columns:430px 1fr;min-height:64px;padding:12px}
+.try-list .trouble-row strong {font-size:20px}
+.try-note {margin-top:16px;padding:14px 20px;border-left:4px solid var(--red);background:#342426;font-size:17px;color:#DFB9B9}
+
+/* DEMO: STATEMENT → STOCK IN */
+.demo-grid {display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;margin-top:32px}
+.demo-grid .lab-step {min-height:68px;padding:12px 5px}
+.demo-grid .lab-step strong {font-size:19px}
+.demo-grid .lab-step em {font-size:15px}
+.demo-grid code {font:500 14px var(--mono);color:#F6F6F7;background:#2D2F33;padding:1px 5px}
+.map {background:var(--code);border-top:4px solid var(--red);padding:20px 22px}
+.map .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em;margin-bottom:10px}
+.map table {width:100%;border-collapse:collapse;font-size:16px}
+.map th {text-align:left;color:#9699A1;font-weight:600;font-size:13px;padding:7px 8px;border-bottom:1px solid #33353A}
+.map td {padding:9px 8px;border-bottom:1px solid #2A2C30;color:#E6E8EA}
+.map td:first-child {font-family:var(--mono);font-size:14px;color:#C9CCD2}
+.map .ok {color:#9FD3A4} .map .ask {color:#FFD27A} .map .new {color:#FFB4AE}
+.map .foot {margin-top:12px;font-size:14px;color:#9699A1}
+
+/* WRAP-UP: PROBLEM → CRUD → SKILL */
+.wrap3 {display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;gap:8px;margin-top:30px;align-items:stretch}
+.wrap3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:18px 22px;display:flex;flex-direction:column}
+.wrap3 .card.mid {background:#3B2528;border-color:#7E3B3C;border-top-color:var(--red)}
+.wrap3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.06em}
+.wrap3 h3 {font-size:25px;color:#F7F7F9;line-height:1.3;margin-top:8px}
+.wrap3 .like {margin-top:6px;font-size:15px;color:#B6B9C0}
+.wrap3 .like b {color:#F6F6F7;font-weight:600}
+.wrap3 .ex {margin-top:12px;display:grid;gap:6px}
+.wrap3 .ex div {display:grid;grid-template-columns:88px 1fr;gap:10px;align-items:baseline;font-size:16px;color:#E6E8EA;background:rgba(0,0,0,.22);padding:7px 10px}
+.wrap3 .ex div span:first-child {color:#9699A1;font-size:14px}
+.wrap3 .week {margin-top:auto;padding-top:12px;font-size:14px;color:#9699A1}
+.wrap3 .week b {color:var(--red);font-weight:650}
+.wrap3 .card.mid .ex div {grid-template-columns:112px 1fr}
+.wrap3 .arrow {align-self:center;text-align:center;color:var(--red);font-size:30px;font-weight:640}
+.wrap-note {margin-top:16px;padding:14px 20px;border-left:4px solid var(--red);background:var(--surface);font-size:19px;color:#E6E8EA}
+.wrap-note b {color:var(--red)}
+
+/* ROUTINE */
+.ops-list {margin-top:65px;border-top:1px solid var(--line)}
+.ops-row {display:grid;grid-template-columns:80px 260px 1fr;gap:24px;min-height:106px;padding:24px 12px;border-bottom:1px solid var(--line);align-items:center}
+.ops-row .number {font-size:28px;color:var(--red);font-weight:650}
+.ops-row strong {font-size:26px;letter-spacing:-.04em;color:#F6F6F7}
+.ops-row span {font-size:19px;color:#B6B9C0}
+.ops-warning {margin-top:30px;color:#D3A7A9;font-size:18px}
+
+/* NEXT WEEK */
+.next {background:linear-gradient(110deg,#18191C 0%,#202124 70%,#292021 100%)}
+.next .topline {color:#BEC1C7}
+.next .subline {border-color:#47494F;color:#BEC0C7}
+.next .big-number {position:absolute;right:98px;top:175px;font-size:320px;letter-spacing:-.085em;font-weight:700;color:rgba(255,255,255,.055);line-height:1;user-select:none}
+.next h2 {font-size:70px;position:relative;z-index:1;margin-top:77px}
+.next .topics {position:relative;z-index:1;color:#C7CAD0;font-size:26px;margin-top:32px}
+.endcheck {display:flex;gap:34px;margin-top:90px;position:relative;z-index:1}
+.endcheck span {display:inline-flex;gap:12px;align-items:center;color:#E0E1E5;font-size:20px;font-weight:550}
+.endcheck span:before {content:'✓';border:1px solid var(--red);color:var(--red);font-size:17px;width:25px;height:25px;display:grid;place-items:center}
+.next-note {position:absolute;bottom:119px;color:rgba(255,255,255,.86);font-size:19px}
+
+/* PRESENTER CONTROLS */
+.nav {height:64px;position:fixed;inset:auto 0 0;background:#16171A;border-top:1px solid #3E4045;display:flex;align-items:center;justify-content:space-between;padding:0 25px;color:#D6D7DC;z-index:8;gap:24px}
+.nav-left {display:flex;align-items:center;gap:18px;min-width:270px;font-size:13px;font-weight:610;letter-spacing:.12em}
+.nav-left .status-dot {width:7px;height:7px;background:var(--red);border-radius:50%}
+.nav-center {display:flex;align-items:center;gap:10px;min-width:320px;justify-content:center}
+.nav button {border:1px solid #4B4D53;color:#E5E6E9;background:#292B2F;padding:8px 13px;border-radius:3px;font-size:13px;font-weight:600;white-space:nowrap}
+.nav button:hover {background:#35373C;border-color:#797B82}
+.nav button:disabled {opacity:.35;cursor:not-allowed}
+.nav .count {font:700 14px/1 var(--sans);min-width:78px;text-align:center;letter-spacing:.1em}
+.nav-right {display:flex;align-items:center;justify-content:end;gap:8px;min-width:270px}
+.progress {position:fixed;bottom:64px;left:0;height:3px;width:100%;z-index:9;background:transparent}
+.progress .bar {background:var(--red);height:100%;width:9.09%;transition:width .2s}
+.toast {position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(10px);background:#202020;color:#fff;border-radius:4px;padding:10px 17px;font-size:14px;opacity:0;pointer-events:none;transition:all .2s;z-index:12}
+.toast.show {opacity:1;transform:translateX(-50%) translateY(0)}
+.overview {display:none;position:fixed;inset:0;background:rgba(9,10,12,.97);z-index:30;padding:55px max(65px,calc((100vw - 1360px)/2));overflow-y:auto}
+.overview.open {display:block}
+.overview h2 {color:#fff;font-size:36px;letter-spacing:-.045em}
+.overview .subtitle {font-size:16px;color:#b9b9b9;margin-top:8px}
+.overview .grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:37px}
+.overview .tile {display:flex;flex-direction:column;gap:13px;text-align:left;background:#24262A;color:#fff;border:1px solid #4A4C52;padding:22px 24px;min-height:133px;cursor:pointer}
+.overview .tile:hover,.overview .tile.current {border-color:var(--red);background:#342528}
+.overview .tile .slide-no {font-size:14px;color:var(--red);letter-spacing:.11em;font-weight:640}
+.overview .tile .title {font-size:22px;letter-spacing:-.025em;font-weight:640}
+.overview .tile .caption {color:#BEC0C5;font-size:15px}
+.overview .close {position:absolute;right:70px;top:55px;border:1px solid #777777;color:#fff;background:transparent;padding:12px 19px;font-weight:580}
+@media (max-width:780px) {
+  .nav {padding:0 12px;gap:8px}
+  .nav-left {display:none}
+  .nav-center {min-width:0}
+  .nav-right {min-width:0}
+  .nav .mobilehide {display:none}
+  .overview {padding:35px 20px}
+  .overview .grid {grid-template-columns:1fr 1fr}
+  .overview .close {right:20px;top:30px}
+}
+@media (prefers-reduced-motion:reduce) {*,*::before,*::after {animation:none!important;transition:none!important}}
+@page {size:13.333in 7.5in;margin:0}
+@media print {
+  html,body {width:auto;height:auto;overflow:visible}
+  .viewport {position:static;width:auto;height:auto;overflow:visible}
+  .deck {position:static;transform:none;width:1440px;height:auto;box-shadow:none;overflow:visible;margin:0}
+  .slide {position:relative;display:block;visibility:visible;opacity:1;pointer-events:auto;width:1440px;height:810px;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-child {break-after:auto}
+  .nav,.progress,.toast,.overview {display:none}
+}
+
+/* ── WEEK 02 ─────────────────────────────────────────── */
+.w2-split {display:grid;grid-template-columns:1.08fr .92fr;gap:34px;margin-top:28px;align-items:center}
+.w2-fig {background:var(--code);border:1px solid #33353A;padding:14px 16px}
+.w2-fig svg {display:block;width:100%;height:auto}
+.w2-fig.wide {margin-top:30px;padding:18px 20px}
+.w2-pts {display:grid;gap:12px}
+.w2-pt {background:var(--surface);border-left:4px solid var(--red);padding:14px 18px}
+.w2-pt b {display:block;font-size:20px;color:#F6F6F7}
+.w2-pt span {display:block;margin-top:5px;font-size:16px;line-height:1.5;color:#C3C6CC}
+.w2-pt code, .w2-formula {font-family:var(--mono)}
+.w2-formula {font-size:30px;color:#fff;background:var(--code);padding:16px 20px;border-top:4px solid var(--red);text-align:center}
+.w2-formula small {display:block;margin-top:8px;font-size:15px;color:#A9ACB2;font-family:var(--sans)}
+.w2-defs {display:grid;gap:10px}
+.w2-def {display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;background:var(--surface);padding:12px 16px}
+.w2-def b {font-size:22px;color:var(--red)}
+.w2-def span {font-size:17px;line-height:1.45;color:#D6D8DC}
+.w2-def span em {display:block;font-style:normal;font-size:14px;color:#9699A1;margin-top:3px}
+.w2-vs {display:grid;grid-template-columns:1fr 50px 1fr;gap:10px;margin-top:30px;align-items:stretch}
+.w2-vs .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid #6A6C72;padding:20px 24px}
+.w2-vs .card.ml {border-top-color:var(--red);background:#3B2528;border-color:#7E3B3C}
+.w2-vs .card .step {font-size:15px;font-weight:650;letter-spacing:.08em;color:#A9ACB2}
+.w2-vs .card.ml .step {color:var(--red)}
+.w2-vs .card h3 {font-size:26px;margin-top:10px;color:#F7F7F9}
+.w2-vs pre {margin:14px 0 0;background:#111317;padding:12px 14px;font:500 15px/1.6 var(--mono);color:#E6E8EA;white-space:pre-wrap}
+.w2-vs ul {margin:14px 0 0;padding-left:18px;font-size:16px;line-height:1.7;color:#D6D8DC}
+.w2-vs .arrow {align-self:center;text-align:center;font-size:20px;color:#A9ACB2;font-weight:700}
+.w2-pipe {display:grid;gap:22px;margin-top:44px}
+.w2-pipe .row {display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center}
+.w2-pipe .row > b {font-size:22px;color:var(--red)}
+.w2-pipe .flow {display:flex;align-items:center;gap:10px}
+.w2-pipe .flow span {background:var(--surface);border:1px solid #45474D;padding:22px 18px;font-size:19px;color:#E6E8EA;white-space:nowrap}
+.w2-pipe .flow span.hum {border-color:#8C7A3A;background:#3A3420;color:#FFE3A3}
+.w2-pipe .flow span.auto {border-color:#7E3B3C;background:#3B2528;color:#FFE1DF;flex:1;text-align:center}
+.w2-pipe .flow i {font-style:normal;color:var(--red);font-size:22px}
+.w2-conv {display:flex;align-items:center;gap:22px;margin-top:32px}
+.w2-conv .op {font-size:34px;color:var(--red);font-weight:700}
+.w2-conv figure {margin:0;text-align:center}
+.w2-conv figcaption {margin-top:10px;font-size:15px;color:#A9ACB2}
+.w2-grid {display:grid;grid-template-columns:repeat(3,64px);gap:4px}
+.w2-grid span {height:56px;display:grid;place-items:center;font:600 19px var(--mono);background:#2A2C30;color:#F3F3F4}
+.w2-grid.img span:nth-child(3n) {background:#D8D8D8;color:#111}
+.w2-grid.k span {background:#3B2528;color:#FFE1DF}
+.w2-conv .res {font:700 44px var(--mono);color:#fff;background:var(--code);border-top:4px solid var(--red);padding:18px 26px}
+.w2-conv .why {flex:1;display:grid;gap:10px}
+.w2-prompt {font-size:24px;color:#F6F6F7;background:var(--code);padding:16px 20px;border-left:4px solid var(--red)}
+.w2-prompt em {font-style:normal;color:var(--red);font-weight:700}
+.w2-bars {display:grid;gap:8px;margin-top:14px}
+.w2-bar {display:grid;grid-template-columns:110px 1fr 70px;gap:12px;align-items:center;font-size:18px}
+.w2-bar .t {font-family:var(--mono);color:#F3F3F4}
+.w2-bar .b {height:24px;background:#2A2C30} .w2-bar .b i {display:block;height:100%;background:var(--red)}
+.w2-bar .p {text-align:right;font-variant-numeric:tabular-nums;color:#D6D8DC}
+.w2-toks {display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.w2-toks span {font:600 18px var(--mono);background:#2A2C30;border:1px solid #45474D;padding:6px 10px;color:#F3F3F4}
+.w2-att {display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.w2-chip {position:relative;font-size:26px;font-weight:600;color:#fff;padding:14px 18px 22px;border:1px solid #45474D}
+.w2-chip em {position:absolute;left:0;right:0;bottom:4px;text-align:center;font-style:normal;font-size:13px;color:#FFE1DF}
+.w2-chip.focus {background:#F3F3F4;color:#111;border-color:#fff}
+.w2-time {display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:32px;border-top:3px solid #55575C}
+.w2-time div {position:relative;padding:22px 14px 0 0}
+.w2-time div:before {content:'';position:absolute;top:-10px;left:0;width:16px;height:16px;border-radius:50%;background:#8F949C}
+.w2-time div.hot:before {background:var(--red);width:20px;height:20px;top:-12px}
+.w2-time b {display:block;font-size:16px;color:#A9ACB2}
+.w2-time strong {display:block;margin-top:6px;font-size:21px;color:#F6F6F7}
+.w2-time span {display:block;margin-top:6px;font-size:15px;line-height:1.45;color:#C3C6CC}
+.w2-time div.hot strong {color:var(--red)}
+.w2-sum {margin-top:28px}
+.w2-sum table {font-size:17px}
+.w2-sum td:first-child {font-family:var(--sans);font-size:18px;color:#F6F6F7;font-weight:600}
+.today-agenda.w2a .today-item {min-height:98px}
+.w2-split.fx .w2-defs {gap:7px}
+.w2-split.fx .w2-def {padding:6px 16px}
+.w2-split.fx .w2-def span {font-size:16px}
+.w2-split.fx .w2-fig svg {height:272px}
+.today-agenda.w2a .today-items {margin-top:34px}
+
+.w2-math {font-family:'Cambria Math','Cambria','Times New Roman',serif;font-size:26px;color:#fff;background:var(--code);border-top:4px solid var(--red);padding:12px 18px;text-align:center;line-height:1.5}
+.w2-math.sm {font-size:21px;padding:10px 16px}
+.w2-math.left {text-align:left}
+.w2-math small {display:block;font-family:var(--sans);font-size:14px;color:#A9ACB2;margin-top:2px;line-height:1.45}
+.w2-math i, .m i {font-style:italic}
+.m {font-family:'Cambria Math','Cambria','Times New Roman',serif;font-size:1.08em;color:#fff}
+.w2-cite {position:absolute;left:82px;right:82px;bottom:84px;font-size:13px;color:#8F949C;line-height:1.45;z-index:2}
+.w2-cite b {color:#B6B9C0;font-weight:600}
+.w2-pts.tight {gap:9px}
+.w2-pts.tight .w2-pt {padding:10px 16px}
+.w2-pts.tight .w2-pt b {font-size:18px}
+.w2-pts.tight .w2-pt span {font-size:15px}
+.w2-tpe {display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.w2-tpe div {background:var(--code);border-top:3px solid var(--red);padding:10px 14px}
+.w2-tpe b {display:block;font-size:19px;font-weight:650;color:var(--red)}
+.w2-tpe b .m {color:var(--red);font-size:23px}
+.w2-split .w2-fig svg {max-height:322px}
+.w2-fig.wide svg {max-height:220px}
+.w2-tpe span {display:block;font-size:15px;color:#D6D8DC;margin-top:2px}
+.w2-tpe em {display:block;font-style:normal;font-size:13px;color:#9699A1;margin-top:3px}
+.w2-refs {display:grid;grid-template-columns:1fr 1fr;gap:6px 30px;margin-top:26px;font-size:15px;line-height:1.45;color:#C3C6CC;counter-reset:ref}
+.w2-refs div {position:relative;padding-left:34px;counter-increment:ref}
+.w2-refs div:before {content:'[' counter(ref) ']';position:absolute;left:0;color:var(--red);font-weight:650}
+.w2-refs b {color:#F3F3F4;font-weight:600}
+.w2-refs i {color:#E6E8EA}
+.w2-sum.ac table {font-size:15px}
+.w2-sum.ac td {padding:8px}
+.w2-sum.ac td .m {font-size:16px}
+</style>
+</head>
+<body>
+<main aria-label="AI 스터디 2주차 발표 화면" class="viewport">
+<div class="deck" id="deck">
+<section aria-label="1 / 23, 표지" class="slide dark cover active" data-time="1분" data-title="표지">
+<div class="field"></div>
+<div class="topline"><span>AI STUDY <span class="sep"></span> WEEK 02</span><strong>2026</strong></div>
+<div class="slide-inner">
+<p class="edition">2주차</p>
+<h1>AI는 어떻게<br/><span class="accent">배우는가.</span></h1>
+<p class="deckdesc">함수 근사 · 경험적 위험 최소화 · 경사하강법 · CNN · Transformer</p>
+</div>
+</section><section aria-label="2 / 23, 오늘의 내용" class="slide dark today-agenda w2a" data-time="1분" data-title="오늘의 내용">
+<div class="topline"><span>WEEK 02 / TODAY</span><span>25 + 10 + 25 MIN</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">TODAY'S AGENDA</div><h2>오늘의 내용</h2><p class="lede">“학습”을 정의하고, 고전 머신러닝에서 오늘의 LLM까지 같은 틀로 읽어 봅니다.</p></div>
+<div class="today-items">
+<div class="today-item"><span class="today-number">01</span><div class="today-description"><h3>학습의 정의</h3><p>AI ⊃ ML ⊃ DL ⊃ LLM · Mitchell의 T·E·P · 함수 근사와 일반화</p></div><span class="today-en">FOUNDATION</span></div>
+<div class="today-item"><span class="today-number">02</span><div class="today-description"><h3>고전 머신러닝</h3><p>선형회귀 · 손실 함수 · 경사하강법 · 결정 트리</p></div><span class="today-en">CLASSICAL ML</span></div>
+<div class="today-item"><span class="today-number">03</span><div class="today-description"><h3>딥러닝과 언어 모델</h3><p>신경망 · 역전파 · CNN · 언어 모델 · Self-Attention · GPT-3</p></div><span class="today-en">DL · LLM</span></div>
+<div class="today-item"><span class="today-number">04</span><div class="today-description"><h3>실습</h3><p>경사하강법 · 합성곱 필터 · 다음 토큰 확률 분포</p></div><span class="today-en">HANDS-ON</span></div>
+</div>
+</div>
+<div class="subline"><span>OVERVIEW / 오늘 할 일</span><span class="page">02 / 23</span></div>
+</section><section aria-label="3 / 23, AI > ML > DL > LLM" class="slide paper" data-time="1분" data-title="AI > ML > DL > LLM">
+<div class="topline"><span>01 / FOUNDATION</span><span>AI &gt; ML &gt; DL &gt; LLM</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">FOUNDATION / 포함 관계</div><h2>AI ⊃ ML ⊃ DL ⊃ LLM</h2><p class="lede">각 개념은 바깥 개념의 부분집합입니다. 등장한 시기와 함께 봅니다.</p></div>
+<div class="w2-split" style="grid-template-columns:.8fr 1.2fr;margin-top:18px">
+<div class="w2-fig" style="padding:6px 10px"><svg viewBox="0 0 520 430" role="img" aria-label="AI 안에 ML, ML 안에 DL, DL 안에 CNN과 LLM">
+<circle cx="260" cy="215" r="205" fill="#222428" stroke="#55575C" stroke-width="2"/>
+<circle cx="260" cy="254" r="160" fill="#2A2C30" stroke="#6A6C72" stroke-width="2"/>
+<circle cx="260" cy="290" r="120" fill="#33262A" stroke="#7E3B3C" stroke-width="2"/>
+<circle cx="200" cy="318" r="42" fill="#4A2427" stroke="#B8484A" stroke-width="2"/>
+<circle cx="314" cy="314" r="54" fill="#E10800"/>
+<text x="260" y="44" fill="#F3F3F4" font-size="26" font-weight="700" text-anchor="middle">AI</text>
+<text x="260" y="70" fill="#A9ACB2" font-size="14" text-anchor="middle">규칙 기반 · 탐색 · …</text>
+<text x="260" y="124" fill="#F3F3F4" font-size="24" font-weight="700" text-anchor="middle">ML 머신러닝</text>
+<text x="260" y="148" fill="#A9ACB2" font-size="14" text-anchor="middle">선형회귀 · 결정 트리</text>
+<text x="260" y="200" fill="#F3F3F4" font-size="22" font-weight="700" text-anchor="middle">DL 딥러닝</text>
+<text x="260" y="222" fill="#D9B7B8" font-size="14" text-anchor="middle">신경망</text>
+<text x="200" y="324" fill="#F3F3F4" font-size="18" font-weight="700" text-anchor="middle">CNN</text>
+<text x="314" y="312" fill="#fff" font-size="20" font-weight="700" text-anchor="middle">LLM</text>
+<text x="314" y="334" fill="#FFE1DF" font-size="12" text-anchor="middle">Transformer</text>
+</svg></div>
+<div class="w2-defs">
+<div class="w2-def"><b>AI</b><span>지능적 행동을 하는 시스템 전반 — 규칙 기반 · 탐색 · 학습<em>용어: Dartmouth Workshop (McCarthy et al., 1956)</em></span></div>
+<div class="w2-def"><b>ML</b><span>데이터로부터 성능이 향상되는 알고리즘<em>용어: Samuel (1959) · 선형회귀 · 결정 트리 · SVM</em></span></div>
+<div class="w2-def"><b>DL</b><span>다층 신경망으로 표현(특징)까지 학습<em>역전파 (1986) → AlexNet (2012) 이후 확산 · CNN</em></span></div>
+<div class="w2-def"><b>LLM</b><span>대규모 텍스트로 학습한 Transformer 언어 모델<em>GPT (2018) · GPT-3 (2020) · gemma4</em></span></div>
+</div>
+</div>
+</div>
+<div class="subline"><span>FOUNDATION / 포함 관계</span><span class="page">03 / 23</span></div>
+</section><section aria-label="4 / 23, 학습의 정의" class="slide white" data-time="2분" data-title="학습의 정의">
+<div class="topline"><span>02 / FOUNDATION</span><span>DEFINITION OF LEARNING</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">FOUNDATION / 학습이란</div><h2>규칙을 짜는 AI vs 데이터로 배우는 AI</h2><p class="lede">규칙 기반 시스템은 사람이 판단 기준을 코드로 쓰고, 머신러닝은 그 기준을 데이터로 추정합니다.</p></div>
+<div class="w2-vs" style="margin-top:24px">
+<div class="card"><div class="step">규칙 기반 (expert system)</div><h3>사람이 규칙을 쓴다</h3>
+<pre>if 온도 &gt; 80 and 압력 &gt; 5:
+    불량
+elif 가동시간 &gt; 8:
+    주의</pre>
+<ul><li>지식 획득 병목 — 규칙을 모두 알아야 함</li><li>예외가 늘수록 유지보수 비용 급증</li></ul></div>
+<div class="arrow">→</div>
+<div class="card ml"><div class="step">머신러닝</div><h3>“경험으로 성능이 오른다”</h3>
+<div class="w2-tpe" style="grid-template-columns:1fr;margin-top:10px">
+<div><b>T · Task</b><span>공정 조건 → 불량 여부 판정</span></div>
+<div><b>E · Experience</b><span>정답이 달린 과거 기록 10,000건</span></div>
+<div><b>P · Performance</b><span>처음 보는 데이터에서의 정확도</span></div>
+</div></div>
+</div>
+</div>
+<div class="w2-cite">“A computer program is said to learn from experience <b>E</b> with respect to some class of tasks <b>T</b> and performance measure <b>P</b>, if its performance at tasks in T, as measured by P, improves with experience E.” — Mitchell, <i>Machine Learning</i> (1997)</div>
+<div class="subline"><span>FOUNDATION / 학습의 정의</span><span class="page">04 / 23</span></div>
+</section><section aria-label="5 / 23, 함수 근사와 일반화" class="slide paper" data-time="2분" data-title="함수 근사와 일반화">
+<div class="topline"><span>03 / FOUNDATION</span><span>FUNCTION APPROXIMATION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">FOUNDATION / 모델 = 함수</div><h2>모델 = 함수 <span style="font-family:Cambria Math,serif">f<sub>θ</sub> : X → Y</span></h2><p class="lede">학습은 관측된 데이터로 파라미터 θ를 정해, <b>처음 보는 x에도 맞는</b> 함수를 찾는 과정입니다.</p></div>
+<div class="w2-split fx" style="grid-template-columns:1fr 1fr;margin-top:16px;align-items:start">
+<div class="w2-defs">
+<div class="w2-math sm left">경험적 위험 최소화 (ERM)<br/><i>θ</i>* = arg min<sub><i>θ</i></sub> &nbsp;1/<i>n</i> Σ<sub><i>i</i></sub> ℒ( <i>f<sub>θ</sub></i>(<i>x<sub>i</sub></i>), <i>y<sub>i</sub></i> )<small>학습 데이터에서 평균 손실을 가장 작게 하는 θ</small></div>
+<div class="w2-math sm left">진짜 목표 — 기대 위험<br/><i>R</i>(<i>θ</i>) = 𝔼<sub>(<i>x</i>,<i>y</i>)∼𝒟</sub> [ ℒ( <i>f<sub>θ</sub></i>(<i>x</i>), <i>y</i> ) ]<small>모집단 분포 𝒟 전체에서의 손실 → 직접 알 수 없어 검증·테스트 데이터로 추정</small></div>
+<div class="w2-def"><b>과적합</b><span>학습 오차는 작은데 테스트 오차가 큼<em>모델 복잡도 ↑ → 편향 ↓ · 분산 ↑ (bias–variance trade-off)</em></span></div>
+</div>
+<div class="w2-fig"><svg viewBox="0 0 560 360" role="img" aria-label="외우기와 일반화 비교"><line x1="56" x2="540" y1="318" y2="318" stroke="#33353A"/><line x1="56" x2="540" y1="221" y2="221" stroke="#33353A"/><line x1="56" x2="540" y1="125" y2="125" stroke="#33353A"/><line x1="56" x2="540" y1="28" y2="28" stroke="#33353A"/><path d="M145.1,229.3 C162.2,233.4 161.4,247.9 182.8,238.3 C204.2,228.6 179.6,240.9 192.0,208.0 C204.5,175.0 168.7,211.1 210.1,165.8 C251.6,120.5 249.5,106.7 283.2,108.4 C316.8,110.1 260.5,153.7 284.2,169.5 C308.0,185.3 309.6,147.2 335.4,143.1 C361.1,139.0 334.1,158.3 340.9,160.5 C347.7,162.7 344.2,160.9 350.3,148.0 C356.4,135.0 345.3,149.2 354.3,132.0 C363.2,114.9 353.6,120.0 370.0,110.2 C386.5,100.4 376.8,92.4 390.5,110.6 C404.2,128.7 377.1,134.7 400.2,150.1 C423.3,165.5 422.5,161.4 441.4,144.5 C460.2,127.6 425.2,122.7 441.8,112.9 C458.4,103.1 461.5,118.4 477.9,122.9" fill="none" stroke="#8F949C" stroke-width="2.5" stroke-dasharray="6 4"/><line x1="56" y1="241" x2="536" y2="85" stroke="#F3F3F4" stroke-width="3.5"/><circle cx="182.8" cy="238.3" r="6" fill="#E6E8EA"/><circle cx="340.9" cy="160.5" r="6" fill="#E6E8EA"/><circle cx="350.3" cy="148.0" r="6" fill="#E6E8EA"/><circle cx="441.8" cy="112.9" r="6" fill="#E6E8EA"/><circle cx="192.0" cy="208.0" r="6" fill="#E6E8EA"/><circle cx="283.2" cy="108.4" r="6" fill="#E6E8EA"/><circle cx="441.4" cy="144.5" r="6" fill="#E6E8EA"/><circle cx="145.1" cy="229.3" r="6" fill="#E6E8EA"/><circle cx="354.3" cy="132.0" r="6" fill="#E6E8EA"/><circle cx="400.2" cy="150.1" r="6" fill="#E6E8EA"/><circle cx="370.0" cy="110.2" r="6" fill="#E6E8EA"/><circle cx="335.4" cy="143.1" r="6" fill="#E6E8EA"/><circle cx="210.1" cy="165.8" r="6" fill="#E6E8EA"/><circle cx="284.2" cy="169.5" r="6" fill="#E6E8EA"/><circle cx="390.5" cy="110.6" r="6" fill="#E6E8EA"/><circle cx="477.9" cy="122.9" r="6" fill="#E6E8EA"/><circle cx="246.7" cy="178.9" r="9" fill="none" stroke="#E10800" stroke-width="3.5"/><circle cx="163.9" cy="205.9" r="9" fill="none" stroke="#E10800" stroke-width="3.5"/><text x="60" y="22" fill="#E6E8EA" font-size="14">● 학습 데이터</text><text x="170" y="22" fill="#E10800" font-size="14">○ 처음 보는 데이터</text><text x="540" y="350" fill="#8F949C" font-size="13" text-anchor="end">점선: 모든 점을 지나도록 외운 곡선 · 실선: 일반화된 직선</text></svg></div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Vapnik, <i>The Nature of Statistical Learning Theory</i> (1995) · Hastie, Tibshirani &amp; Friedman, <i>The Elements of Statistical Learning</i> (2009), Ch. 7</div>
+<div class="subline"><span>FOUNDATION / 함수 근사</span><span class="page">05 / 23</span></div>
+</section><section aria-label="6 / 23, 선형회귀" class="slide paper" data-time="1분" data-title="선형회귀">
+<div class="topline"><span>04 / CLASSICAL ML</span><span>LINEAR REGRESSION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">ML ① / 선형회귀</div><h2>선형회귀: 가장 단순한 가설 공간</h2><p class="lede">입력과 출력의 관계를 직선(초평면)으로 가정합니다. (예시 데이터)</p></div>
+<div class="w2-split">
+<div class="w2-fig"><svg viewBox="0 0 560 360" role="img" aria-label="산점도와 직선"><line x1="56" x2="540" y1="318" y2="318" stroke="#33353A"/><text x="40" y="323" fill="#8F949C" font-size="13" text-anchor="end">0</text><line x1="56" x2="540" y1="221" y2="221" stroke="#33353A"/><text x="40" y="226" fill="#8F949C" font-size="13" text-anchor="end">10</text><line x1="56" x2="540" y1="125" y2="125" stroke="#33353A"/><text x="40" y="130" fill="#8F949C" font-size="13" text-anchor="end">20</text><line x1="56" x2="540" y1="28" y2="28" stroke="#33353A"/><text x="40" y="33" fill="#8F949C" font-size="13" text-anchor="end">30</text><text x="56" y="342" fill="#8F949C" font-size="13" text-anchor="middle">0</text><text x="152" y="342" fill="#8F949C" font-size="13" text-anchor="middle">2</text><text x="248" y="342" fill="#8F949C" font-size="13" text-anchor="middle">4</text><text x="344" y="342" fill="#8F949C" font-size="13" text-anchor="middle">6</text><text x="440" y="342" fill="#8F949C" font-size="13" text-anchor="middle">8</text><text x="536" y="342" fill="#8F949C" font-size="13" text-anchor="middle">10</text><text x="540" y="358" fill="#8F949C" font-size="12" text-anchor="end">x · 금형 사용 횟수 (천 회)</text><text x="60" y="20" fill="#8F949C" font-size="12">y · 마모량 (μm)</text><line x1="56" y1="241" x2="536" y2="85" stroke="#F3F3F4" stroke-width="3.5"/><circle cx="182.8" cy="238.3" r="6" fill="#E6E8EA"/><circle cx="340.9" cy="160.5" r="6" fill="#E6E8EA"/><circle cx="350.3" cy="148.0" r="6" fill="#E6E8EA"/><circle cx="441.8" cy="112.9" r="6" fill="#E6E8EA"/><circle cx="192.0" cy="208.0" r="6" fill="#E6E8EA"/><circle cx="283.2" cy="108.4" r="6" fill="#E6E8EA"/><circle cx="441.4" cy="144.5" r="6" fill="#E6E8EA"/><circle cx="145.1" cy="229.3" r="6" fill="#E6E8EA"/><circle cx="354.3" cy="132.0" r="6" fill="#E6E8EA"/><circle cx="400.2" cy="150.1" r="6" fill="#E6E8EA"/><circle cx="370.0" cy="110.2" r="6" fill="#E6E8EA"/><circle cx="335.4" cy="143.1" r="6" fill="#E6E8EA"/><circle cx="210.1" cy="165.8" r="6" fill="#E6E8EA"/><circle cx="284.2" cy="169.5" r="6" fill="#E6E8EA"/><circle cx="390.5" cy="110.6" r="6" fill="#E6E8EA"/><circle cx="477.9" cy="122.9" r="6" fill="#E6E8EA"/></svg></div>
+<div class="w2-pts tight">
+<div class="w2-math">ŷ = <i>w</i><sup>⊤</sup><i>x</i> + <i>b</i><small>단변수일 때 ŷ = w·x + b · 파라미터 θ = (w, b)</small></div>
+<div class="w2-math sm">정규방정식 &nbsp;<i>θ̂</i> = (<i>X</i><sup>⊤</sup><i>X</i>)<sup>−1</sup><i>X</i><sup>⊤</sup><i>y</i><small>MSE를 최소화하는 해를 닫힌 형태로 계산 (최소제곱법)</small></div>
+<div class="w2-pt"><b>이 데이터의 해: w ≈ 1.62, b ≈ 7.95</b><span>데이터가 많거나 모델이 비선형이면 닫힌 해 대신 경사하강법</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> 최소제곱법 — Legendre (1805), Gauss (1809) · Hastie et al. (2009), Ch. 3</div>
+<div class="subline"><span>ML / 선형회귀</span><span class="page">06 / 23</span></div>
+</section><section aria-label="7 / 23, 손실 함수" class="slide white" data-time="2분" data-title="손실 함수">
+<div class="topline"><span>05 / CLASSICAL ML</span><span>LOSS FUNCTION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">ML ② / 손실 함수</div><h2>손실 함수: 예측과 정답의 차이를 수치화</h2><p class="lede">무엇을 “잘 맞췄다”고 볼지 정하는 것이 손실 함수입니다. 문제 유형에 따라 달라집니다.</p></div>
+<div class="w2-split">
+<div class="w2-fig"><svg viewBox="0 0 560 360" role="img" aria-label="산점도와 직선"><line x1="56" x2="540" y1="318" y2="318" stroke="#33353A"/><text x="40" y="323" fill="#8F949C" font-size="13" text-anchor="end">0</text><line x1="56" x2="540" y1="221" y2="221" stroke="#33353A"/><text x="40" y="226" fill="#8F949C" font-size="13" text-anchor="end">10</text><line x1="56" x2="540" y1="125" y2="125" stroke="#33353A"/><text x="40" y="130" fill="#8F949C" font-size="13" text-anchor="end">20</text><line x1="56" x2="540" y1="28" y2="28" stroke="#33353A"/><text x="40" y="33" fill="#8F949C" font-size="13" text-anchor="end">30</text><text x="56" y="342" fill="#8F949C" font-size="13" text-anchor="middle">0</text><text x="152" y="342" fill="#8F949C" font-size="13" text-anchor="middle">2</text><text x="248" y="342" fill="#8F949C" font-size="13" text-anchor="middle">4</text><text x="344" y="342" fill="#8F949C" font-size="13" text-anchor="middle">6</text><text x="440" y="342" fill="#8F949C" font-size="13" text-anchor="middle">8</text><text x="536" y="342" fill="#8F949C" font-size="13" text-anchor="middle">10</text><text x="540" y="358" fill="#8F949C" font-size="12" text-anchor="end">x · 금형 사용 횟수 (천 회)</text><text x="60" y="20" fill="#8F949C" font-size="12">y · 마모량 (μm)</text><line x1="56" y1="163" x2="536" y2="134" stroke="#8F949C" stroke-width="2.5" stroke-dasharray="7 5"/><line x1="182.8" y1="238.3" x2="182.8" y2="199.8" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="340.9" y1="160.5" x2="340.9" y2="148.2" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="350.3" y1="148.0" x2="350.3" y2="145.1" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="441.8" y1="112.9" x2="441.8" y2="115.3" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="192.0" y1="208.0" x2="192.0" y2="196.8" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="283.2" y1="108.4" x2="283.2" y2="167.0" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="441.4" y1="144.5" x2="441.4" y2="115.4" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="145.1" y1="229.3" x2="145.1" y2="212.1" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="354.3" y1="132.0" x2="354.3" y2="143.8" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="400.2" y1="150.1" x2="400.2" y2="128.8" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="370.0" y1="110.2" x2="370.0" y2="138.7" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="335.4" y1="143.1" x2="335.4" y2="150.0" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="210.1" y1="165.8" x2="210.1" y2="190.9" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="284.2" y1="169.5" x2="284.2" y2="166.7" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="390.5" y1="110.6" x2="390.5" y2="132.0" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="477.9" y1="122.9" x2="477.9" y2="103.5" stroke="#E10800" stroke-width="2" stroke-dasharray="4 3"/><line x1="56" y1="241" x2="536" y2="85" stroke="#F3F3F4" stroke-width="3.5"/><circle cx="182.8" cy="238.3" r="6" fill="#E6E8EA"/><circle cx="340.9" cy="160.5" r="6" fill="#E6E8EA"/><circle cx="350.3" cy="148.0" r="6" fill="#E6E8EA"/><circle cx="441.8" cy="112.9" r="6" fill="#E6E8EA"/><circle cx="192.0" cy="208.0" r="6" fill="#E6E8EA"/><circle cx="283.2" cy="108.4" r="6" fill="#E6E8EA"/><circle cx="441.4" cy="144.5" r="6" fill="#E6E8EA"/><circle cx="145.1" cy="229.3" r="6" fill="#E6E8EA"/><circle cx="354.3" cy="132.0" r="6" fill="#E6E8EA"/><circle cx="400.2" cy="150.1" r="6" fill="#E6E8EA"/><circle cx="370.0" cy="110.2" r="6" fill="#E6E8EA"/><circle cx="335.4" cy="143.1" r="6" fill="#E6E8EA"/><circle cx="210.1" cy="165.8" r="6" fill="#E6E8EA"/><circle cx="284.2" cy="169.5" r="6" fill="#E6E8EA"/><circle cx="390.5" cy="110.6" r="6" fill="#E6E8EA"/><circle cx="477.9" cy="122.9" r="6" fill="#E6E8EA"/></svg></div>
+<div class="w2-pts tight">
+<div class="w2-math sm">회귀 · MSE &nbsp;ℒ = 1/<i>n</i> Σ<sub><i>i</i></sub> (<i>y<sub>i</sub></i> − ŷ<sub><i>i</i></sub>)²<small>오차가 정규분포를 따른다고 가정하면 최대우도추정과 동치</small></div>
+<div class="w2-math sm">분류 · 교차 엔트로피 &nbsp;ℒ = − Σ<sub><i>k</i></sub> <i>y<sub>k</sub></i> log <i>p̂<sub>k</sub></i><small>정답 클래스의 확률이 1에 가까울수록 작아짐 — CNN·LLM이 쓰는 손실</small></div>
+<div class="w2-pt"><b>실선 MSE 6.2 &lt; 점선 MSE 13.8</b><span>빨간 점선 = 잔차(yᵢ − ŷᵢ) · 제곱이라 큰 오차에 더 큰 벌점</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Bishop, <i>Pattern Recognition and Machine Learning</i> (2006), §1.2 · §4.3</div>
+<div class="subline"><span>ML / 손실 함수</span><span class="page">07 / 23</span></div>
+</section><section aria-label="8 / 23, 경사하강법" class="slide paper" data-time="2분" data-title="경사하강법">
+<div class="topline"><span>06 / CLASSICAL ML</span><span>GRADIENT DESCENT</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">ML ③ / 경사하강법</div><h2>경사하강법: 기울기의 반대 방향으로 한 걸음</h2><p class="lede">닫힌 해가 없거나 계산이 비쌀 때, 손실의 기울기(gradient)를 따라 θ를 반복 갱신합니다.</p></div>
+<div class="w2-split">
+<div class="w2-fig"><svg viewBox="0 0 560 340" role="img" aria-label="손실 곡선과 경사하강법"><line x1="60" y1="300" x2="540" y2="300" stroke="#55575C"/><line x1="60" y1="24" x2="60" y2="300" stroke="#55575C"/><text x="540" y="322" fill="#8F949C" font-size="13" text-anchor="end">w (기울기 값)</text><text x="68" y="20" fill="#8F949C" font-size="13">손실</text><path d="M60.0,43.5 L63.9,50.9 L67.8,58.1 L71.8,65.2 L75.7,72.2 L79.6,79.1 L83.5,85.8 L87.4,92.4 L91.3,98.9 L95.2,105.3 L99.2,111.6 L103.1,117.7 L107.0,123.7 L110.9,129.6 L114.8,135.3 L118.8,141.0 L122.7,146.5 L126.6,151.8 L130.5,157.1 L134.4,162.2 L138.3,167.2 L142.2,172.1 L146.2,176.9 L150.1,181.5 L154.0,186.1 L157.9,190.5 L161.8,194.7 L165.8,198.9 L169.7,202.9 L173.6,206.8 L177.5,210.6 L181.4,214.2 L185.3,217.7 L189.2,221.1 L193.2,224.4 L197.1,227.6 L201.0,230.6 L204.9,233.5 L208.8,236.3 L212.8,239.0 L216.7,241.5 L220.6,243.9 L224.5,246.2 L228.4,248.4 L232.3,250.4 L236.2,252.3 L240.2,254.1 L244.1,255.8 L248.0,257.3 L251.9,258.8 L255.8,260.1 L259.8,261.2 L263.7,262.3 L267.6,263.2 L271.5,264.0 L275.4,264.7 L279.3,265.3 L283.2,265.7 L287.2,266.0 L291.1,266.2 L295.0,266.2 L298.9,266.2 L302.8,266.0 L306.8,265.7 L310.7,265.3 L314.6,264.7 L318.5,264.0 L322.4,263.2 L326.3,262.3 L330.3,261.2 L334.2,260.1 L338.1,258.8 L342.0,257.3 L345.9,255.8 L349.8,254.1 L353.8,252.3 L357.7,250.4 L361.6,248.4 L365.5,246.2 L369.4,243.9 L373.3,241.5 L377.2,239.0 L381.2,236.3 L385.1,233.5 L389.0,230.6 L392.9,227.6 L396.8,224.4 L400.8,221.1 L404.7,217.7 L408.6,214.2 L412.5,210.6 L416.4,206.8 L420.3,202.9 L424.2,198.9 L428.2,194.7 L432.1,190.5 L436.0,186.1 L439.9,181.5 L443.8,176.9 L447.8,172.1 L451.7,167.2 L455.6,162.2 L459.5,157.1 L463.4,151.8 L467.3,146.5 L471.2,141.0 L475.2,135.3 L479.1,129.6 L483.0,123.7 L486.9,117.7 L490.8,111.6 L494.8,105.3 L498.7,98.9 L502.6,92.4 L506.5,85.8 L510.4,79.1 L514.3,72.2 L518.2,65.2 L522.2,58.1 L526.1,50.9 L530.0,43.5" fill="none" stroke="#F3F3F4" stroke-width="3"/><line x1="95.2" y1="105.3" x2="183.1" y2="215.8" stroke="#E10800" stroke-width="2.5" marker-end="url(#ah)"/><line x1="183.1" y1="215.8" x2="232.4" y2="250.4" stroke="#E10800" stroke-width="2.5" marker-end="url(#ah)"/><line x1="232.4" y1="250.4" x2="259.9" y2="261.3" stroke="#E10800" stroke-width="2.5" marker-end="url(#ah)"/><line x1="259.9" y1="261.3" x2="275.4" y2="264.7" stroke="#E10800" stroke-width="2.5" marker-end="url(#ah)"/><circle cx="95.2" cy="105.3" r="8" fill="#E10800"/><text x="95.2" y="109.3" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">1</text><circle cx="183.1" cy="215.8" r="8" fill="#E10800"/><text x="183.1" y="219.8" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">2</text><circle cx="232.4" cy="250.4" r="8" fill="#E10800"/><text x="232.4" y="254.4" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">3</text><circle cx="259.9" cy="261.3" r="8" fill="#E10800"/><text x="259.9" y="265.3" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">4</text><circle cx="275.4" cy="264.7" r="8" fill="#E10800"/><text x="275.4" y="268.7" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">5</text><line x1="365.5" y1="246.2" x2="204.2" y2="233.0" stroke="#8F949C" stroke-width="2" stroke-dasharray="5 4"/><line x1="204.2" y1="233.0" x2="412.0" y2="211.1" stroke="#8F949C" stroke-width="2" stroke-dasharray="5 4"/><line x1="412.0" y1="211.1" x2="144.4" y2="174.7" stroke="#8F949C" stroke-width="2" stroke-dasharray="5 4"/><circle cx="365.5" cy="246.2" r="5" fill="#8F949C"/><circle cx="204.2" cy="233.0" r="5" fill="#8F949C"/><circle cx="412.0" cy="211.1" r="5" fill="#8F949C"/><circle cx="144.4" cy="174.7" r="5" fill="#8F949C"/><text x="295.0" y="292.2" fill="#9FD3A4" font-size="13" text-anchor="middle">최저점 · 가장 좋은 w</text><text x="64" y="322" fill="#8F949C" font-size="13">회색 점선: 학습률이 너무 크면 튕겨 나감</text><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E10800"/></marker></defs></svg></div>
+<div class="w2-pts tight">
+<div class="w2-math"><i>θ</i><sub><i>t</i>+1</sub> = <i>θ<sub>t</sub></i> − <i>η</i> ∇<sub><i>θ</i></sub> ℒ(<i>θ<sub>t</sub></i>)<small>η = 학습률 (한 걸음의 크기)</small></div>
+<div class="w2-math sm">∂ℒ/∂<i>w</i> = 2/<i>n</i> Σ (ŷ<sub><i>i</i></sub> − <i>y<sub>i</sub></i>) <i>x<sub>i</sub></i> &nbsp;·&nbsp; ∂ℒ/∂<i>b</i> = 2/<i>n</i> Σ (ŷ<sub><i>i</i></sub> − <i>y<sub>i</sub></i>)<small>선형회귀 + MSE의 기울기</small></div>
+<div class="w2-pt"><b>수렴 조건 · 변형</b><span>이차 손실에서는 η &lt; 2/λ<sub>max</sub>(헤시안 최대 고윳값) · 실제로는 미니배치 SGD, Adam</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Cauchy (1847) · Robbins &amp; Monro (1951) 확률적 근사 · Kingma &amp; Ba, “Adam” (ICLR 2015)</div>
+<div class="subline"><span>ML / 경사하강법</span><span class="page">08 / 23</span></div>
+</section><section aria-label="9 / 23, 결정 트리" class="slide white" data-time="1분" data-title="결정 트리">
+<div class="topline"><span>07 / CLASSICAL ML</span><span>DECISION TREE</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">ML ④ / 결정 트리</div><h2>결정 트리: 불순도를 줄이는 분할의 반복</h2><p class="lede">특성 공간을 축에 평행한 분할로 나눕니다. 각 단계에서 불순도가 가장 많이 줄어드는 질문을 고릅니다. (예시)</p></div>
+<div class="w2-split">
+<div class="w2-fig"><svg viewBox="0 0 580 350" role="img" aria-label="결정 트리 예시"><line x1="290" y1="64" x2="150" y2="150" stroke="#8F949C" stroke-width="2"/><text x="200" y="100" fill="#A9ACB2" font-size="14" text-anchor="middle">예</text><line x1="290" y1="64" x2="430" y2="150" stroke="#8F949C" stroke-width="2"/><text x="384" y="100" fill="#A9ACB2" font-size="14" text-anchor="middle">아니오</text><line x1="150" y1="198" x2="80" y2="284" stroke="#8F949C" stroke-width="2"/><text x="98" y="240" fill="#A9ACB2" font-size="14" text-anchor="middle">예</text><line x1="150" y1="198" x2="220" y2="284" stroke="#8F949C" stroke-width="2"/><text x="214" y="240" fill="#A9ACB2" font-size="14" text-anchor="middle">아니오</text><line x1="430" y1="198" x2="360" y2="284" stroke="#8F949C" stroke-width="2"/><text x="378" y="240" fill="#A9ACB2" font-size="14" text-anchor="middle">예</text><line x1="430" y1="198" x2="500" y2="284" stroke="#8F949C" stroke-width="2"/><text x="494" y="240" fill="#A9ACB2" font-size="14" text-anchor="middle">아니오</text><rect x="190.0" y="16" width="200" height="48" rx="6" fill="#27292D" stroke="#55575C" stroke-width="2"/><text x="290" y="46" fill="#F3F3F4" font-size="17" font-weight="600" text-anchor="middle">온도 &gt; 80℃ ?</text><rect x="55.0" y="150" width="190" height="48" rx="6" fill="#27292D" stroke="#55575C" stroke-width="2"/><text x="150" y="180" fill="#F3F3F4" font-size="17" font-weight="600" text-anchor="middle">압력 &gt; 5 bar ?</text><rect x="335.0" y="150" width="190" height="48" rx="6" fill="#27292D" stroke="#55575C" stroke-width="2"/><text x="430" y="180" fill="#F3F3F4" font-size="17" font-weight="600" text-anchor="middle">가동 &gt; 8시간 ?</text><rect x="20.0" y="284" width="120" height="48" rx="6" fill="#4A2427" stroke="#B8484A" stroke-width="2"/><text x="80" y="314" fill="#FFB4AE" font-size="17" font-weight="600" text-anchor="middle">불량</text><rect x="160.0" y="284" width="120" height="48" rx="6" fill="#22302A" stroke="#3E7A4E" stroke-width="2"/><text x="220" y="314" fill="#9FD3A4" font-size="17" font-weight="600" text-anchor="middle">정상</text><rect x="300.0" y="284" width="120" height="48" rx="6" fill="#3A3420" stroke="#8C7A3A" stroke-width="2"/><text x="360" y="314" fill="#FFD27A" font-size="17" font-weight="600" text-anchor="middle">주의</text><rect x="440.0" y="284" width="120" height="48" rx="6" fill="#22302A" stroke="#3E7A4E" stroke-width="2"/><text x="500" y="314" fill="#9FD3A4" font-size="17" font-weight="600" text-anchor="middle">정상</text></svg></div>
+<div class="w2-pts tight">
+<div class="w2-math sm">Gini &nbsp;<i>G</i> = 1 − Σ<sub><i>k</i></sub> <i>p<sub>k</sub></i>² &nbsp;·&nbsp; 엔트로피 &nbsp;<i>H</i> = − Σ<sub><i>k</i></sub> <i>p<sub>k</sub></i> log₂ <i>p<sub>k</sub></i><small>p<sub>k</sub> = 노드 안에서 클래스 k의 비율 · 한 클래스만 있으면 0</small></div>
+<div class="w2-math sm">정보 이득 &nbsp;IG = <i>H</i>(부모) − Σ<sub><i>c</i></sub> (<i>n<sub>c</sub></i>/<i>n</i>) <i>H</i>(자식<sub><i>c</i></sub>)<small>이 값이 가장 큰 특성·기준값으로 분할 (탐욕적 탐색)</small></div>
+<div class="w2-pt"><b>해석 가능 · 앙상블로 확장</b><span>Random Forest(배깅) · Gradient Boosting / XGBoost — 표 데이터에서 강력</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Breiman et al., <i>CART</i> (1984) · Quinlan, ID3 (1986) · Breiman, Random Forests (2001) · Chen &amp; Guestrin, XGBoost (KDD 2016)</div>
+<div class="subline"><span>ML / 결정 트리</span><span class="page">09 / 23</span></div>
+</section><section aria-label="10 / 23, 신경망과 역전파" class="slide paper" data-time="2분" data-title="신경망과 역전파">
+<div class="topline"><span>08 / DEEP LEARNING</span><span>NEURAL NETWORK</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">DL ① / 신경망</div><h2>신경망: 표현(특징)까지 학습하는 합성 함수</h2><p class="lede">고전 ML은 사람이 특징을 설계하고, 딥러닝은 층을 쌓아 특징 추출까지 함께 학습합니다.</p></div>
+<div class="w2-pipe" style="margin-top:22px;gap:12px">
+<div class="row"><b>ML</b><div class="flow"><span>원본 데이터</span><i>→</i><span class="hum">특징 공학 · 밝기 평균, 흠집 길이 …</span><i>→</i><span>모델</span><i>→</i><span>ŷ</span></div></div>
+<div class="row"><b>DL</b><div class="flow"><span>원본 데이터</span><i>→</i><span class="auto">층 1 → 층 2 → 층 3 → …  표현 학습 (representation learning)</span><i>→</i><span>ŷ</span></div></div>
+</div>
+<div class="w2-tpe" style="margin-top:18px">
+<div><b><span class="m"><i>a</i> = σ(<i>Wx</i> + <i>b</i>)</span></b><span>뉴런 한 층 — 선형 변환 후 비선형 활성화</span><em>ReLU σ(z) = max(0, z)</em></div>
+<div><b><span class="m"><i>f</i> = <i>f<sub>L</sub></i> ∘ ⋯ ∘ <i>f</i><sub>1</sub></span></b><span>층의 합성 — 깊을수록 추상적인 표현</span><em>보편 근사 정리: 은닉층 1개로도 연속함수 근사 가능</em></div>
+<div><b><span class="m">∂ℒ/∂<i>W<sub>l</sub></i></span> 연쇄 법칙</b><span>역전파로 모든 층의 기울기를 한 번에 계산</span><em>계산된 기울기로 경사하강법 갱신</em></div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Rumelhart, Hinton &amp; Williams, “Learning representations by back-propagating errors”, <i>Nature</i> (1986) · Cybenko (1989) · LeCun, Bengio &amp; Hinton, “Deep learning”, <i>Nature</i> (2015)</div>
+<div class="subline"><span>DL / 신경망</span><span class="page">10 / 23</span></div>
+</section><section aria-label="11 / 23, CNN" class="slide white" data-time="1분" data-title="CNN">
+<div class="topline"><span>09 / DEEP LEARNING</span><span>CNN</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">DL ② / CNN</div><h2>CNN: 국소 연결과 가중치 공유</h2><p class="lede">같은 작은 필터를 이미지 전체에 적용해, 위치가 달라도 같은 무늬를 찾습니다.</p></div>
+<div class="w2-fig wide" style="margin-top:20px;padding:12px 18px"><svg viewBox="0 0 1270 300" role="img" aria-label="CNN 구조: 입력 이미지, 합성곱, 특징 지도, 풀링, 분류"><rect x="30" y="40" width="22" height="22" fill="#3A3C41"/><rect x="54" y="40" width="22" height="22" fill="#3A3C41"/><rect x="78" y="40" width="22" height="22" fill="#3A3C41"/><rect x="102" y="40" width="22" height="22" fill="#3A3C41"/><rect x="126" y="40" width="22" height="22" fill="#3A3C41"/><rect x="150" y="40" width="22" height="22" fill="#3A3C41"/><rect x="174" y="40" width="22" height="22" fill="#3A3C41"/><rect x="198" y="40" width="22" height="22" fill="#3A3C41"/><rect x="30" y="64" width="22" height="22" fill="#3A3C41"/><rect x="54" y="64" width="22" height="22" fill="#D8D8D8"/><rect x="78" y="64" width="22" height="22" fill="#D8D8D8"/><rect x="102" y="64" width="22" height="22" fill="#D8D8D8"/><rect x="126" y="64" width="22" height="22" fill="#D8D8D8"/><rect x="150" y="64" width="22" height="22" fill="#D8D8D8"/><rect x="174" y="64" width="22" height="22" fill="#3A3C41"/><rect x="198" y="64" width="22" height="22" fill="#3A3C41"/><rect x="30" y="88" width="22" height="22" fill="#3A3C41"/><rect x="54" y="88" width="22" height="22" fill="#D8D8D8"/><rect x="78" y="88" width="22" height="22" fill="#3A3C41"/><rect x="102" y="88" width="22" height="22" fill="#3A3C41"/><rect x="126" y="88" width="22" height="22" fill="#3A3C41"/><rect x="150" y="88" width="22" height="22" fill="#D8D8D8"/><rect x="174" y="88" width="22" height="22" fill="#3A3C41"/><rect x="198" y="88" width="22" height="22" fill="#3A3C41"/><rect x="30" y="112" width="22" height="22" fill="#3A3C41"/><rect x="54" y="112" width="22" height="22" fill="#D8D8D8"/><rect x="78" y="112" width="22" height="22" fill="#3A3C41"/><rect x="102" y="112" width="22" height="22" fill="#D8D8D8"/><rect x="126" y="112" width="22" height="22" fill="#D8D8D8"/><rect x="150" y="112" width="22" height="22" fill="#D8D8D8"/><rect x="174" y="112" width="22" height="22" fill="#3A3C41"/><rect x="198" y="112" width="22" height="22" fill="#3A3C41"/><rect x="30" y="136" width="22" height="22" fill="#3A3C41"/><rect x="54" y="136" width="22" height="22" fill="#D8D8D8"/><rect x="78" y="136" width="22" height="22" fill="#3A3C41"/><rect x="102" y="136" width="22" height="22" fill="#D8D8D8"/><rect x="126" y="136" width="22" height="22" fill="#3A3C41"/><rect x="150" y="136" width="22" height="22" fill="#3A3C41"/><rect x="174" y="136" width="22" height="22" fill="#3A3C41"/><rect x="198" y="136" width="22" height="22" fill="#3A3C41"/><rect x="30" y="160" width="22" height="22" fill="#3A3C41"/><rect x="54" y="160" width="22" height="22" fill="#D8D8D8"/><rect x="78" y="160" width="22" height="22" fill="#D8D8D8"/><rect x="102" y="160" width="22" height="22" fill="#D8D8D8"/><rect x="126" y="160" width="22" height="22" fill="#3A3C41"/><rect x="150" y="160" width="22" height="22" fill="#3A3C41"/><rect x="174" y="160" width="22" height="22" fill="#3A3C41"/><rect x="198" y="160" width="22" height="22" fill="#3A3C41"/><rect x="30" y="184" width="22" height="22" fill="#3A3C41"/><rect x="54" y="184" width="22" height="22" fill="#3A3C41"/><rect x="78" y="184" width="22" height="22" fill="#3A3C41"/><rect x="102" y="184" width="22" height="22" fill="#3A3C41"/><rect x="126" y="184" width="22" height="22" fill="#3A3C41"/><rect x="150" y="184" width="22" height="22" fill="#3A3C41"/><rect x="174" y="184" width="22" height="22" fill="#3A3C41"/><rect x="198" y="184" width="22" height="22" fill="#3A3C41"/><rect x="30" y="208" width="22" height="22" fill="#3A3C41"/><rect x="54" y="208" width="22" height="22" fill="#3A3C41"/><rect x="78" y="208" width="22" height="22" fill="#3A3C41"/><rect x="102" y="208" width="22" height="22" fill="#3A3C41"/><rect x="126" y="208" width="22" height="22" fill="#3A3C41"/><rect x="150" y="208" width="22" height="22" fill="#3A3C41"/><rect x="174" y="208" width="22" height="22" fill="#3A3C41"/><rect x="198" y="208" width="22" height="22" fill="#3A3C41"/><rect x="54" y="64" width="70" height="70" fill="none" stroke="#E10800" stroke-width="4"/><text x="126" y="250" fill="#F3F3F4" font-size="18" font-weight="600" text-anchor="middle">입력 이미지</text><text x="126" y="274" fill="#A9ACB2" font-size="14" text-anchor="middle">빨간 3×3 필터가 밀며 지나감</text><path d="M240,130 h52" stroke="#E10800" stroke-width="3" marker-end="url(#a2)"/><rect x="320" y="36" width="150" height="150" fill="#2A2C30" stroke="#7E3B3C" stroke-width="2"/><rect x="336" y="52" width="150" height="150" fill="#2A2C30" stroke="#7E3B3C" stroke-width="2"/><rect x="352" y="68" width="150" height="150" fill="#2A2C30" stroke="#7E3B3C" stroke-width="2"/><rect x="368" y="84" width="150" height="150" fill="#2A2C30" stroke="#7E3B3C" stroke-width="2"/><text x="418" y="250" fill="#F3F3F4" font-size="18" font-weight="600" text-anchor="middle">합성곱 → 특징 지도</text><text x="418" y="274" fill="#A9ACB2" font-size="14" text-anchor="middle">필터마다 다른 무늬(선·모서리)</text><path d="M540,130 h52" stroke="#E10800" stroke-width="3" marker-end="url(#a2)"/><rect x="620" y="70" width="86" height="86" fill="#33262A" stroke="#B8484A" stroke-width="2"/><rect x="632" y="82" width="86" height="86" fill="#33262A" stroke="#B8484A" stroke-width="2"/><rect x="644" y="94" width="86" height="86" fill="#33262A" stroke="#B8484A" stroke-width="2"/><rect x="656" y="106" width="86" height="86" fill="#33262A" stroke="#B8484A" stroke-width="2"/><text x="690" y="250" fill="#F3F3F4" font-size="18" font-weight="600" text-anchor="middle">풀링 (축소)</text><text x="690" y="274" fill="#A9ACB2" font-size="14" text-anchor="middle">강한 값만 남겨 절반 크기로</text><path d="M770,130 h52" stroke="#E10800" stroke-width="3" marker-end="url(#a2)"/><text x="900" y="122" fill="#F3F3F4" font-size="34" font-weight="700" text-anchor="middle">× 여러 층</text><text x="900" y="152" fill="#A9ACB2" font-size="14" text-anchor="middle">선 → 모양 → 부품</text><path d="M990,130 h52" stroke="#E10800" stroke-width="3" marker-end="url(#a2)"/><text x="1070" y="74" fill="#A9ACB2" font-size="15">분류 결과</text><rect x="1070" y="90" width="170" height="34" fill="#22302A"/><rect x="1070" y="90" width="156" height="34" fill="#3E7A4E"/><text x="1080" y="113" fill="#fff" font-size="16" font-weight="600">정상 92%</text><rect x="1070" y="134" width="170" height="34" fill="#2A2C30"/><rect x="1070" y="134" width="14" height="34" fill="#B8484A"/><text x="1092" y="157" fill="#E6E8EA" font-size="16">불량 8%</text><defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E10800"/></marker></defs></svg></div>
+<div class="w2-tpe" style="margin-top:14px">
+<div><b>국소 수용 영역</b><span>각 출력은 입력의 작은 영역(3×3)만 봄</span></div>
+<div><b>가중치 공유</b><span>모든 위치에 같은 필터 → 파라미터 수 대폭 감소</span></div>
+<div><b>풀링 · 계층 구조</b><span>작은 이동에 강건 · 선 → 모양 → 부품</span></div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> LeCun et al., LeNet-5 (1998) · Krizhevsky, Sutskever &amp; Hinton, AlexNet — ImageNet top-5 오류 15.3% (NeurIPS 2012) · He et al., ResNet (CVPR 2016) · 1주차 CASE 02의 EfficientNet · ConvNeXt도 CNN 계열</div>
+<div class="subline"><span>DL / CNN</span><span class="page">11 / 23</span></div>
+</section><section aria-label="12 / 23, 합성곱 연산" class="slide paper" data-time="2분" data-title="합성곱 연산">
+<div class="topline"><span>10 / DEEP LEARNING</span><span>CONVOLUTION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">DL ③ / 합성곱</div><h2>합성곱 연산과 파라미터 수</h2><p class="lede">필터 K를 이미지 I 위로 밀며 원소별 곱의 합을 구합니다. 필터 값은 역전파로 학습됩니다.</p></div>
+<div class="w2-math" style="margin-top:20px"><i>S</i>(<i>i</i>, <i>j</i>) = Σ<sub><i>m</i></sub> Σ<sub><i>n</i></sub> <i>I</i>(<i>i</i>+<i>m</i>, <i>j</i>+<i>n</i>) · <i>K</i>(<i>m</i>, <i>n</i>) + <i>b</i><small>엄밀히는 교차상관(cross-correlation)이지만 딥러닝에서는 관례상 합성곱이라 부름</small></div>
+<div class="w2-conv" style="margin-top:20px">
+<figure><div class="w2-grid img"><span>10</span><span>10</span><span>200</span><span>10</span><span>10</span><span>200</span><span>10</span><span>10</span><span>200</span></div><figcaption>I 의 3×3 조각</figcaption></figure>
+<div class="op">⊙</div>
+<figure><div class="w2-grid k"><span>-1</span><span>0</span><span>1</span><span>-1</span><span>0</span><span>1</span><span>-1</span><span>0</span><span>1</span></div><figcaption>K · 세로 경계 필터</figcaption></figure>
+<div class="op">=</div>
+<figure><div class="res">570</div><figcaption>(200 − 10) × 3</figcaption></figure>
+<div class="why">
+<div class="w2-pt"><b>파라미터 수 비교 (입력 256×256)</b><span>3×3 필터 하나 = 가중치 9개 + 편향 1개 · 전결합 뉴런 하나 = 가중치 65,536개</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Goodfellow, Bengio &amp; Courville, <i>Deep Learning</i> (2016), Ch. 9</div>
+<div class="subline"><span>DL / 합성곱</span><span class="page">12 / 23</span></div>
+</section><section aria-label="13 / 23, 언어 모델" class="slide white" data-time="2분" data-title="언어 모델">
+<div class="topline"><span>11 / LLM</span><span>LANGUAGE MODEL</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LLM ① / 언어 모델</div><h2>언어 모델: 다음 토큰의 조건부 확률</h2><p class="lede">문장의 확률을 “앞 토큰들이 주어졌을 때 다음 토큰”의 곱으로 분해합니다. 아래는 사내 gemma4:31b의 실제 출력입니다.</p></div>
+<div class="w2-split" style="grid-template-columns:1.05fr .95fr;align-items:start;margin-top:18px">
+<div>
+<div class="w2-prompt">오늘 아침 출근길에 비가 와서 나는 <em>___</em></div>
+<div class="w2-bars"><div class="w2-bar"><span class="t">␣우</span><span class="b"><i style="width:83.7%"></i></span><span class="p">83.7%</span></div><div class="w2-bar"><span class="t">우</span><span class="b"><i style="width:6.8%"></i></span><span class="p">6.8%</span></div><div class="w2-bar"><span class="t">␣지금</span><span class="b"><i style="width:2.7%"></i></span><span class="p">2.7%</span></div><div class="w2-bar"><span class="t">␣오늘</span><span class="b"><i style="width:2.0%"></i></span><span class="p">2.0%</span></div><div class="w2-bar"><span class="t">␣조금</span><span class="b"><i style="width:1.3%"></i></span><span class="p">1.3%</span></div></div>
+<div class="w2-toks"><span>␣우</span><span>산을</span><span>␣</span><span>썼</span><span>다</span><span>.</span></div>
+</div>
+<div class="w2-pts tight">
+<div class="w2-math sm"><i>P</i>(<i>x</i><sub>1</sub>, …, <i>x<sub>T</sub></i>) = Π<sub><i>t</i></sub> <i>P</i>(<i>x<sub>t</sub></i> | <i>x</i><sub>&lt;<i>t</i></sub>)<small>연쇄 법칙(chain rule)에 따른 자기회귀 분해</small></div>
+<div class="w2-math sm"><i>p<sub>i</sub></i> = exp(<i>z<sub>i</sub></i>/<i>T</i>) / Σ<sub><i>j</i></sub> exp(<i>z<sub>j</sub></i>/<i>T</i>)<small>softmax · T = temperature (T→0: 최댓값만, T↑: 분포가 평평)</small></div>
+<div class="w2-pt"><b>학습 = 다음 토큰 교차 엔트로피 최소화</b><span>ℒ = − Σ<sub>t</sub> log P(x<sub>t</sub> | x<sub>&lt;t</sub>) · 토큰은 BPE 등 하위 단어 단위</span></div>
+</div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Shannon (1948) · Bengio et al., “A Neural Probabilistic Language Model” (JMLR 2003) · Sennrich et al., BPE (ACL 2016)</div>
+<div class="subline"><span>LLM / 언어 모델</span><span class="page">13 / 23</span></div>
+</section><section aria-label="14 / 23, Self-Attention" class="slide paper" data-time="2분" data-title="Self-Attention">
+<div class="topline"><span>12 / LLM</span><span>TRANSFORMER</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LLM ② / Self-Attention</div><h2>Transformer: Scaled Dot-Product Attention</h2><p class="lede">각 토큰이 문장의 모든 토큰과의 관련도를 계산해, 그 가중합으로 자신의 표현을 갱신합니다.</p></div>
+<div class="w2-math" style="margin-top:18px">Attention(<i>Q</i>, <i>K</i>, <i>V</i>) = softmax( <i>QK</i><sup>⊤</sup> / √<i>d<sub>k</sub></i> ) <i>V</i><small>Q 질의 · K 키 · V 값 — 모두 입력에 학습된 행렬을 곱해 만듦 · √d<sub>k</sub>로 나눠 softmax 포화 방지</small></div>
+<div class="w2-att" style="margin-top:18px"><span class="w2-chip" style="background:rgba(225,8,0,0.25)">작업자가<em>10%</em></span><span class="w2-chip" style="background:rgba(225,8,0,0.93)">금형을<em>62%</em></span><span class="w2-chip" style="background:rgba(225,8,0,0.28)">점검했는데<em>12%</em></span><span class="w2-chip focus">그것은</span><span class="w2-chip" style="background:rgba(225,8,0,0.18)">이미<em>5%</em></span><span class="w2-chip" style="background:rgba(225,8,0,0.22)">마모되어<em>8%</em></span><span class="w2-chip" style="background:rgba(225,8,0,0.16)">있었다.<em>3%</em></span></div>
+<p class="note" style="margin-top:6px">“그것은”(질의)이 각 토큰(키)에 주는 가중치 — 설명용 예시 수치</p>
+<div class="w2-tpe" style="margin-top:10px">
+<div><b>Multi-Head</b><span>여러 관점의 attention을 병렬로 계산해 이어 붙임</span></div>
+<div><b>병렬화 · 장거리 의존성</b><span>RNN과 달리 순서대로 처리하지 않음 — 대신 계산량 O(n²)</span></div>
+<div><b>위치 인코딩</b><span>순서 정보가 없으므로 위치를 따로 더해 줌</span></div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Bahdanau, Cho &amp; Bengio (ICLR 2015) · Vaswani et al., “Attention Is All You Need” (NeurIPS 2017)</div>
+<div class="subline"><span>LLM / Attention</span><span class="page">14 / 23</span></div>
+</section><section aria-label="15 / 23, GPT-3와 스케일링" class="slide white" data-time="1분" data-title="GPT-3와 스케일링">
+<div class="topline"><span>13 / LLM</span><span>GPT-3</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LLM ③ / GPT-3</div><h2>GPT-3: 규모와 In-Context Learning</h2><p class="lede">목표는 같은 “다음 토큰 예측”입니다. 규모를 키우자, 가중치를 바꾸지 않고 프롬프트의 예시만으로 새 작업을 수행했습니다.</p></div>
+<div class="w2-time" style="margin-top:28px">
+<div><b>2017</b><strong>Transformer</strong><span>Vaswani et al.</span></div>
+<div><b>2018</b><strong>GPT-1</strong><span>1.17억 파라미터</span></div>
+<div><b>2019</b><strong>GPT-2</strong><span>15억</span></div>
+<div class="hot"><b>2020</b><strong>GPT-3</strong><span>1,750억 · 96층 · d<sub>model</sub> 12,288 · 컨텍스트 2,048 · 학습 토큰 약 3,000억</span></div>
+<div><b>2022</b><strong>InstructGPT</strong><span>RLHF로 지시 따르기 정렬 → ChatGPT</span></div>
+<div><b>지금</b><strong>gemma4:31b</strong><span>약 310억 · 사내 서버 · 컨텍스트 131,072</span></div>
+</div>
+<div class="w2-tpe" style="margin-top:26px">
+<div><b>Few-shot</b><span>예시 몇 개를 프롬프트에 넣으면 기울기 갱신 없이 작업 수행</span></div>
+<div><b>Scaling Law</b><span>손실이 파라미터 · 데이터 · 연산량의 거듭제곱 법칙으로 감소</span><em>L(N) ∝ N<sup>−α</sup></em></div>
+<div><b>한계</b><span>사실 오류(hallucination) · 계산 · 최신 정보 → 도구 · 데이터 연결 (3~6주차)</span></div>
+</div>
+</div>
+<div class="w2-cite"><b>참고</b> Radford et al. (2018, 2019) · Brown et al., “Language Models are Few-Shot Learners” (NeurIPS 2020) · Kaplan et al., “Scaling Laws for Neural Language Models” (2020) · Ouyang et al., InstructGPT (NeurIPS 2022)</div>
+<div class="subline"><span>LLM / GPT-3</span><span class="page">15 / 23</span></div>
+</section><section aria-label="16 / 23, 정리: 같은 틀로 보기" class="slide paper" data-time="1분" data-title="정리: 같은 틀로 보기">
+<div class="topline"><span>14 / SUMMARY</span><span>ONE FRAMEWORK</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">SUMMARY / 정리</div><h2>정리: 가설 공간 · 손실 · 최적화</h2><p class="lede">모든 방법은 “어떤 모양의 f를 · 무엇을 기준으로 · 어떻게 찾는가”의 조합입니다.</p></div>
+<div class="map w2-sum ac"><table><thead><tr><th>방법</th><th>가설 공간 f<sub>θ</sub></th><th>손실 · 학습 기준</th><th>최적화</th><th>업무 예</th></tr></thead><tbody>
+<tr><td>선형회귀</td><td><span class="m"><i>w</i><sup>⊤</sup><i>x</i> + <i>b</i></span></td><td>MSE</td><td>정규방정식 · 경사하강법</td><td>사용 횟수 → 마모량</td></tr>
+<tr><td>결정 트리</td><td>축에 평행한 분할의 조합</td><td>Gini · 엔트로피</td><td>탐욕적 분할</td><td>공정 조건 → 불량 여부</td></tr>
+<tr><td>CNN</td><td>합성곱 · 풀링 층의 합성</td><td>교차 엔트로피</td><td>역전파 + SGD</td><td>SEM 이미지 → 정상 / 불량</td></tr>
+<tr><td>Transformer · LLM</td><td>Self-Attention 층의 합성</td><td>다음 토큰 교차 엔트로피</td><td>역전파 + Adam</td><td>질문 → 답변 · 요약</td></tr>
+</tbody></table>
+<div class="foot">공통 목표: 학습 데이터의 손실이 아니라 처음 보는 데이터에서의 기대 위험을 줄이는 것(일반화)</div></div>
+</div>
+<div class="subline"><span>SUMMARY / 정리</span><span class="page">16 / 23</span></div>
+</section><section aria-label="17 / 23, 참고 문헌" class="slide white" data-time="1분" data-title="참고 문헌">
+<div class="topline"><span>15 / REFERENCES</span><span>FURTHER READING</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">REFERENCES / 참고 문헌</div><h2>참고 문헌</h2><p class="lede">더 깊이 보고 싶다면 — 교과서 3권과 주요 논문</p></div>
+<div class="w2-refs">
+<div>T. Mitchell. <i>Machine Learning</i>. McGraw-Hill, 1997.</div>
+<div>D. Rumelhart, G. Hinton, R. Williams. Learning representations by back-propagating errors. <i>Nature</i>, 1986.</div>
+<div>T. Hastie, R. Tibshirani, J. Friedman. <i>The Elements of Statistical Learning</i>. Springer, 2009.</div>
+<div>Y. LeCun et al. Gradient-based learning applied to document recognition. <i>Proc. IEEE</i>, 1998.</div>
+<div>C. Bishop. <i>Pattern Recognition and Machine Learning</i>. Springer, 2006.</div>
+<div>A. Krizhevsky, I. Sutskever, G. Hinton. ImageNet classification with deep CNNs. <i>NeurIPS</i>, 2012.</div>
+<div>I. Goodfellow, Y. Bengio, A. Courville. <i>Deep Learning</i>. MIT Press, 2016.</div>
+<div>A. Vaswani et al. <b>Attention Is All You Need</b>. <i>NeurIPS</i>, 2017.</div>
+<div>L. Breiman et al. <i>Classification and Regression Trees</i>. 1984.</div>
+<div>T. Brown et al. <b>Language Models are Few-Shot Learners</b>. <i>NeurIPS</i>, 2020.</div>
+<div>D. Kingma, J. Ba. Adam: A method for stochastic optimization. <i>ICLR</i>, 2015.</div>
+<div>J. Kaplan et al. Scaling laws for neural language models. arXiv:2001.08361, 2020.</div>
+</div>
+</div>
+<div class="subline"><span>REFERENCES / 참고 문헌</span><span class="page">17 / 23</span></div>
+</section><section aria-label="18 / 23, 휴식" class="slide dark setup-opening" data-time="10분" data-title="휴식">
+<div class="topline"><span>BREAK</span><span>10 MINUTES</span></div>
+<div class="setup-accent"></div>
+<div class="slide-inner">
+<div class="opening-label">BREAK / 10 MIN</div>
+<h2>10분 휴식</h2>
+<p class="opening-subtitle">쉬는 동안 실습 준비를 해 두면 바로 시작할 수 있습니다.</p>
+<div class="opening-divider"></div>
+<div class="opening-phases"><span><b>01</b> DAL 폴더 Pull</span><span class="chev">→</span><span><b>02</b> week2\practice 열기</span><span class="chev">→</span><span><b>03</b> python --version 확인</span></div>
+</div>
+<div class="subline"><span>BREAK / 휴식</span><span class="page">18 / 23</span></div>
+</section><section aria-label="19 / 23, 실습: 직접 돌려 보는 AI 원리" class="slide paper" data-time="2분" data-title="실습: 직접 돌려 보는 AI 원리">
+<div class="topline"><span>16 / LAB</span><span>HANDS-ON</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB / OVERVIEW</div><h2>실습: 수식을 직접 돌려 보기</h2><p class="lede">설명에서 본 세 가지 식을 직접 움직여 봅니다. 설치할 것은 없습니다.</p></div>
+<div class="lab3">
+<div class="card"><div class="step">① θ ← θ − η∇ℒ</div><h3>경사하강법</h3><code>gradient-descent.html</code><p>w, b를 손으로 맞춰 보고 학습률 η를 바꾸며<br/>수렴 · 느린 수렴 · 발산 비교</p></div>
+<div class="card mid"><div class="step">② S = Σ I · K</div><h3>합성곱 필터</h3><code>cnn-filter.html</code><p>필터 K를 바꾸며 특징 지도 관찰<br/>클릭한 위치의 원소별 곱의 합 확인</p></div>
+<div class="card"><div class="step">③ P(xₜ | x&lt;ₜ)</div><h3>다음 토큰 분포</h3><code>next_token.py</code><p>gemma4:31b의 상위 후보와 확률<br/>temperature에 따른 샘플링 차이</p></div>
+</div>
+<div class="lab-path"><b>자료 위치</b><code>DAL\week2\practice</code><span>①② 브라우저로 열기 · ③ VS Code 터미널에서 실행</span></div>
+</div>
+<div class="subline"><span>LAB / 개요</span><span class="page">19 / 23</span></div>
+</section><section aria-label="20 / 23, 실습 ① 경사하강법" class="slide white" data-time="7분" data-title="실습 ① 경사하강법">
+<div class="topline"><span>17 / LAB</span><span>GRADIENT DESCENT</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB ① / 경사하강법</div><h2>실습 ① 경사하강법</h2><p class="lede">gradient-descent.html을 더블클릭해 브라우저로 엽니다.</p></div>
+<div class="lab-grid">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>손으로 맞춰 보기</strong><em>w · b 슬라이더로 MSE를 최대한 줄여 보기</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>자동 학습</strong><em>η = 0.01 → 손실 곡선이 단조 감소하는지</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>학습률 바꾸기</strong><em>η 최소 → 느린 수렴 · η ≥ 0.035 → 발산</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>해 비교</strong><em>수렴값 w ≈ 1.92, b ≈ 4.72 와 내가 찾은 값</em></div></div>
+</div>
+<div class="map"><div class="meta">확인할 점</div><table><tbody>
+<tr><td>손실</td><td>잔차(빨간 점선)의 제곱 평균 = MSE</td></tr>
+<tr><td>학습률</td><td>이 데이터에서 η ≈ 0.03까지 수렴, 0.035부터 발산</td></tr>
+<tr><td>수렴</td><td>기울기 → 0, 더 걸어도 손실이 줄지 않음</td></tr>
+</tbody></table><div class="foot">조건수(손실 곡면의 찌그러짐)가 크면 b가 w보다 천천히 수렴 — 정규화·Adam이 쓰이는 이유</div></div>
+</div>
+</div>
+<div class="subline"><span>LAB / 경사하강법</span><span class="page">20 / 23</span></div>
+</section><section aria-label="21 / 23, 실습 ② 합성곱 필터" class="slide paper" data-time="6분" data-title="실습 ② 합성곱 필터">
+<div class="topline"><span>18 / LAB</span><span>CONVOLUTION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB ② / 합성곱 필터</div><h2>실습 ② 합성곱 필터</h2><p class="lede">cnn-filter.html을 브라우저로 엽니다. 내 사진은 PC 안에서만 처리됩니다.</p></div>
+<div class="lab-grid">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>필터 바꿔 보기</strong><em>Sobel 세로 · 가로 · 라플라시안 · 평균 · 샤프닝</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>이미지 클릭</strong><em>그 위치의 Σ I(i+m, j+n)·K(m, n) 계산 확인</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>ReLU · 최대 풀링</strong><em>합성곱 → 활성화 → 풀링 = CNN 한 블록</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>필터 직접 설계</strong><em>대각선 흠집만 반응하는 K 만들기</em></div></div>
+</div>
+<div class="map"><div class="meta">확인할 점</div><table><tbody>
+<tr><td>Sobel</td><td>밝기의 수평·수직 기울기 근사</td></tr>
+<tr><td>라플라시안</td><td>2차 미분 근사 — 모든 방향 경계</td></tr>
+<tr><td>풀링</td><td>해상도 ½, 작은 위치 이동에 강건</td></tr>
+</tbody></table><div class="foot">CNN은 이런 K를 사람이 아니라 역전파로 학습합니다</div></div>
+</div>
+</div>
+<div class="subline"><span>LAB / 합성곱 필터</span><span class="page">21 / 23</span></div>
+</section><section aria-label="22 / 23, 실습 ③ 다음 토큰 분포" class="slide white" data-time="9분" data-title="실습 ③ 다음 토큰 분포">
+<div class="topline"><span>19 / LAB</span><span>NEXT TOKEN</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB ③ / 다음 토큰 분포</div><h2>실습 ③ 다음 토큰 확률 분포</h2><p class="lede">VS Code 터미널에서 실행합니다. 사내 Ollama 서버(gemma4:31b)의 logprobs를 그대로 보여 줍니다.</p></div>
+<div class="lab-grid lab-setup">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>상위 후보와 확률</strong><em>p = exp(logprob) · 1등과 2등의 차이는?</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>엔트로피가 높은 위치</strong><em>“특별시” 49.8% vs “입니다” 49.1%</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>temperature 샘플링</strong><em>T = 0 → 결정적 · T = 1.2 → 매번 다른 문장</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>도메인 문장</strong><em>예: “절곡기 불량의 주요 원인은”</em></div></div>
+</div>
+<div class="lab-cmd"><div class="term-top">POWERSHELL</div>
+<pre>cd "$HOME\Documents\DAL\week2\practice"
+
+<span class="c"># 다음 토큰 상위 후보와 확률</span>
+python next_token.py "오늘 아침 출근길에 비가 와서 나는" --steps 3
+
+<span class="c"># 확률이 거의 같은 경우</span>
+python next_token.py "대한민국의 수도는" --steps 2
+
+<span class="c"># temperature를 높여 세 번 샘플링</span>
+python next_token.py "우리 팀의 다음 프로젝트 이름은" --temperature 1.2 --runs 3</pre>
+<button class="copy" data-copy="cd &quot;$HOME\Documents\DAL\week2\practice&quot;
+
+# 다음 토큰 상위 후보와 확률
+python next_token.py &quot;오늘 아침 출근길에 비가 와서 나는&quot; --steps 3
+
+# 확률이 거의 같은 경우
+python next_token.py &quot;대한민국의 수도는&quot; --steps 2
+
+# temperature를 높여 세 번 샘플링
+python next_token.py &quot;우리 팀의 다음 프로젝트 이름은&quot; --temperature 1.2 --runs 3">명령어 복사</button></div>
+</div>
+</div>
+<div class="subline"><span>LAB / 다음 토큰 분포</span><span class="page">22 / 23</span></div>
+</section><section aria-label="23 / 23, 마무리 / 3주차 예고" class="slide dark next" data-time="1분" data-title="마무리 / 3주차 예고">
+<div class="topline"><span>20 / NEXT WEEK</span><span>AI STUDY 2026</span></div>
+<div aria-hidden="true" class="big-number">03</div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">NEXT / WEEK 03</div><h2>컴퓨터와<br/>대화하기 ①</h2><p class="topics">GUI · CLI · Shell · SSH</p></div>
+<div class="endcheck"><span>경사하강법</span><span>합성곱 필터</span><span>다음 토큰 분포</span></div>
+<div class="next-note">다음 주 시작 전: DAL 폴더에서 최신 자료 Pull</div>
+</div>
+<div class="subline"><span>NEXT / 3주차</span><span class="page">23 / 23</span></div>
+</section></div>
+</main>
+<div aria-hidden="true" class="progress"><div class="bar" id="progressBar"></div></div>
+<nav aria-label="발표 조작" class="nav">
+<div class="nav-left"><span class="status-dot"></span> AI STUDY   /   WEEK 01</div>
+<div class="nav-center"><button id="prev" title="이전 슬라이드: ←">← 이전</button><div class="count" id="count">01 / 23</div><button id="next" title="다음 슬라이드: → 또는 Space">다음 →</button></div>
+<div class="nav-right"><button id="overviewBtn" title="목차 보기: O">목차</button><button class="mobilehide" id="printBtn" title="인쇄 / PDF 저장">인쇄</button><button id="fullBtn" title="전체 화면: F">전체 화면 ↗</button></div>
+</nav>
+<div aria-label="슬라이드 목차" aria-modal="true" class="overview" id="overview" role="dialog">
+<h2>슬라이드 목차</h2><div class="subtitle">선택하면 해당 슬라이드로 이동합니다.</div><button class="close" id="closeOverview">닫기 ×</button><div class="grid" id="tiles"></div>
+</div>
+<div aria-live="polite" class="toast" id="toast" role="status">클립보드에 복사했습니다</div>
+<script>
+(() => {
+ 'use strict';
+ const slides=[...document.querySelectorAll('.slide')];
+ const viewport=document.querySelector('.viewport'), deck=document.getElementById('deck');
+ const btnPrev=document.getElementById('prev'), btnNext=document.getElementById('next');
+ const overview=document.getElementById('overview'), tiles=document.getElementById('tiles');
+ let index=0, toastTimer=0;
+ function resize(){let w=viewport.clientWidth,h=viewport.clientHeight;deck.style.setProperty('--scale',Math.min(w/1440,h/810));}
+ function show(i,updateHash=true){index=Math.max(0,Math.min(i,slides.length-1)); slides.forEach((el,j)=>{el.classList.toggle('active',j===index);el.setAttribute('aria-hidden',j===index?'false':'true')});document.getElementById('count').textContent=`${String(index+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}`; document.getElementById('progressBar').style.width=((index+1)/slides.length*100)+'%'; btnPrev.disabled=index===0;btnNext.disabled=index===slides.length-1; if(updateHash)history.replaceState(null,'','#'+(index+1)); tiles.querySelectorAll('.tile').forEach((el,j)=>el.classList.toggle('current',j===index)); document.title=`${String(index+1).padStart(2,'0')} · ${slides[index].dataset.title} | AI STUDY`;}
+ function openOverview(){overview.classList.add('open');document.getElementById('closeOverview').focus()}
+ function closeOverview(){overview.classList.remove('open')}
+ function notify(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2100)}
+ for(const [i,slide] of slides.entries()){const el=document.createElement('button');el.className='tile';el.innerHTML=`<span class="slide-no">${String(i+1).padStart(2,'0')} / ${String(slides.length).padStart(2,'0')}</span><span class="title"></span><span class="caption"></span>`;el.querySelector('.title').textContent=slide.dataset.title;el.querySelector('.caption').textContent=slide.dataset.time;el.addEventListener('click',()=>{show(i);closeOverview()});tiles.appendChild(el)}
+ btnPrev.addEventListener('click',()=>show(index-1));btnNext.addEventListener('click',()=>show(index+1));
+ document.getElementById('overviewBtn').addEventListener('click',openOverview);document.getElementById('closeOverview').addEventListener('click',closeOverview);
+ document.getElementById('fullBtn').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(e){notify('전체 화면을 시작할 수 없습니다')}});
+ document.addEventListener('fullscreenchange',()=>{document.getElementById('fullBtn').textContent=document.fullscreenElement?'전체 화면 종료':'전체 화면 ↗';setTimeout(resize,80)});
+ document.getElementById('printBtn').addEventListener('click',()=>window.print());
+ document.querySelectorAll('[data-copy]').forEach(el=>el.addEventListener('click',async()=>{let str=el.dataset.copy;try{if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(str);}else{const temp=document.createElement('textarea');temp.value=str;document.body.appendChild(temp);temp.select();document.execCommand('copy');temp.remove()}notify('복사 완료: '+str);}catch(e){notify('복사에 실패했습니다. 텍스트를 직접 선택해 주세요.')}}));
+ window.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;if(overview.classList.contains('open')){if(e.key==='Escape'||e.key.toLowerCase()==='o')closeOverview();return}const t=e.target.tagName.toLowerCase();if(t==='input'||t==='textarea')return;if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(index+1)}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(index-1)}else if(e.key==='Home'){e.preventDefault();show(0)}else if(e.key==='End'){e.preventDefault();show(slides.length-1)}else if(e.key.toLowerCase()==='o'){e.preventDefault();openOverview()}else if(e.key.toLowerCase()==='f'){e.preventDefault();document.getElementById('fullBtn').click()}});
+ let touchX=null; viewport.addEventListener('touchstart',e=>{touchX=e.changedTouches[0]?.screenX??null},{passive:true});viewport.addEventListener('touchend',e=>{if(touchX===null)return;let dx=(e.changedTouches[0]?.screenX??touchX)-touchX;if(Math.abs(dx)>60)show(index+(dx<0?1:-1));touchX=null},{passive:true});
+ window.addEventListener('resize',resize);window.addEventListener('hashchange',()=>{let h=parseInt(location.hash.slice(1),10);if(Number.isInteger(h))show(h-1,false)});
+ let initial=Number.parseInt(location.hash.slice(1),10);show(initial>0?initial-1:0,false);resize();
+})();
+</script>
+</body>
+</html>

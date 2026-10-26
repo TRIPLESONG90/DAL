@@ -350,18 +350,21 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .map .foot {margin-top:12px;font-size:14px;color:#9699A1}
 
 /* WRAP-UP: PROBLEM → CRUD → SKILL */
-.wrap3 {display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:8px;margin-top:34px;align-items:stretch}
-.wrap3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.wrap3 {display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;gap:8px;margin-top:30px;align-items:stretch}
+.wrap3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:18px 22px;display:flex;flex-direction:column}
 .wrap3 .card.mid {background:#3B2528;border-color:#7E3B3C;border-top-color:var(--red)}
-.wrap3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
-.wrap3 h3 {font-size:26px;color:#F7F7F9;line-height:1.25}
-.wrap3 .q {font-size:16px;color:#E6D4D5}
-.wrap3 pre {margin:0;background:#111317;padding:10px 12px;font:500 13px/1.6 var(--mono);color:#E6E8EA;white-space:pre-wrap}
-.wrap3 pre b {color:var(--red);font-weight:600}
-.wrap3 ul {list-style:none;margin:0;padding:0;font-size:15px;line-height:1.7;color:#C3C6CC}
-.wrap3 ul b {color:#F6F6F7;font-weight:600;font-family:var(--mono);font-size:14px}
+.wrap3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.06em}
+.wrap3 h3 {font-size:25px;color:#F7F7F9;line-height:1.3;margin-top:8px}
+.wrap3 .like {margin-top:6px;font-size:15px;color:#B6B9C0}
+.wrap3 .like b {color:#F6F6F7;font-weight:600}
+.wrap3 .ex {margin-top:12px;display:grid;gap:6px}
+.wrap3 .ex div {display:grid;grid-template-columns:88px 1fr;gap:10px;align-items:baseline;font-size:16px;color:#E6E8EA;background:rgba(0,0,0,.22);padding:7px 10px}
+.wrap3 .ex div span:first-child {color:#9699A1;font-size:14px}
+.wrap3 .week {margin-top:auto;padding-top:12px;font-size:14px;color:#9699A1}
+.wrap3 .week b {color:var(--red);font-weight:650}
+.wrap3 .card.mid .ex div {grid-template-columns:112px 1fr}
 .wrap3 .arrow {align-self:center;text-align:center;color:var(--red);font-size:30px;font-weight:640}
-.wrap-note {margin-top:18px;padding:14px 20px;border-left:4px solid var(--red);background:var(--surface);font-size:18px;color:#E6E8EA}
+.wrap-note {margin-top:16px;padding:14px 20px;border-left:4px solid var(--red);background:var(--surface);font-size:19px;color:#E6E8EA}
 .wrap-note b {color:var(--red)}
 
 /* ROUTINE */
@@ -683,7 +686,7 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="hermes-grid">
 <div class="lab-list">
 <div class="lab-step"><span class="index">01</span><div><strong>첫 실행</strong><em>온보딩에서 <b>Choose provider later</b> 선택</em></div></div>
-<div class="lab-step"><span class="index">02</span><div><strong>Settings → Providers → Custom Endpoints</strong><em>Base URL <code>http://25.25.25.116:11434/v1</code> · API Key 비움</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>Settings → Providers → Custom Endpoints</strong><em>Base URL <code>http://25.25.25.201:11435/v1</code> · API Key 비움</em></div></div>
 <div class="lab-step"><span class="index">03</span><div><strong>Settings → Model → Main model</strong><em><code>gemma4:31b</code> 선택 후 Apply</em></div></div>
 </div>
 <div class="privacy"><div class="meta">DATA PROTECTION / 데이터 보호</div>
@@ -854,26 +857,26 @@ Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills">명령어 �
 </div>
 </div>
 <div class="subline"><span>DEMO / 자동 입고</span><span class="page">25 / 28</span></div>
-</section><section aria-label="26 / 28, 문제 정의 → CRUD 앱 → Skill화" class="slide paper" data-time="3분" data-title="문제 정의 → CRUD 앱 → Skill화">
-<div class="topline"><span>23 / WRAP-UP</span><span>PROBLEM → CRUD → SKILL</span></div>
+</section><section aria-label="26 / 28, 스터디 목표: 내 업무를 Agent로" class="slide paper" data-time="3분" data-title="스터디 목표: 내 업무를 Agent로">
+<div class="topline"><span>23 / GOAL</span><span>PROBLEM → CRUD → SKILL</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">WRAP-UP / 정리</div><h2>문제 정의 → CRUD 앱 → Skill화</h2><p class="lede">재고관리 예제로 본 업무 자동화 Agent를 만드는 순서</p></div>
+<div class="headline"><div class="section-tag">GOAL / 스터디 목표</div><h2>문제 정의 → CRUD 앱 → Skill화</h2><p class="lede">어떤 업무든 같은 순서로 — 기록할 것을 정하고, 다루는 앱을 만들고, 사용법을 Skill로 남깁니다.</p></div>
 <div class="wrap3">
-<div class="card"><div class="step">01 문제 정의</div><h3>DB 스키마 설계</h3><div class="q">무엇을 기록해야 하는가</div>
-<pre><b>품목</b>  name · qty · min · unit
-<b>기록</b>  time · action · name
-      qty · before → after · note</pre>
-<ul><li>안전재고 · 단위 · 문서 번호까지 정해 두기</li></ul></div>
+<div class="card"><div class="step">01 문제 정의 · DB 설계</div><h3>내 업무에서 무엇을 기록하나?</h3><div class="like">비유: <b>엑셀 표의 칸 정하기</b></div>
+<div class="ex"><div><span>재고</span><span>품목 · 수량 · 안전재고</span></div><div><span>설비 점검</span><span>설비 · 점검일 · 결과</span></div><div><span>시험 · 측정</span><span>시료 · 조건 · 측정값</span></div></div>
+<div class="week">배우는 주차 <b>4주차</b> DB · SQL</div></div>
 <div aria-hidden="true" class="arrow">→</div>
-<div class="card mid"><div class="step">02 CRUD 앱 작성</div><h3>AI Coding으로 구현</h3><div class="q">데이터를 다루는 기능과 규칙</div>
-<ul><li><b>C</b> add · <b>R</b> list · search · read · history</li><li><b>U</b> in · out · min · <b>D</b> remove</li><li>재고 부족 출고 · 같은 문서 중복 입고는 앱이 거부</li><li>사람은 웹 화면, 에이전트는 명령줄</li></ul></div>
+<div class="card mid"><div class="step">02 CRUD 앱 작성</div><h3>그 기록을 다루는 도구</h3><div class="like">비유: <b>그 표를 쓰는 프로그램</b> (AI가 작성)</div>
+<div class="ex"><div><span>만들기 · 읽기</span><span>등록 · 검색 · 조회</span></div><div><span>고치기 · 지우기</span><span>수정 · 삭제</span></div><div><span>쓰는 사람</span><span>사람은 화면, 에이전트는 API</span></div></div>
+<div class="week">배우는 주차 <b>6주차</b> Tool · MCP · <b>9주차</b> AI Coding</div></div>
 <div aria-hidden="true" class="arrow">→</div>
-<div class="card"><div class="step">03 Skill화</div><h3>사용법을 절차로</h3><div class="q">언제 · 어떤 순서로 · 어떤 규칙으로</div>
-<ul><li>검색 → 되묻기 → 점검 → 실행 → 보고</li><li>명세서: 읽기 → 중복 확인 → 맞추기 → 승인 → 입고</li><li>삭제 · 대량 변경은 먼저 확인</li></ul></div>
+<div class="card"><div class="step">03 Skill화</div><h3>누가 써도 같은 방식으로</h3><div class="like">비유: <b>신입에게 주는 업무 매뉴얼</b></div>
+<div class="ex"><div><span>언제</span><span>어떤 요청에 이 업무를 하는지</span></div><div><span>순서</span><span>확인 → 실행 → 보고</span></div><div><span>규칙</span><span>시스템 숫자만 · 위험하면 확인</span></div></div>
+<div class="week">배우는 주차 <b>7–8주차</b> Agentic AI · Skills</div></div>
 </div>
-<div class="wrap-note"><b>스키마가 정해지면</b> 앱은 AI가 만들고, <b>앱이 생기면</b> 사용법은 Skill이 정리합니다. 지켜야 할 규칙은 앱에, 판단은 Skill에 둡니다.</div>
+<div class="wrap-note">목표는 <b>자연어 한마디로 내 업무를 처리하는 Agent</b>입니다. 오늘 재고관리 예제는 이 세 단계를 한 번에 보여 준 것입니다.</div>
 </div>
-<div class="subline"><span>WRAP-UP / 정리</span><span class="page">26 / 28</span></div>
+<div class="subline"><span>GOAL / 스터디 목표</span><span class="page">26 / 28</span></div>
 </section><section aria-label="27 / 28, 앞으로 자료 받는 방법" class="slide white" data-time="2분" data-title="앞으로 자료 받는 방법">
 <div class="topline"><span>24 / ROUTINE</span><span>HOW WE WORK</span></div>
 <div class="slide-inner">
@@ -890,7 +893,7 @@ Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills">명령어 �
 <div class="topline"><span>25 / NEXT WEEK</span><span>AI STUDY 2026</span></div>
 <div aria-hidden="true" class="big-number">02</div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">NEXT / WEEK 02</div><h2>AI와 LLM은<br/>어떻게 작동할까?</h2><p class="topics">AI · 머신러닝 · 딥러닝 · LLM · Transformer</p></div>
+<div class="headline"><div class="section-tag">NEXT / WEEK 02</div><h2>AI는 어떻게<br/>배우는가?</h2><p class="topics">AI &gt; ML &gt; DL &gt; LLM · 선형회귀 · CNN · Transformer</p></div>
 <div class="endcheck"><span>DAL Clone</span><span>자료 열기</span><span>Git Pull</span></div>
 <div class="next-note">다음 주 시작 전: DAL 폴더에서 최신 자료 Pull</div>
 </div>
