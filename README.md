@@ -5,7 +5,7 @@ AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9�
 > 각자의 아이디어 → AI로 구현 → Skill → 에이전트
 > 직무·전공에 관계없이, 각자의 관심사와 업무에 적용할 수 있는 활용 구조를 다룹니다.
 
-## 커리큘럼
+## 9주 로드맵
 
 | 주차 | 주제 | 키워드 |
 |---|---|---|
@@ -28,21 +28,21 @@ AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9�
 DAL/
 ├── README.md
 └── week1/
-    └── week1.html   # 1주차 강의 슬라이드 (오리엔테이션)
+    └── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
 ```
 
-매주 강의 자료가 `weekN/` 폴더로 추가됩니다.
+매주 스터디 자료가 `weekN/` 폴더로 추가됩니다.
 
 ## 1주차 — 오리엔테이션
 
-[week1/week1.html](week1/week1.html) · 40분 · 슬라이드 19장
+[week1/week1.html](week1/week1.html) · 40분 · 슬라이드 21장
 
-1. **강의 목표** — 9주 커리큘럼, 배우는 내용, 최종 활용 방향
+1. **과정 소개** — 9주 로드맵, 배우는 내용, 최종 활용 방향
 2. **실제 활용 사례**
    - CASE 01: 절곡기 공정 데이터 조회 에이전트 (“44호기 불량률 알려줘.”)
    - CASE 02: DLStudio Skills × Hermes 연동 (“TG SEM 학습 잘되고 있어?”)
    - 구축 과정 3단계: AI로 시스템 만들기 → Skill화 → AI 에이전트 연결
-3. **VS Code · Git 기초 설정** — 설치 확인 → DAL 저장소 Clone → Git Pull
+3. **VS Code · Git 기초 설정** — 설치 확인 → 계정·초대 확인 → DAL 저장소 Clone → Git Pull → 막힐 때 확인할 것
 
 ### 슬라이드 보는 법
 
@@ -89,7 +89,7 @@ git clone https://github.com/TRIPLESONG90/DAL.git
 
 ### 3. 매주: Pull
 
-새 강의 자료가 올라오면 최신 파일을 받습니다.
+새 자료가 올라오면 최신 파일을 받습니다.
 
 - **메뉴로**: Source Control → `···` → **Pull**
 - **명령어로**: DAL 폴더에서 터미널을 열고
@@ -102,9 +102,22 @@ git pull origin main
 
 > Clone = 최초 1회 / Pull = 이후 업데이트
 
+원본 파일은 직접 고치지 말고, 실습할 때는 DAL 폴더 밖으로 복사해서 사용하세요. 원본을 고치면 다음 Pull에서 충돌이 납니다.
+
+### 막힐 때
+
+| 증상 | 해결 |
+|---|---|
+| `'git' is not recognized` | Git 설치 후 VS Code를 완전히 종료했다가 다시 실행 |
+| `Repository not found` / 로그인 반복 | 초대를 수락했는지, 초대받은 계정으로 로그인했는지 확인 |
+| `Your local changes ... would be overwritten` | 필요한 내용은 밖에 복사한 뒤 Source Control → Discard Changes 후 다시 Pull |
+| Explorer가 비어 있음 | File → Open Folder로 Clone한 DAL 폴더 열기 |
+
 ## 매주 진행 방식
 
-1. **진행자** — DAL 저장소에 강의 자료와 예제 코드 업로드
+2주차부터 매주 60분, **설명 25분 → 휴식 10분 → 실습 25분**으로 진행합니다.
+
+1. **진행자** — DAL 저장소에 스터디 자료와 예제 코드 업로드
 2. **참여자** — VS Code에서 DAL 폴더를 열고 Pull 실행
 3. **실습** — 자료 확인 · 예제 실행 · 결과 비교
 
