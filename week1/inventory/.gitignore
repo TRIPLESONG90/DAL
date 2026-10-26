@@ -1,0 +1,5 @@
+# 실행하면 생기는 데이터 파일 (각자 PC에서만 사용)
+inventory.json
+*.tmp
+__pycache__/
+.claude/

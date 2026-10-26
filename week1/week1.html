@@ -130,6 +130,8 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .case-detail .detail-n {font-size:17px;color:var(--red);font-weight:680}
 .case-detail strong {display:block;color:#F8F8FA;font-size:22px;line-height:1.3}
 .case-detail p {margin-top:5px;color:#B7BCC3;font-size:16px;line-height:1.4}
+.case-details.stack .case-detail {padding:11px 0}
+.case-details.stack .case-detail strong {font-size:20px}
 .case-detail-foot {font-size:15px;line-height:1.4;color:#B5BAC3;padding:13px 14px;background:#282A2F;border-left:3px solid var(--red)}
 
 /* 08 THREE STEPS */
@@ -146,6 +148,26 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .step-overview-arrow {align-self:center;color:var(--red);font-size:32px;font-weight:640;text-align:center;line-height:1}
 .step-overview-note {margin-top:18px;padding:19px 21px;border-left:3px solid var(--red);background:var(--surface);display:flex;align-items:center;gap:22px;color:#D6D8DC;font-size:17px;line-height:1.4}
 .step-overview-note .note-label {color:var(--red);font-weight:650;white-space:nowrap;font-size:16px}
+
+/* SKILL AS THE BUNDLE */
+.bundle-map {margin-top:40px;display:grid;grid-template-columns:1fr 52px 1.1fr 52px .8fr;align-items:center;gap:8px}
+.bundle-parts {display:flex;flex-direction:column;gap:10px}
+.bundle-part {display:grid;grid-template-columns:172px 1fr;align-items:center;gap:10px;background:var(--surface);border:1px solid #42454A;padding:13px 18px}
+.bundle-part b {font-size:19px;color:#F6F6F7;font-weight:650}
+.bundle-part span {font-size:15px;color:#B7BABF}
+.bundle-arrow {color:var(--red);font-size:32px;font-weight:640;text-align:center;line-height:1}
+.bundle-skill {background:#3B2528;border:1px solid #7E3B3C;border-top:4px solid var(--red);padding:22px 26px;min-height:236px}
+.bundle-skill .meta,.bundle-agent .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.bundle-skill h3 {font-size:34px;margin-top:12px;color:#FAFAFB}
+.bundle-skill ul {list-style:none;margin:14px 0 0;padding:0;font-size:18px;line-height:1.75;color:#E6D4D5}
+.bundle-skill li:before {content:'✓';color:var(--red);margin-right:10px}
+.bundle-agent {background:var(--surface);border:1px solid #45474D;padding:22px 24px;min-height:236px;display:flex;flex-direction:column}
+.bundle-agent h3 {font-size:28px;line-height:1.2;margin-top:12px;color:#F6F6F8}
+.bundle-agent p {font-size:16px;line-height:1.5;margin-top:auto;color:#B8BBC1}
+.bundle-cases {margin-top:24px;border-top:1px solid var(--line)}
+.bundle-case {display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);font-size:18px;color:#B6B9C0}
+.bundle-case b {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.bundle-case strong {color:#F6F6F7;font-weight:600}
 
 /* 09 BUILD */
 .service-map {margin-top:49px;display:grid;grid-template-columns:220px 50px 252px 50px 252px 50px 1fr;align-items:stretch;gap:6px}
@@ -203,30 +225,43 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .arch-node h3 {font-size:42px;line-height:1.12;margin-top:28px;color:#F8F8F9}
 .arch-node p {font-size:20px;color:#C0C3C9;line-height:1.45;margin-top:18px}
 .arch-node .tag {position:absolute;bottom:28px;left:33px;font-size:15px;letter-spacing:.04em;color:var(--red)}
-.sync-box {position:relative;height:274px;display:flex;flex-direction:column;justify-content:center;gap:34px;align-items:center}
-.sync-line {width:175px;border-top:2px solid #A4A7AE;position:relative}
-.sync-line:after {content:'›';position:absolute;right:-5px;top:-30px;color:#A4A7AE;font-size:43px}
-.sync-label {font-size:19px;font-weight:640;color:#F5F5F6;margin-top:-23px}
+.sync-box {position:relative;height:274px;display:flex;flex-direction:column;justify-content:center;gap:16px;align-items:center}
+.sync-line {width:175px;height:2px;background:#A4A7AE;position:relative}
+.sync-line:after {content:'';position:absolute;right:1px;top:-5px;width:12px;height:12px;border-top:2px solid #A4A7AE;border-right:2px solid #A4A7AE;transform:rotate(45deg)}
+.sync-label {font-size:19px;font-weight:640;color:#F5F5F6}
 .architecture-foot {margin-top:34px;padding-top:23px;border-top:1px solid #505257;font-size:19px;color:#C1C4C8}
 .architecture-foot strong {color:#FBFBFB}
 .architecture-foot a {color:#f2f6f7;text-decoration:none;border-bottom:1px solid #8d9ca9}
 
 /* SETUP */
-.software-rows {margin-top:70px;border-top:1px solid var(--line)}
-.software-row {display:grid;grid-template-columns:120px 230px 1fr auto;align-items:center;min-height:103px;border-bottom:1px solid var(--line);gap:20px}
+.software-rows {margin-top:30px;border-top:1px solid var(--line)}
+.software-row {display:grid;grid-template-columns:120px 230px 1fr auto;align-items:center;min-height:64px;border-bottom:1px solid var(--line);gap:20px}
 .software-row .no {font-size:25px;font-weight:640;color:var(--red)}
 .software-row strong {font-size:26px;letter-spacing:-.03em;color:#F3F3F4}
 .software-row span {font-size:19px;color:#B0B4BA}
 .software-row a {font-size:17px;color:var(--red);text-decoration:none;border-bottom:1px solid #A04F4D;padding-bottom:4px}
-.code-strip {display:flex;align-items:center;justify-content:space-between;padding:26px 32px;margin-top:41px;background:var(--code);color:#f3f3f3}
+.code-strip {display:flex;align-items:center;justify-content:space-between;padding:16px 32px;margin-top:20px;background:var(--code);color:#f3f3f3}
 .code-strip pre {font:500 25px/1.5 var(--mono);margin:0;letter-spacing:-.025em}
 .code-strip + .note {margin-top:17px}
 .prompt-sign {color:#ff9da3}
 
+/* HERMES SETUP */
+.hermes-grid {display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:36px}
+.hermes-grid .lab-step {min-height:84px}
+.hermes-grid code {font:500 16px var(--mono);color:#F6F6F7;background:#2D2F33;padding:2px 6px}
+.privacy {background:var(--code);border-top:4px solid var(--red);padding:22px 26px;display:flex;flex-direction:column;gap:14px}
+.privacy .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.privacy ul {list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.privacy li {display:grid;grid-template-columns:24px 1fr;font-size:17px;line-height:1.45;color:#D6D8DC}
+.privacy li:before {content:'✓';color:var(--red);font-weight:700}
+.privacy li b {color:#F6F6F7;font-weight:600}
+.privacy li small {display:block;font-size:14px;color:#9699A1;margin-top:2px}
+.privacy .foot {margin-top:auto;font-size:14px;color:#9699A1;border-top:1px solid #33353A;padding-top:12px}
+
 /* CLONE */
-.lab-grid {display:grid;grid-template-columns:1.06fr .94fr;gap:32px;margin-top:53px}
+.lab-grid {display:grid;grid-template-columns:1.06fr .94fr;gap:32px;margin-top:36px}
 .lab-list {border-top:1px solid var(--line)}
-.lab-step {display:grid;grid-template-columns:54px 1fr;min-height:95px;gap:13px;padding:20px 5px;border-bottom:1px solid var(--line);align-items:center}
+.lab-step {display:grid;grid-template-columns:54px 1fr;min-height:88px;gap:13px;padding:20px 5px;border-bottom:1px solid var(--line);align-items:center}
 .lab-step .index {color:var(--red);font-size:23px;font-weight:650}
 .lab-step strong {font-size:21px;line-height:1.4;letter-spacing:-.025em;color:#F3F3F4}
 .lab-step em {font-size:17px;font-style:normal;color:#ADB1B8;display:block;margin-top:5px}
@@ -241,29 +276,29 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .terminal a {color:var(--red);font-size:15px;text-decoration:none;border-bottom:1px solid var(--red)}
 
 /* EXPLORER */
-.file-layout {display:grid;grid-template-columns:.83fr 1.17fr;gap:35px;margin-top:48px}
-.explorer {background:#25272B;border:1px solid var(--line);min-height:402px}
+.file-layout {display:grid;grid-template-columns:.83fr 1.17fr;gap:35px;margin-top:40px}
+.explorer {background:#25272B;border:1px solid var(--line)}
 .explorer-bar {background:#2E3034;border-bottom:1px solid var(--line);padding:18px 24px;color:#DEE0E4;font-weight:640;font-size:17px}
 .tree {padding:24px 27px;font:600 22px/2 var(--mono);color:#E3E4E7}
 .tree .sub {padding-left:35px;font-size:20px;color:#BABCC2}
 .tree .foldericon {color:var(--red);margin-right:12px}
 .tree .fileicon {color:#AFB2BA;margin-right:12px}
 .file-actions {display:flex;flex-direction:column;justify-content:space-between;gap:18px}
-.checkline {border-bottom:1px solid var(--line);padding:13px 0 24px}
+.checkline {border-bottom:1px solid var(--line);padding:8px 0 20px}
 .checkline .q {font-size:17px;color:var(--red);font-weight:640;letter-spacing:.1em}
-.checkline strong {font-size:25px;line-height:1.45;display:block;margin-top:13px;letter-spacing:-.035em;color:#F6F7F8}
+.checkline strong {font-size:23px;line-height:1.45;display:block;margin-top:13px;letter-spacing:-.035em;color:#F6F7F8}
 .callout {background:#342326;border-left:4px solid var(--red);padding:20px 24px;color:#E3B9B9;font-size:17px;line-height:1.55}
 
 /* PULL */
-.pull-steps {display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:57px}
-.pull-panel {min-height:225px;border:1px solid var(--line);padding:30px 33px;background:var(--surface)}
+.pull-steps {display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:40px}
+.pull-panel {min-height:170px;border:1px solid var(--line);padding:24px 33px;background:var(--surface)}
 .pull-panel .meta {color:var(--red);font-size:17px;font-weight:680;letter-spacing:.12em}
-.pull-panel h3 {font-size:33px;margin-top:25px;color:#F5F5F6}
+.pull-panel h3 {font-size:33px;margin-top:16px;color:#F5F5F6}
 .pull-panel p {font-size:21px;color:#B7BAC0;line-height:1.45;margin-top:16px}
-.pull-panel b {display:block;margin-top:20px;color:#E6E8EA;font-size:19px}
-.pull-code {margin-top:28px;display:flex;align-items:center;justify-content:space-between;background:var(--code);color:#fff;padding:27px 32px}
+.pull-panel b {display:block;margin-top:14px;color:#E6E8EA;font-size:19px}
+.pull-code {margin-top:20px;display:flex;align-items:center;justify-content:space-between;background:var(--code);color:#fff;padding:20px 32px}
 .pull-code code {font-family:var(--mono);font-size:28px}
-.pull-result {margin-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:18px;color:#B0B3BA}
+.pull-result {margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-size:18px;color:#B0B3BA}
 .pull-result b {color:#E0E2E5}
 
 .tree .sub.deep {padding-left:70px}
@@ -276,6 +311,58 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 .trouble-row small {display:block;font-size:15px;color:#9699A1;margin-top:4px}
 .trouble-row > span {font-size:19px;color:#B6B9C0;line-height:1.45}
 .trouble-row > span b {color:#F6F6F7;font-weight:600}
+
+/* LAB: INVENTORY AGENT */
+.lab3 {display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
+.lab3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:24px 26px;min-height:270px;display:flex;flex-direction:column}
+.lab3 .card.mid {background:#3B2528;border-color:#7E3B3C;border-top-color:var(--red)}
+.lab3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.lab3 h3 {font-size:30px;margin-top:14px;color:#F7F7F9}
+.lab3 code {align-self:flex-start;margin-top:12px;font:500 15px var(--mono);color:#F6F6F7;background:#1B1C1F;padding:4px 8px}
+.lab3 p {margin-top:auto;font-size:17px;line-height:1.55;color:#C3C6CC}
+.lab-path {margin-top:24px;display:flex;align-items:center;gap:16px;font-size:18px;color:#B6B9C0;border-top:1px solid var(--line);padding-top:20px}
+.lab-path code {font:500 17px var(--mono);color:#F6F6F7;background:var(--surface);padding:6px 10px}
+.lab-path b {color:var(--red)}
+.lab-grid.lab-setup {grid-template-columns:.86fr 1.14fr}
+.lab-cmd {background:var(--code);padding:22px 26px;display:flex;flex-direction:column;gap:12px}
+.lab-cmd .term-top {font-size:15px;color:#9c9c9c;font-weight:580;letter-spacing:.12em}
+.lab-cmd pre {margin:0;font:500 14px/1.75 var(--mono);color:#EEEEF0;white-space:pre-wrap;word-break:break-all}
+.lab-cmd pre .c {color:#8F949C}
+.lab-cmd .copy {align-self:flex-start;margin-top:auto}
+.try-list {margin-top:34px}
+.try-list .trouble-row {grid-template-columns:430px 1fr;min-height:64px;padding:12px}
+.try-list .trouble-row strong {font-size:20px}
+.try-note {margin-top:16px;padding:14px 20px;border-left:4px solid var(--red);background:#342426;font-size:17px;color:#DFB9B9}
+
+/* DEMO: STATEMENT → STOCK IN */
+.demo-grid {display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;margin-top:32px}
+.demo-grid .lab-step {min-height:68px;padding:12px 5px}
+.demo-grid .lab-step strong {font-size:19px}
+.demo-grid .lab-step em {font-size:15px}
+.demo-grid code {font:500 14px var(--mono);color:#F6F6F7;background:#2D2F33;padding:1px 5px}
+.map {background:var(--code);border-top:4px solid var(--red);padding:20px 22px}
+.map .meta {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em;margin-bottom:10px}
+.map table {width:100%;border-collapse:collapse;font-size:16px}
+.map th {text-align:left;color:#9699A1;font-weight:600;font-size:13px;padding:7px 8px;border-bottom:1px solid #33353A}
+.map td {padding:9px 8px;border-bottom:1px solid #2A2C30;color:#E6E8EA}
+.map td:first-child {font-family:var(--mono);font-size:14px;color:#C9CCD2}
+.map .ok {color:#9FD3A4} .map .ask {color:#FFD27A} .map .new {color:#FFB4AE}
+.map .foot {margin-top:12px;font-size:14px;color:#9699A1}
+
+/* WRAP-UP: PROBLEM → CRUD → SKILL */
+.wrap3 {display:grid;grid-template-columns:1fr 40px 1fr 40px 1fr;gap:8px;margin-top:34px;align-items:stretch}
+.wrap3 .card {background:var(--surface);border:1px solid #42454A;border-top:4px solid var(--red);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.wrap3 .card.mid {background:#3B2528;border-color:#7E3B3C;border-top-color:var(--red)}
+.wrap3 .step {color:var(--red);font-size:15px;font-weight:650;letter-spacing:.1em}
+.wrap3 h3 {font-size:26px;color:#F7F7F9;line-height:1.25}
+.wrap3 .q {font-size:16px;color:#E6D4D5}
+.wrap3 pre {margin:0;background:#111317;padding:10px 12px;font:500 13px/1.6 var(--mono);color:#E6E8EA;white-space:pre-wrap}
+.wrap3 pre b {color:var(--red);font-weight:600}
+.wrap3 ul {list-style:none;margin:0;padding:0;font-size:15px;line-height:1.7;color:#C3C6CC}
+.wrap3 ul b {color:#F6F6F7;font-weight:600;font-family:var(--mono);font-size:14px}
+.wrap3 .arrow {align-self:center;text-align:center;color:var(--red);font-size:30px;font-weight:640}
+.wrap-note {margin-top:18px;padding:14px 20px;border-left:4px solid var(--red);background:var(--surface);font-size:18px;color:#E6E8EA}
+.wrap-note b {color:var(--red)}
 
 /* ROUTINE */
 .ops-list {margin-top:65px;border-top:1px solid var(--line)}
@@ -347,7 +434,7 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <body>
 <main aria-label="AI 스터디 1주차 발표 화면" class="viewport">
 <div class="deck" id="deck">
-<section aria-label="1 / 21, 표지" class="slide dark cover active" data-time="1분" data-title="표지">
+<section aria-label="1 / 28, 표지" class="slide dark cover active" data-time="1분" data-title="표지">
 <div class="field"></div>
 <div class="topline"><span>AI STUDY <span class="sep"></span> WEEK 01</span><strong>2026</strong></div>
 <div class="slide-inner">
@@ -355,18 +442,18 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <h1>질문하는 AI에서<br/><span class="accent">일하는 AI로</span></h1>
 <p class="deckdesc">과정소개 · AI 활용 시연 · VS Code &amp; Git</p>
 </div>
-</section><section aria-label="2 / 21, 오늘 다룰 내용" class="slide dark today-agenda" data-time="1분" data-title="오늘 다룰 내용">
+</section><section aria-label="2 / 28, 오늘 다룰 내용" class="slide dark today-agenda" data-time="1분" data-title="오늘 다룰 내용">
 <div class="topline"><span>WEEK 01 / TODAY</span><span>40 MINUTES</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">TODAY'S AGENDA</div><h2>오늘의 내용</h2><p class="lede">스터디 방향을 공유하고, 실제 활용 사례를 본 뒤 개발 환경을 준비합니다.</p></div>
 <div class="today-items">
 <div class="today-item"><span class="today-number">01</span><div class="today-description"><h3>과정 소개</h3><p>9주 로드맵 · 배우는 내용 · 최종 활용 방향</p></div><span class="today-en">OBJECTIVE</span></div>
 <div class="today-item"><span class="today-number">02</span><div class="today-description"><h3>목표 상세 <span class="today-hint">— 실제 활용 예시 2개</span></h3><p>절곡기 공정 데이터 조회 에이전트 · DLStudio × Hermes 연동</p></div><span class="today-en">SHOWCASE</span></div>
-<div class="today-item"><span class="today-number">03</span><div class="today-description"><h3>VS Code·Git 기초 설정</h3><p>설치 확인 · 계정·초대 확인 · DAL 저장소 Clone · Git Pull</p></div><span class="today-en">HANDS-ON</span></div>
+<div class="today-item"><span class="today-number">03</span><div class="today-description"><h3>VS Code·Git 기초 설정</h3><p>VS Code · Git · Hermes 설치 · 계정·초대 확인 · DAL 저장소 Clone · Git Pull</p></div><span class="today-en">HANDS-ON</span></div>
 </div>
 </div>
-<div class="subline"><span>OVERVIEW / 오늘 할 일</span><span class="page">02 / 21</span></div>
-</section><section aria-label="3 / 21, AI 시스템 구축 원리" class="slide paper goal-slide" data-time="1분" data-title="AI 시스템 구축 원리">
+<div class="subline"><span>OVERVIEW / 오늘 할 일</span><span class="page">02 / 28</span></div>
+</section><section aria-label="3 / 28, AI 시스템 구축 원리" class="slide paper goal-slide" data-time="1분" data-title="AI 시스템 구축 원리">
 <div class="topline"><span>01 / INTRODUCTION</span><span>AI STUDY 2026</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">WHY WE STUDY</div><h2>AI Agent 시스템 구축 원리</h2><p class="lede">AI의 원리부터 컴퓨터/데이터/도구를 연결하는 방법까지</p></div>
@@ -377,8 +464,8 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="item"><div class="small-index">03 / BUILD</div><strong>직접 구현</strong><span>AI 에이전트 · AI Coding</span></div>
 </div>
 </div>
-<div class="subline"><span>INTRO / 목표</span><span class="page">03 / 21</span></div>
-</section><section aria-label="4 / 21, 과정 소개" class="slide paper" data-time="4분" data-title="과정 소개">
+<div class="subline"><span>INTRO / 목표</span><span class="page">03 / 28</span></div>
+</section><section aria-label="4 / 28, 과정 소개" class="slide paper" data-time="4분" data-title="과정 소개">
 <div class="topline"><span>02 / ROADMAP</span><span>9 WEEKS</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">LEARNING ROADMAP</div><h2>과정 소개</h2><p class="lede">AI 원리 → 컴퓨터·데이터 → LLM·도구 → Agentic AI → AI Coding</p></div>
@@ -403,8 +490,8 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 </div>
 </div>
-<div class="subline"><span>ROADMAP / 전체 과정</span><span class="page">04 / 21</span></div>
-</section><section aria-label="5 / 21, 기계개발3팀 Agent 구축 사례" class="slide paper" data-time="1분" data-title="기계개발3팀 Agent 구축 사례">
+<div class="subline"><span>ROADMAP / 전체 과정</span><span class="page">04 / 28</span></div>
+</section><section aria-label="5 / 28, 기계개발3팀 Agent 구축 사례" class="slide paper" data-time="1분" data-title="기계개발3팀 Agent 구축 사례">
 <div class="topline"><span>03 / FIELD CASES</span><span>DORCO · APPLICATIONS</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">TWO DEMONSTRATIONS</div><h2>기계개발3팀 Agent 구축 사례</h2><p class="lede">팀 업무를 위해 구축한 2가지 사례를 공유합니다.</p></div>
@@ -412,8 +499,8 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="example"><div class="kicker">CASE 01 / PRODUCTION DATA</div><div class="type">IT시스템 내장 챗봇</div><h3>절곡기 공정 데이터<br/>조회 에이전트</h3><div class="prompt">“44호기 어때?”</div><div class="desc">설비 데이터 · 검사 실적 · 불량률 조회</div></div>
 <div class="example"><div class="kicker">CASE 02 / DEEP LEARNING</div><div class="type">IT시스템 Skill Agent 연동</div><h3>딥러닝 모델 개발 플랫폼<br/>Skill화를 통한 Agent(Hermes) 연동</h3><div class="prompt">“TG SEM 학습 잘되고 있어?”</div><div class="desc">학습 진행 상태 · 성능 지표 · 실행 로그 확인</div></div>
 </div>
-</div><div class="subline"><span>FIELD CASES / 소개</span><span class="page">05 / 21</span></div>
-</section><section aria-label="6 / 21, 사례 1: 절곡기 공정 조회" class="slide white case-photo-slide" data-time="2분" data-title="사례 1: 절곡기 공정 조회">
+</div><div class="subline"><span>FIELD CASES / 소개</span><span class="page">05 / 28</span></div>
+</section><section aria-label="6 / 28, 사례 1: 절곡기 공정 조회" class="slide white case-photo-slide" data-time="2분" data-title="사례 1: 절곡기 공정 조회">
 <div class="topline"><span>04 / CASE 01</span><span>PRODUCTION DATA AGENT</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">CASE 01 / 직접 만든 서비스</div><h2>“44호기 어때?”</h2><p class="lede">AI 에이전트 × 절곡기 공정 데이터</p></div>
@@ -425,12 +512,12 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 <div class="shot-bottom"><span>PRODUCTION DATA / QUERY</span><span>실제 조회 결과는 해당 시스템에서 확인</span></div>
 </div>
-<div class="case-details"><div class="case-details-tag">AGENT FLOW / 작동 구조</div>
-<div class="case-detail"><div class="detail-n">01</div><div><strong>요청 해석</strong><p>44호기 · 조회 기간</p></div></div><div class="case-detail"><div class="detail-n">02</div><div><strong>데이터 조회</strong><p>공정/검사 데이터 API</p></div></div><div class="case-detail"><div class="detail-n">03</div><div><strong>결과 요약</strong><p>검사 수량 · 불량률 · 기준 기간</p></div></div>
+<div class="case-details stack"><div class="case-details-tag">AGENT STACK / 구성</div>
+<div class="case-detail"><div class="detail-n">01</div><div><strong>Agent 프레임워크</strong><p>LangGraph</p></div></div><div class="case-detail"><div class="detail-n">02</div><div><strong>로컬 LLM</strong><p>Ollama · gemma4:31b</p></div></div><div class="case-detail"><div class="detail-n">03</div><div><strong>Tool</strong><p>공정·검사 데이터 조회 API</p></div></div><div class="case-detail"><div class="detail-n">04</div><div><strong>Instructions</strong><p>System Prompt로 정의</p></div></div>
 <div class="case-detail-foot">LLM은 수치를 만들어내지 않고, 연결된 조회 도구의 결과를 설명합니다.</div>
 </div>
-</div></div><div class="subline"><span>CASE 01 / 공정 데이터</span><span class="page">06 / 21</span></div>
-</section><section aria-label="7 / 21, 사례 2: DLStudio·Hermes" class="slide white case-photo-slide" data-time="2분" data-title="사례 2: DLStudio·Hermes">
+</div></div><div class="subline"><span>CASE 01 / 공정 데이터</span><span class="page">06 / 28</span></div>
+</section><section aria-label="7 / 28, 사례 2: DLStudio·Hermes" class="slide white case-photo-slide" data-time="2분" data-title="사례 2: DLStudio·Hermes">
 <div class="topline"><span>05 / CASE 02</span><span>DLSTUDIO × HERMES</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">CASE 02 / 직접 만든 서비스</div><h2>“TG SEM 학습 잘되고 있어?”</h2><p class="lede">딥러닝 모델 개발 플랫폼 Skill화를 통한 Agent(Hermes) 연동</p></div>
@@ -442,23 +529,23 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 <div class="shot-bottom"><span>DLSTUDIO / HERMES</span><span>실제 조회 결과는 해당 시스템에서 확인</span></div>
 </div>
-<div class="case-details"><div class="case-details-tag">AGENT FLOW / 작동 구조</div>
-<div class="case-detail"><div class="detail-n">01</div><div><strong>작업 식별</strong><p>TG SEM 학습 실행</p></div></div><div class="case-detail"><div class="detail-n">02</div><div><strong>상태 조회</strong><p>DLStudio API · 로그/지표</p></div></div><div class="case-detail"><div class="detail-n">03</div><div><strong>결과 보고</strong><p>진행 상태 · 성능 · 오류 여부</p></div></div>
-<div class="case-detail-foot">Skill은 수행 절차를 정의하며, 실제 조회는 API·도구가 담당합니다.</div>
+<div class="case-details stack"><div class="case-details-tag">AGENT STACK / 구성</div>
+<div class="case-detail"><div class="detail-n">01</div><div><strong>Agent</strong><p>Hermes Agent</p></div></div><div class="case-detail"><div class="detail-n">02</div><div><strong>로컬 LLM</strong><p>Ollama · gemma4:31b</p></div></div><div class="case-detail"><div class="detail-n">03</div><div><strong>Tool</strong><p>DLStudio Python SDK · 코드 작성·실행</p></div></div><div class="case-detail"><div class="detail-n">04</div><div><strong>Skill</strong><p>SKILL.md + references 문서</p></div></div>
+<div class="case-detail-foot">Skill은 사용 설명서이고, 실제 작업은 에이전트가 작성한 SDK 코드가 수행합니다.</div>
 </div>
-</div></div><div class="subline"><span>CASE 02 / 학습 플랫폼</span><span class="page">07 / 21</span></div>
-</section><section aria-label="8 / 21, 구축 과정 3단계" class="slide dark step-overview" data-time="1분" data-title="구축 과정 3단계">
+</div></div><div class="subline"><span>CASE 02 / 학습 플랫폼</span><span class="page">07 / 28</span></div>
+</section><section aria-label="8 / 28, AI Agent 구축 과정 3단계" class="slide dark step-overview" data-time="1분" data-title="AI Agent 구축 과정 3단계">
 <div class="topline"><span>06 / IMPLEMENTATION</span><span>FROM IDEA TO AGENT</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">THREE-STEP APPROACH</div>
-<h2>구축 과정 3단계</h2>
-<p class="lede">각자의 아이디어를 AI로 구현한 뒤 에이전트에서 활용하는 흐름</p>
+<h2>AI Agent 구축 과정 3단계</h2>
+<p class="lede">시스템을 준비하고, 사용법을 정의하고, 에이전트에 연결합니다</p>
 </div>
-<div aria-label="AI Coding에서 Skill을 거쳐 AI 에이전트로 연결하는 3단계" class="step-overview-map">
+<div aria-label="시스템·데이터 준비에서 Skill화를 거쳐 AI 에이전트로 연결하는 3단계" class="step-overview-map">
 <div class="step-overview-item">
 <div class="step-overview-n">01 <span>BUILD</span></div>
-<h3>AI로 시스템 만들기</h3>
-<p>웹 · 앱 · 자동화 도구 구현</p>
+<h3>시스템·데이터 준비</h3>
+<p>새로 만들거나 기존 시스템 연결</p>
 <div class="step-overview-tech">AI Coding <span>·</span> Data / API</div>
 </div>
 <div aria-hidden="true" class="step-overview-arrow">→</div>
@@ -466,38 +553,38 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="step-overview-n">02 <span>DEFINE</span></div>
 <h3>Skill화</h3>
 <p>실행 절차 · 입력 · 결과 형식 정의</p>
-<div class="step-overview-tech">SKILL.md <span>·</span> API / MCP</div>
+<div class="step-overview-tech">SKILL.md</div>
 </div>
 <div aria-hidden="true" class="step-overview-arrow">→</div>
 <div class="step-overview-item">
 <div class="step-overview-n">03 <span>CONNECT</span></div>
 <h3>AI 에이전트 연결</h3>
 <p>자연어로 요청하고 도구 사용</p>
-<div class="step-overview-tech">Claude Code <span>·</span> Codex <span>·</span> Hermes</div>
+<div class="step-overview-tech">MCP <span>·</span> Claude Code <span>·</span> Codex <span>·</span> Hermes</div>
 </div>
 </div>
 <div class="step-overview-note"><span class="note-label">핵심 구조</span><span>Skill은 작업 방법을 정의하고, 실제 실행은 API·MCP 등 연결된 도구가 담당</span></div>
 </div>
-<div class="subline"><span>OVERVIEW / 구현부터 연결까지</span><span class="page">08 / 21</span></div>
-</section><section aria-label="9 / 21, IT시스템 구축" class="slide paper" data-time="2분" data-title="IT시스템 구축">
-<div class="topline"><span>07 / BUILD SYSTEMS</span><span>AI CODING</span></div>
+<div class="subline"><span>OVERVIEW / 구현부터 연결까지</span><span class="page">08 / 28</span></div>
+</section><section aria-label="9 / 28, 시스템·데이터 준비" class="slide paper" data-time="2분" data-title="시스템·데이터 준비">
+<div class="topline"><span>07 / BUILD</span><span>SYSTEM &amp; DATA</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 01 / BUILD</div><h2>IT시스템 구축</h2><p class="lede">문서 검색부터 개인 도구, 업무 자동화까지 — 관심 있는 문제를 프로그램으로 구현</p></div>
+<div class="headline"><div class="section-tag">STEP 01 / BUILD</div><h2>시스템·데이터 준비</h2><p class="lede">새로 만들거나, 이미 있는 시스템·데이터를 AI가 쓸 수 있게 연결합니다</p></div>
 <div class="service-map">
-<div class="node"><div class="step">01 / 아이디어</div><h3>AI Coding</h3><p>해결할 문제 정의<br/>코드 생성 · 검토 · 테스트</p></div>
+<div class="node"><div class="step">01 / 새로 만들기</div><h3>AI Coding</h3><p>해결할 문제 정의<br/>코드 생성 · 검토 · 테스트</p></div>
 <div class="arrow">→</div>
-<div class="node emphasis"><div class="step">02 / 프로그램</div><h3>Web / App</h3><p>검색 · 정리 · 자동화<br/>화면과 기능 구현</p></div>
+<div class="node emphasis"><div class="step">02 / 시스템</div><h3>Web / App</h3><p>화면과 기능 구현<br/>검색 · 정리 · 자동화</p></div>
 <div class="arrow">↔</div>
-<div class="node"><div class="step">03 / 정보</div><h3>Data / API</h3><p>문서 · 엑셀 · DB<br/>필요한 외부 서비스 연동</p></div>
-<div class="arrow">↔</div>
-<div class="node"><div class="step">04 / 활용</div><h3>My Workflow</h3><p>개인 도구 · 부서 업무<br/>반복 작업의 자동화</p></div>
+<div class="node"><div class="step">03 / 기존 연결</div><h3>Data / API</h3><p>문서 · 엑셀 · DB<br/>사내 시스템 API 연결</p></div>
+<div class="arrow">→</div>
+<div class="node"><div class="step">04 / 준비 완료</div><h3>AI가 쓸 기능</h3><p>조회 · 실행 기능을<br/>API로 제공</p></div>
 </div>
-<div class="system-layer"><strong>구현 예시</strong><span>문서 검색 · 회의록 정리 · 재고 관리 · 데이터 시각화 · 개인 일정 도구</span></div>
-</div><div class="subline"><span>BUILD / 각자의 아이디어</span><span class="page">09 / 21</span></div>
-</section><section aria-label="10 / 21, 시스템 활용 방법 Skill화" class="slide paper" data-time="2분" data-title="시스템 활용 방법 Skill화">
-<div class="topline"><span>08 / PACKAGE WORKFLOWS</span><span>SKILLS</span></div>
+<div class="system-layer"><strong>준비 예시</strong><span>문서 검색 · 회의록 정리 · 재고 관리 · 데이터 시각화 · 개인 일정 도구</span></div>
+</div><div class="subline"><span>BUILD / 시스템·데이터 준비</span><span class="page">09 / 28</span></div>
+</section><section aria-label="10 / 28, Skill화" class="slide paper" data-time="2분" data-title="Skill화">
+<div class="topline"><span>08 / DEFINE</span><span>SKILLS</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 02 / SKILL</div><h2>시스템 활용 방법 Skill화</h2><p class="lede">업무 목적 · 필요한 도구 · 처리 순서 · 결과 형식을 재사용 가능하게 정의</p></div>
+<div class="headline"><div class="section-tag">STEP 02 / DEFINE</div><h2>Skill화</h2><p class="lede">준비한 시스템의 사용법 — 실행 절차 · 입력 · 결과 형식을 정의합니다</p></div>
 <div class="skill-layout">
 <div class="skill-steps">
 <div class="skill-step"><div class="n">01</div><div><strong>어떤 작업을 처리하는가</strong><p>문서 검색 / 데이터 정리 / 보고서 작성</p></div></div>
@@ -515,21 +602,44 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <span class="code-accent">도구:</span> 파일 검색 / API / MCP</pre></div>
 </div>
 <div class="skill-bottom"><b>Skill ≠ API.</b> Skill은 작업 지침입니다. 실제 검색·조회·실행에는 연결된 도구나 API가 필요합니다.</div>
-</div><div class="subline"><span>SKILL / 반복 가능한 절차</span><span class="page">10 / 21</span></div>
-</section><section aria-label="11 / 21, 에이전트 도구 연동" class="slide white" data-time="2분" data-title="에이전트 도구 연동">
-<div class="topline"><span>09 / AGENT INTEGRATION</span><span>TOOLS &amp; PROTOCOLS</span></div>
+</div><div class="subline"><span>DEFINE / 사용법 정의</span><span class="page">10 / 28</span></div>
+</section><section aria-label="11 / 28, AI 에이전트 연결" class="slide white" data-time="2분" data-title="AI 에이전트 연결">
+<div class="topline"><span>09 / CONNECT</span><span>TOOLS &amp; PROTOCOLS</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 03 / CONNECT</div><h2>에이전트 도구 연동</h2><p class="lede">각자가 만든 서비스와 기존 도구를 여러 AI 에이전트 환경에서 활용</p></div>
+<div class="headline"><div class="section-tag">STEP 03 / CONNECT</div><h2>AI 에이전트 연결</h2><p class="lede">자연어로 요청하면, 에이전트가 Skill을 참고해 도구를 호출합니다</p></div>
 <div class="agents">
 <div class="box"><div class="meta">USER INTERFACE</div><h3>Claude Code<br/>Codex · Hermes</h3><p>자연어로 업무 요청<br/>대화 · 계획 · 실행</p></div>
 <div class="arrow">→</div>
-<div class="box"><div class="meta">AGENT RUNTIME</div><h3>Skill +<br/>Tool Calling</h3><p>작업 절차 참고<br/>실행할 도구 선택</p></div>
+<div class="box"><div class="meta">AGENT RUNTIME</div><h3>Skill +<br/>Tool Calling</h3><p>② Skill의 절차 참고<br/>실행할 도구 선택</p></div>
 <div class="arrow">→</div>
-<div class="box ink"><div class="meta">MY SYSTEMS &amp; TOOLS</div><h3>MCP / API<br/>→ 문서 · DB · 서비스</h3><p>파일 · 일정 · 업무 데이터 조회<br/>필요한 기능 실행 및 결과 반환</p></div>
+<div class="box ink"><div class="meta">MY SYSTEMS &amp; TOOLS</div><h3>MCP / API<br/>→ 문서 · DB · 서비스</h3><p>①에서 준비한 시스템·데이터<br/>기능 실행 및 결과 반환</p></div>
 </div>
 <div class="agent-tags"><span>자연어 요청</span><span>작업 재사용</span><span>시스템 호출</span><span>근거 기반 응답</span></div>
-</div><div class="subline"><span>CONNECT / 시스템과 에이전트</span><span class="page">11 / 21</span></div>
-</section><section aria-label="12 / 21, 기초 설정 시작" class="slide dark setup-opening" data-time="1분" data-title="기초 설정 시작">
+</div><div class="subline"><span>CONNECT / 에이전트 연결</span><span class="page">11 / 28</span></div>
+</section><section aria-label="12 / 28, 흩어진 AI 활용법, Skill로 묶기" class="slide paper" data-time="2분" data-title="흩어진 AI 활용법, Skill로 묶기">
+<div class="topline"><span>10 / THE IDEA</span><span>SKILLS × MCP × RAG</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">WHY SKILLS</div><h2>흩어진 AI 활용법, Skill로 묶기</h2><p class="lede">Skill은 MCP·RAG와 함께 쓰는 방법을 절차로 정리합니다.</p></div>
+<div class="bundle-map">
+<div class="bundle-parts">
+<div class="bundle-part"><b>System Prompt</b><span>지침 · 역할</span></div>
+<div class="bundle-part"><b>RAG</b><span>문서 검색 · 사내 지식</span></div>
+<div class="bundle-part"><b>MCP / API</b><span>시스템 연결 · 조회 · 실행</span></div>
+<div class="bundle-part"><b>Scripts / SDK</b><span>반복 작업 코드</span></div>
+</div>
+<div aria-hidden="true" class="bundle-arrow">→</div>
+<div class="bundle-skill"><div class="meta">SKILL / 활용법</div><h3>SKILL.md</h3>
+<ul><li>언제 · 무엇을 쓸지</li><li>어떤 순서로 진행할지</li><li>결과를 어떻게 확인할지</li><li>먼저 물어볼 위험 작업</li></ul></div>
+<div aria-hidden="true" class="bundle-arrow">→</div>
+<div class="bundle-agent"><div class="meta">AI AGENT</div><h3>Claude Code<br/>Codex · Hermes</h3><p>어떤 에이전트에서든<br/>같은 방식으로 동작</p></div>
+</div>
+<div class="bundle-cases">
+<div class="bundle-case"><b>CASE 01</b><span>지침은 <strong>System Prompt</strong>, 도구는 코드에 직접 연결 — 그 에이전트 안에서만 동작</span></div>
+<div class="bundle-case"><b>CASE 02</b><span>같은 내용을 <strong>Skill</strong>로 묶음 — Hermes · Claude Code 등 어디서든 동작</span></div>
+</div>
+</div>
+<div class="subline"><span>IDEA / 활용법 묶기</span><span class="page">12 / 28</span></div>
+</section><section aria-label="13 / 28, 기초 설정 시작" class="slide dark setup-opening" data-time="1분" data-title="기초 설정 시작">
 <div class="topline"><span>AGENDA 03 / HANDS-ON</span><span>VS CODE · GIT</span></div>
 <div class="setup-accent"></div>
 <div class="slide-inner">
@@ -537,37 +647,61 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <h2>VS Code · Git<br/>기초 설정</h2>
 <p class="opening-subtitle">GitHub의 스터디 자료를 내 컴퓨터로 가져오기</p>
 <div class="opening-divider"></div>
-<div class="opening-phases"><span><b>01</b> 설치 확인</span><span class="chev">→</span><span><b>02</b> 계정·초대</span><span class="chev">→</span><span><b>03</b> DAL Clone</span><span class="chev">→</span><span><b>04</b> Git Pull</span></div>
+<div class="opening-phases"><span><b>01</b> 설치 · Hermes</span><span class="chev">→</span><span><b>02</b> 계정·초대</span><span class="chev">→</span><span><b>03</b> DAL Clone</span><span class="chev">→</span><span><b>04</b> Git Pull</span></div>
 </div>
-<div class="subline"><span>HANDS-ON / 기초 설정</span><span class="page">12 / 21</span></div>
-</section><section aria-label="13 / 21, 공통 자료실 DAL" class="slide dark" data-time="2분" data-title="공통 자료실 DAL">
-<div class="topline"><span>10 / WORKSPACE</span><span>GITHUB × VS CODE</span></div>
+<div class="subline"><span>HANDS-ON / 기초 설정</span><span class="page">13 / 28</span></div>
+</section><section aria-label="14 / 28, 공통 자료실 DAL" class="slide dark" data-time="2분" data-title="공통 자료실 DAL">
+<div class="topline"><span>11 / WORKSPACE</span><span>GITHUB × VS CODE</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">SHARED REPOSITORY</div><h2>스터디 자료는 GitHub에서</h2><p class="lede">수업 자료와 예제 코드를 한 곳에서 관리합니다.</p></div>
+<div class="headline"><div class="section-tag">SHARED REPOSITORY</div><h2>스터디 자료는 GitHub에서</h2><p class="lede">스터디 자료와 예제 코드를 한 곳에서 관리합니다.</p></div>
 <div class="architecture">
 <div class="arch-node"><div class="meta">REMOTE / GITHUB</div><h3>DAL</h3><p>스터디 자료 · 예제 코드<br/>수정 이력 보관</p><div class="tag">TRIPLESONG90 / DAL</div></div>
-<div class="sync-box"><div class="sync-line"></div><div class="sync-label">Clone / Pull</div><div class="sync-line"></div></div>
+<div class="sync-box"><div class="sync-label">Clone / Pull</div><div aria-hidden="true" class="sync-line"></div></div>
 <div class="arch-node"><div class="meta">LOCAL / MY PC</div><h3>VS Code</h3><p>받아온 자료 열기<br/>코드 확인 · 실습</p><div class="tag">내 컴퓨터의 DAL 폴더</div></div>
 </div>
 <div class="architecture-foot"><strong>저장소:</strong> <a href="https://github.com/TRIPLESONG90/DAL" rel="noopener" target="_blank">github.com/TRIPLESONG90/DAL ↗</a>   ·   비공개 저장소 / 초대 수락 필요</div>
 </div>
-<div class="subline"><span>WORKSPACE / 공통 자료실</span><span class="page">13 / 21</span></div>
-</section><section aria-label="14 / 21, VS Code·Git 준비" class="slide paper" data-time="2분" data-title="VS Code·Git 준비">
-<div class="topline"><span>11 / SETUP</span><span>INSTALLATION CHECK</span></div>
+<div class="subline"><span>WORKSPACE / 공통 자료실</span><span class="page">14 / 28</span></div>
+</section><section aria-label="15 / 28, VS Code·Git·Hermes·Python 설치" class="slide paper" data-time="3분" data-title="VS Code·Git·Hermes·Python 설치">
+<div class="topline"><span>12 / SETUP</span><span>INSTALLATION</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">TOOLS</div><h2>필요한 프로그램은 두 가지</h2><p class="lede">VS Code에서 Git을 사용해 DAL 저장소를 내려받습니다.</p></div>
+<div class="headline"><div class="section-tag">STEP 01 / INSTALL</div><h2>필요한 프로그램은 네 가지</h2><p class="lede">VS Code와 Git으로 자료를 받고, Python으로 실습 앱을, Hermes로 에이전트를 실행합니다.</p></div>
 <div class="software-rows">
 <div class="software-row"><span class="no">01</span><strong>VS Code</strong><span>파일 열기 · 코드 편집 · 터미널</span><a href="https://code.visualstudio.com/download" rel="noopener" target="_blank">설치 페이지 ↗</a></div>
 <div class="software-row"><span class="no">02</span><strong>Git</strong><span>저장소 복사 · 변경된 자료 받기</span><a href="https://git-scm.com/downloads" rel="noopener" target="_blank">설치 페이지 ↗</a></div>
+<div class="software-row"><span class="no">03</span><strong>Hermes Desktop</strong><span>AI 에이전트 · Skill 실행</span><a href="https://hermes-agent.nousresearch.com/desktop" rel="noopener" target="_blank">설치 페이지 ↗</a></div>
+<div class="software-row"><span class="no">04</span><strong>Python</strong><span>실습 앱 실행 · 설치 시 <b>Add python.exe to PATH</b> 체크</span><a href="https://www.python.org/downloads/" rel="noopener" target="_blank">설치 페이지 ↗</a></div>
 </div>
-<div class="code-strip"><pre><span class="prompt-sign">$</span> git --version</pre><button class="copy" data-copy="git --version" title="명령어 복사">COPY</button></div>
-<p class="note">VS Code → Terminal → New Terminal에서 실행하여 Git 설치 확인</p>
+<div class="code-strip"><pre><span class="prompt-sign">$</span> git --version; python --version; python -m pip install pypdf</pre><button class="copy" data-copy="git --version; python --version; python -m pip install pypdf" title="명령어 복사">COPY</button></div>
+<p class="note">VS Code 터미널에서 실행 · pypdf는 PDF 거래명세서 읽기용</p>
 </div>
-<div class="subline"><span>SETUP / 설치 확인</span><span class="page">14 / 21</span></div>
-</section><section aria-label="15 / 21, GitHub 계정·초대 확인" class="slide white" data-time="2분" data-title="GitHub 계정·초대 확인">
-<div class="topline"><span>12 / ACCESS</span><span>GITHUB INVITATION</span></div>
+<div class="subline"><span>SETUP / 설치 확인</span><span class="page">15 / 28</span></div>
+</section><section aria-label="16 / 28, Hermes 설정 · 데이터 보호" class="slide paper" data-time="3분" data-title="Hermes 설정 · 데이터 보호">
+<div class="topline"><span>13 / SETUP</span><span>HERMES DESKTOP</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">BEFORE CLONE / ACCESS</div><h2>GitHub 계정·초대 확인</h2><p class="lede">DAL은 비공개 저장소라 초대를 수락한 계정만 받을 수 있습니다.</p></div>
+<div class="headline"><div class="section-tag">STEP 01 · HERMES / SETUP</div><h2>Hermes 설정 · 데이터 보호</h2><p class="lede">로컬 LLM(Ollama · gemma4:31b)에 연결하고, 데이터가 밖으로 나가지 않게 설정합니다.</p></div>
+<div class="hermes-grid">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>첫 실행</strong><em>온보딩에서 <b>Choose provider later</b> 선택</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>Settings → Providers → Custom Endpoints</strong><em>Base URL <code>http://25.25.25.116:11434/v1</code> · API Key 비움</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>Settings → Model → Main model</strong><em><code>gemma4:31b</code> 선택 후 Apply</em></div></div>
+</div>
+<div class="privacy"><div class="meta">DATA PROTECTION / 데이터 보호</div>
+<ul>
+<li><span><b>사용 지표 질문 → No thanks</b><small>첫 실행의 "Share usage stats?" 창에서 No thanks 선택</small></span></li>
+<li><span><b>Settings에서 두 스위치 끄기</b><small>Collect usage stats · Share usage stats with Nous</small></span></li>
+<li><span><b>로컬 Ollama만 연결</b><small>클라우드 Provider · 예비(fallback) Provider를 등록하지 않기</small></span></li>
+<li><span><b>Send diagnostics 누르지 않기</b><small>오류 카드에서 누르면 진단 정보가 외부로 업로드됨</small></span></li>
+</ul>
+<div class="foot">확인: 터미널에서 <code>hermes config get telemetry</code> → shared_metrics의 <code>enabled: false</code> · <code>send: false</code></div>
+</div>
+</div>
+</div>
+<div class="subline"><span>SETUP / Hermes</span><span class="page">16 / 28</span></div>
+</section><section aria-label="17 / 28, GitHub 계정·초대 확인" class="slide white" data-time="2분" data-title="GitHub 계정·초대 확인">
+<div class="topline"><span>14 / ACCESS</span><span>GITHUB INVITATION</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">STEP 02 / ACCESS</div><h2>GitHub 계정·초대 확인</h2><p class="lede">DAL은 비공개 저장소라 초대를 수락한 계정만 받을 수 있습니다.</p></div>
 <div class="ops-list">
 <div class="ops-row"><div class="number">01</div><strong>GitHub 로그인</strong><span>github.com에 로그인 · 계정이 없다면 가입 후 아이디를 진행자에게 전달</span></div>
 <div class="ops-row"><div class="number">02</div><strong>초대 수락</strong><span>초대 메일의 <b>View invitation</b> → <b>Accept invitation</b></span></div>
@@ -575,17 +709,17 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 <div class="ops-warning">※ VS Code에서 Clone할 때도 초대를 수락한 같은 계정으로 로그인합니다.</div>
 </div>
-<div class="subline"><span>HANDS-ON / 계정 확인</span><span class="page">15 / 21</span></div>
-</section><section aria-label="16 / 21, Git Clone 실습" class="slide paper" data-time="5분" data-title="Git Clone 실습">
-<div class="topline"><span>13 / HANDS-ON</span><span>GIT CLONE</span></div>
+<div class="subline"><span>HANDS-ON / 계정 확인</span><span class="page">17 / 28</span></div>
+</section><section aria-label="18 / 28, Git Clone 실습" class="slide paper" data-time="5분" data-title="Git Clone 실습">
+<div class="topline"><span>15 / HANDS-ON</span><span>GIT CLONE</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 01 / CLONE</div><h2>첫 자료 받기: Clone</h2><p class="lede">GitHub 저장소 전체를 내 컴퓨터에 처음 복사합니다.</p></div>
+<div class="headline"><div class="section-tag">STEP 03 / CLONE</div><h2>첫 자료 받기: Clone</h2><p class="lede">GitHub 저장소 전체를 내 컴퓨터에 처음 복사합니다.</p></div>
 <div class="lab-grid">
 <div class="lab-list">
 <div class="lab-step"><span class="index">01</span><div><strong>VS Code 실행</strong><em>앞 단계에서 초대 수락까지 마친 상태</em></div></div>
 <div class="lab-step"><span class="index">02</span><div><strong>Ctrl + Shift + P</strong><em>명령 팔레트 열기</em></div></div>
 <div class="lab-step"><span class="index">03</span><div><strong>Git: Clone 선택</strong><em>저장소 주소 입력</em></div></div>
-<div class="lab-step"><span class="index">04</span><div><strong>저장할 폴더 선택 후 Open</strong><em>VS Code에서 DAL 폴더 열기</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>문서 폴더 선택 후 Open</strong><em>문서\DAL 폴더가 생기고 VS Code에서 열림</em></div></div>
 </div>
 <div class="terminal">
 <div class="term-top">REPOSITORY URL</div><div class="term-rule"></div>
@@ -595,47 +729,153 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 </div>
 </div>
-<div class="subline"><span>HANDS-ON / Clone</span><span class="page">16 / 21</span></div>
-</section><section aria-label="17 / 21, 자료 열어보기" class="slide white" data-time="2분" data-title="자료 열어보기">
-<div class="topline"><span>14 / HANDS-ON</span><span>EXPLORER</span></div>
+<div class="subline"><span>HANDS-ON / Clone</span><span class="page">18 / 28</span></div>
+</section><section aria-label="19 / 28, 자료 열어보기" class="slide white" data-time="2분" data-title="자료 열어보기">
+<div class="topline"><span>16 / HANDS-ON</span><span>EXPLORER</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 02 / EXPLORE</div><h2>내 PC에서 자료 열어보기</h2><p class="lede">VS Code Explorer에서 Clone한 폴더를 확인합니다.</p></div>
+<div class="headline"><div class="section-tag">STEP 03 · CHECK / EXPLORE</div><h2>내 PC에서 자료 열어보기</h2><p class="lede">VS Code Explorer에서 Clone한 폴더를 확인합니다.</p></div>
 <div class="file-layout">
 <div class="explorer"><div class="explorer-bar">EXPLORER   /   VS CODE</div><div class="tree"><div><span class="foldericon">▾</span>DAL</div><div class="sub"><span class="fileicon">▤</span>README.md</div><div class="sub"><span class="foldericon">▾</span>week1/</div><div class="sub deep"><span class="fileicon">▤</span>week1.html</div></div></div>
 <div class="file-actions">
-<div class="checkline"><div class="q">CHECK 01</div><strong>왼쪽 파일 탐색기에<br/>DAL 폴더가 표시되나요?</strong></div>
-<div class="checkline"><div class="q">CHECK 02</div><strong>업로드된 스터디 자료를<br/>VS Code에서 열 수 있나요?</strong></div>
+<div class="checkline"><div class="q">CHECK 01</div><strong>왼쪽 파일 탐색기에 DAL 폴더가 표시되나요?</strong></div>
+<div class="checkline"><div class="q">CHECK 02</div><strong>week1 폴더의 자료를 VS Code에서 열 수 있나요?</strong></div>
 <div class="callout">매주 <b>weekN 폴더</b>가 추가됩니다. 원본 파일은 직접 고치지 말고, 실습할 때는 <b>DAL 폴더 밖으로 복사</b>해서 사용하세요. 원본을 고치면 다음 Pull에서 충돌이 납니다.</div>
 </div>
 </div>
 </div>
-<div class="subline"><span>HANDS-ON / 자료 탐색</span><span class="page">17 / 21</span></div>
-</section><section aria-label="18 / 21, Git Pull 실습" class="slide paper" data-time="4분" data-title="Git Pull 실습">
-<div class="topline"><span>15 / HANDS-ON</span><span>GIT PULL</span></div>
+<div class="subline"><span>HANDS-ON / 자료 탐색</span><span class="page">19 / 28</span></div>
+</section><section aria-label="20 / 28, Git Pull 실습" class="slide paper" data-time="4분" data-title="Git Pull 실습">
+<div class="topline"><span>17 / HANDS-ON</span><span>GIT PULL</span></div>
 <div class="slide-inner">
-<div class="headline"><div class="section-tag">STEP 03 / PULL</div><h2>새 자료 받기: Pull</h2><p class="lede">처음 한 번 Clone했다면, 다음부터는 Pull로 업데이트합니다.</p></div>
+<div class="headline"><div class="section-tag">STEP 04 / PULL</div><h2>새 자료 받기: Pull</h2><p class="lede">처음 한 번 Clone했다면, 다음부터는 Pull로 업데이트합니다.</p></div>
 <div class="pull-steps">
 <div class="pull-panel"><div class="meta">METHOD A / VS CODE</div><h3>메뉴로 실행</h3><p>Source Control → ··· → Pull</p><b>VS Code GUI</b></div>
 <div class="pull-panel"><div class="meta">METHOD B / TERMINAL</div><h3>명령어로 실행</h3><p>저장소 폴더에서 터미널 열기</p><b>VS Code Terminal</b></div>
 </div>
 <div class="pull-code"><code><span class="prompt-sign">$</span> git pull origin main</code><button class="copy" data-copy="git pull origin main">명령어 복사</button></div>
-<div class="pull-result"><span>변경 사항이 없다면 <b>Already up to date.</b> 가 표시될 수 있습니다.</span><span>Clone = 최초 1회   /   Pull = 이후 업데이트</span></div>
+<div class="pull-result"><span>실습: 진행자가 새 파일을 올리면 Pull → Explorer에 새 파일 확인 · 변경이 없으면 <b>Already up to date.</b></span><span>Clone = 최초 1회   /   Pull = 이후 업데이트</span></div>
 </div>
-<div class="subline"><span>HANDS-ON / Pull</span><span class="page">18 / 21</span></div>
-</section><section aria-label="19 / 21, 막힐 때 확인할 것" class="slide paper" data-time="1분" data-title="막힐 때 확인할 것">
-<div class="topline"><span>16 / TROUBLESHOOTING</span><span>COMMON ISSUES</span></div>
+<div class="subline"><span>HANDS-ON / Pull</span><span class="page">20 / 28</span></div>
+</section><section aria-label="21 / 28, 막힐 때 확인할 것" class="slide paper" data-time="1분" data-title="막힐 때 확인할 것">
+<div class="topline"><span>18 / TROUBLESHOOTING</span><span>COMMON ISSUES</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">TROUBLESHOOTING</div><h2>막힐 때 확인할 것</h2><p class="lede">실습 중 자주 나오는 상황과 해결 방법입니다.</p></div>
 <div class="trouble-list">
 <div class="trouble-row"><div><code>'git' is not recognized</code><small>터미널에서 git 명령을 찾지 못함</small></div><span>Git 설치 후 <b>VS Code를 완전히 종료했다가 다시 실행</b></span></div>
 <div class="trouble-row"><div><code>Repository not found</code><small>Clone 실패 · 로그인 창이 반복됨</small></div><span>초대를 수락했는지, <b>초대받은 계정으로 로그인</b>했는지 확인</span></div>
 <div class="trouble-row"><div><code>Your local changes ... would be overwritten</code><small>Pull 실패</small></div><span>원본 파일을 수정한 경우 · 필요한 내용은 밖에 복사한 뒤 <b>Source Control → Discard Changes</b> 후 다시 Pull</span></div>
-<div class="trouble-row"><div><strong>Explorer가 비어 있음</strong><small>받은 자료가 보이지 않음</small></div><span><b>File → Open Folder</b>로 Clone한 DAL 폴더 열기</span></div>
+<div class="trouble-row"><div><strong>Explorer가 비어 있음</strong><small>받은 자료가 보이지 않음</small></div><span><b>File → Open Folder</b>로 문서\DAL 폴더 열기</span></div>
 </div>
 </div>
-<div class="subline"><span>HANDS-ON / 문제 해결</span><span class="page">19 / 21</span></div>
-</section><section aria-label="20 / 21, 앞으로 자료 받는 방법" class="slide white" data-time="2분" data-title="앞으로 자료 받는 방법">
-<div class="topline"><span>17 / ROUTINE</span><span>HOW WE WORK</span></div>
+<div class="subline"><span>HANDS-ON / 문제 해결</span><span class="page">21 / 28</span></div>
+</section><section aria-label="22 / 28, 실습: 재고관리 Agent 예제" class="slide paper" data-time="2분" data-title="실습: 재고관리 Agent 예제">
+<div class="topline"><span>19 / LAB</span><span>INVENTORY AGENT</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB / OVERVIEW</div><h2>실습: 재고관리 Agent 예제</h2><p class="lede">AI Agent 구축 3단계를 부품 3,000개 재고관리 앱으로 직접 해 봅니다.</p></div>
+<div class="lab3">
+<div class="card"><div class="step">① 시스템·데이터 준비</div><h3>재고관리 앱</h3><code>inventory.py</code><p>부품 3,000개 · 웹 화면 + 명령줄<br/>사람은 화면으로, 에이전트는 명령줄로</p></div>
+<div class="card mid"><div class="step">② Skill화</div><h3>사용 설명서</h3><code>skills/inventory/SKILL.md</code><p>검색 → 되묻기 → 점검 → 실행 → 보고<br/>삭제·대량 변경은 먼저 확인</p></div>
+<div class="card"><div class="step">③ AI 에이전트 연결</div><h3>Hermes Desktop</h3><code>gemma4:31b</code><p>Skill을 넣고 자연어로 요청<br/>바뀐 재고가 웹 화면에 바로 반영</p></div>
+</div>
+<div class="lab-path"><b>자료 위치</b><code>DAL\week1\inventory</code><span>→ 복사 →</span><code>문서\inventory-lab</code><span>원본은 고치지 않습니다</span></div>
+</div>
+<div class="subline"><span>LAB / 개요</span><span class="page">22 / 28</span></div>
+</section><section aria-label="23 / 28, 실습 순서: 앱 실행 · Skill 설치" class="slide white" data-time="3분" data-title="실습 순서: 앱 실행 · Skill 설치">
+<div class="topline"><span>20 / LAB</span><span>SETUP</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB / SETUP</div><h2>실습 순서: 앱 실행 · Skill 설치</h2><p class="lede">VS Code 터미널(PowerShell)에서 순서대로 실행합니다.</p></div>
+<div class="lab-grid lab-setup">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>실습 폴더 복사</strong><em>문서\inventory-lab 에서 실습</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>앱 실행 · 브라우저 열기</strong><em>http://127.0.0.1:8000 · 검색과 부족만 필터 써 보기</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>Skill을 Hermes에 설치</strong><em>앱은 켜 둔 채 새 터미널에서 실행</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>Hermes 다시 열기</strong><em>Skills 탭에서 inventory 확인</em></div></div>
+</div>
+<div class="lab-cmd"><div class="term-top">POWERSHELL</div>
+<pre><span class="c"># 1. 실습 폴더 복사 (원본은 그대로)</span>
+cd "$HOME\Documents"
+Copy-Item -Recurse DAL\week1\inventory inventory-lab
+cd inventory-lab
+
+<span class="c"># 2. 앱 실행 → http://127.0.0.1:8000</span>
+python inventory.py serve
+
+<span class="c"># 3. (새 터미널, inventory-lab 폴더에서) Skill 설치</span>
+Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills</pre>
+<button class="copy" data-copy="# 1. 실습 폴더 복사 (원본은 그대로)
+cd &quot;$HOME\Documents&quot;
+Copy-Item -Recurse DAL\week1\inventory inventory-lab
+cd inventory-lab
+
+# 2. 앱 실행 → http://127.0.0.1:8000
+python inventory.py serve
+
+# 3. (새 터미널, inventory-lab 폴더에서) Skill 설치
+Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills">명령어 복사</button></div>
+</div>
+</div>
+<div class="subline"><span>LAB / 설치</span><span class="page">23 / 28</span></div>
+</section><section aria-label="24 / 28, 에이전트에게 요청해 보기" class="slide paper" data-time="3분" data-title="에이전트에게 요청해 보기">
+<div class="topline"><span>21 / LAB</span><span>TRY IT</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">LAB / TRY IT</div><h2>에이전트에게 요청해 보기</h2><p class="lede">웹 화면을 띄워 둔 채로 요청하고, Skill에 적은 규칙대로 움직이는지 확인합니다.</p></div>
+<div class="trouble-list try-list">
+<div class="trouble-row"><div><strong>“재고 부족한 품목 알려줘”</strong></div><span>전체 <b>237개</b> 중 급한 순 상위만 보여 주는가</span></div>
+<div class="trouble-row"><div><strong>“베어링 20개 출고해줘”</strong></div><span>후보 141개 → <b>어떤 베어링인지 되묻는가</b></span></div>
+<div class="trouble-row"><div><strong>“베어링 6204ZZ 20개 출고해줘”</strong></div><span>재고 8개 → <b>실행하지 않고 알리는가</b></span></div>
+<div class="trouble-row"><div><strong>“볼트 M6x20 SUS 30개 출고해줘”</strong></div><span>변경 전후 표 · <b>웹 화면에 바로 반영</b>되는가</span></div>
+<div class="trouble-row"><div><strong>“윤활유 1L 품목 삭제해줘”</strong></div><span>바로 지우지 않고 <b>먼저 확인을 받는가</b></span></div>
+</div>
+<div class="try-note">더 해 보기 — SKILL.md에 “출고할 때는 사유를 물어본다”를 추가하고, Hermes 동작이 바뀌는지 확인합니다.</div>
+</div>
+<div class="subline"><span>LAB / 요청</span><span class="page">24 / 28</span></div>
+</section><section aria-label="25 / 28, 시연: 거래명세서로 자동 입고" class="slide white" data-time="3분" data-title="시연: 거래명세서로 자동 입고">
+<div class="topline"><span>22 / DEMO</span><span>STATEMENT → STOCK IN</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">DEMO / 거래명세서</div><h2>시연: 거래명세서로 자동 입고</h2><p class="lede">“이 거래명세서로 입고 처리해줘” + 엑셀·PDF 파일 첨부 → Hermes가 읽고, 맞추고, 확인받고, 입고합니다.</p></div>
+<div class="demo-grid">
+<div class="lab-list">
+<div class="lab-step"><span class="index">01</span><div><strong>명세서 읽기</strong><em><code>read</code> — 품명 · 규격 · 단위 · 수량 · 명세서 번호</em></div></div>
+<div class="lab-step"><span class="index">02</span><div><strong>중복 확인</strong><em><code>history --note</code> — 같은 번호로 입고한 적 있으면 중단</em></div></div>
+<div class="lab-step"><span class="index">03</span><div><strong>품목 맞추기</strong><em>표기 정리 후 <code>--search</code> — 매칭 · 확인 필요 · 미등록</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>입고 계획 확인</strong><em>현재 → 입고 후 표를 보여 주고 승인받기</em></div></div>
+<div class="lab-step"><span class="index">05</span><div><strong>입고 · 보고</strong><em><code>in --note 명세서번호</code> — 매칭 품목만</em></div></div>
+</div>
+<div class="map"><div class="meta">TS-20261026-01 · 실제 시연 결과</div>
+<table><thead><tr><th>명세서 표기</th><th>재고 품목</th><th>상태</th></tr></thead><tbody>
+<tr><td>베어링 6204 ZZ</td><td>베어링 6204ZZ</td><td class="ok">매칭 8 → 28</td></tr>
+<tr><td>오링 P20 (NBR)</td><td>오링 P20 NBR</td><td class="ok">매칭 35 → 135</td></tr>
+<tr><td>에어호스 PU Ø8 청색</td><td>에어호스 PU 8mm 청색</td><td class="ok">매칭 50 → 100</td></tr>
+<tr><td>육각볼트 M6×20 SUS</td><td>볼트 · 렌치볼트 · 접시볼트</td><td class="ask">확인 필요 → 되물음</td></tr>
+<tr><td>LM부시 LM12 플랜지형</td><td>—</td><td class="new">미등록 → 추가 여부 질문</td></tr>
+</tbody></table>
+<div class="foot">엑셀 8개 중 7개 · PDF(TS-20261027-02) 7개 중 6개 입고 · 같은 명세서를 다시 주면 “이미 처리됨”을 알리고 입고하지 않음</div>
+</div>
+</div>
+</div>
+<div class="subline"><span>DEMO / 자동 입고</span><span class="page">25 / 28</span></div>
+</section><section aria-label="26 / 28, 문제 정의 → CRUD 앱 → Skill화" class="slide paper" data-time="3분" data-title="문제 정의 → CRUD 앱 → Skill화">
+<div class="topline"><span>23 / WRAP-UP</span><span>PROBLEM → CRUD → SKILL</span></div>
+<div class="slide-inner">
+<div class="headline"><div class="section-tag">WRAP-UP / 정리</div><h2>문제 정의 → CRUD 앱 → Skill화</h2><p class="lede">재고관리 예제로 본 업무 자동화 Agent를 만드는 순서</p></div>
+<div class="wrap3">
+<div class="card"><div class="step">01 문제 정의</div><h3>DB 스키마 설계</h3><div class="q">무엇을 기록해야 하는가</div>
+<pre><b>품목</b>  name · qty · min · unit
+<b>기록</b>  time · action · name
+      qty · before → after · note</pre>
+<ul><li>안전재고 · 단위 · 문서 번호까지 정해 두기</li></ul></div>
+<div aria-hidden="true" class="arrow">→</div>
+<div class="card mid"><div class="step">02 CRUD 앱 작성</div><h3>AI Coding으로 구현</h3><div class="q">데이터를 다루는 기능과 규칙</div>
+<ul><li><b>C</b> add · <b>R</b> list · search · read · history</li><li><b>U</b> in · out · min · <b>D</b> remove</li><li>재고 부족 출고 · 같은 문서 중복 입고는 앱이 거부</li><li>사람은 웹 화면, 에이전트는 명령줄</li></ul></div>
+<div aria-hidden="true" class="arrow">→</div>
+<div class="card"><div class="step">03 Skill화</div><h3>사용법을 절차로</h3><div class="q">언제 · 어떤 순서로 · 어떤 규칙으로</div>
+<ul><li>검색 → 되묻기 → 점검 → 실행 → 보고</li><li>명세서: 읽기 → 중복 확인 → 맞추기 → 승인 → 입고</li><li>삭제 · 대량 변경은 먼저 확인</li></ul></div>
+</div>
+<div class="wrap-note"><b>스키마가 정해지면</b> 앱은 AI가 만들고, <b>앱이 생기면</b> 사용법은 Skill이 정리합니다. 지켜야 할 규칙은 앱에, 판단은 Skill에 둡니다.</div>
+</div>
+<div class="subline"><span>WRAP-UP / 정리</span><span class="page">26 / 28</span></div>
+</section><section aria-label="27 / 28, 앞으로 자료 받는 방법" class="slide white" data-time="2분" data-title="앞으로 자료 받는 방법">
+<div class="topline"><span>24 / ROUTINE</span><span>HOW WE WORK</span></div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">WEEKLY ROUTINE</div><h2>이후 매주 반복할 것</h2><p class="lede">2주차부터는 <b>설명 25분 · 휴식 10분 · 실습 25분</b>, 매주 60분으로 진행합니다.</p></div>
 <div class="ops-list">
@@ -645,22 +885,22 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 </div>
 <div class="ops-warning">※ 실습 자료는 공용 예제로 운영합니다. 회사 기밀자료와 계정 비밀번호는 저장소에 업로드하지 않습니다.</div>
 </div>
-<div class="subline"><span>ROUTINE / 자료 공유</span><span class="page">20 / 21</span></div>
-</section><section aria-label="21 / 21, 마무리 / 2주차 예고" class="slide dark next" data-time="1분" data-title="마무리 / 2주차 예고">
-<div class="topline"><span>18 / NEXT WEEK</span><span>AI STUDY 2026</span></div>
+<div class="subline"><span>ROUTINE / 자료 공유</span><span class="page">27 / 28</span></div>
+</section><section aria-label="28 / 28, 마무리 / 2주차 예고" class="slide dark next" data-time="1분" data-title="마무리 / 2주차 예고">
+<div class="topline"><span>25 / NEXT WEEK</span><span>AI STUDY 2026</span></div>
 <div aria-hidden="true" class="big-number">02</div>
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">NEXT / WEEK 02</div><h2>AI와 LLM은<br/>어떻게 작동할까?</h2><p class="topics">AI · 머신러닝 · 딥러닝 · LLM · Transformer</p></div>
-<div class="endcheck"><span>DAL Clone</span><span>Git Pull</span><span>자료 열기</span></div>
+<div class="endcheck"><span>DAL Clone</span><span>자료 열기</span><span>Git Pull</span></div>
 <div class="next-note">다음 주 시작 전: DAL 폴더에서 최신 자료 Pull</div>
 </div>
-<div class="subline"><span>NEXT / 2주차</span><span class="page">21 / 21</span></div>
+<div class="subline"><span>NEXT / 2주차</span><span class="page">28 / 28</span></div>
 </section></div>
 </main>
 <div aria-hidden="true" class="progress"><div class="bar" id="progressBar"></div></div>
 <nav aria-label="발표 조작" class="nav">
 <div class="nav-left"><span class="status-dot"></span> AI STUDY   /   WEEK 01</div>
-<div class="nav-center"><button id="prev" title="이전 슬라이드: ←">← 이전</button><div class="count" id="count">01 / 21</div><button id="next" title="다음 슬라이드: → 또는 Space">다음 →</button></div>
+<div class="nav-center"><button id="prev" title="이전 슬라이드: ←">← 이전</button><div class="count" id="count">01 / 28</div><button id="next" title="다음 슬라이드: → 또는 Space">다음 →</button></div>
 <div class="nav-right"><button id="overviewBtn" title="목차 보기: O">목차</button><button class="mobilehide" id="printBtn" title="인쇄 / PDF 저장">인쇄</button><button id="fullBtn" title="전체 화면: F">전체 화면 ↗</button></div>
 </nav>
 <div aria-label="슬라이드 목차" aria-modal="true" class="overview" id="overview" role="dialog">

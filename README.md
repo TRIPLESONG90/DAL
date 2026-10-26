@@ -28,21 +28,26 @@ AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9�
 DAL/
 ├── README.md
 └── week1/
-    └── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
+    ├── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
+    └── inventory/   # 실습: 재고관리 앱 → Skill화 → 에이전트 연결
 ```
 
 매주 스터디 자료가 `weekN/` 폴더로 추가됩니다.
 
 ## 1주차 — 오리엔테이션
 
-[week1/week1.html](week1/week1.html) · 40분 · 슬라이드 21장
+[week1/week1.html](week1/week1.html) · 40분 · 슬라이드 28장
 
 1. **과정 소개** — 9주 로드맵, 배우는 내용, 최종 활용 방향
-2. **실제 활용 사례**
-   - CASE 01: 절곡기 공정 데이터 조회 에이전트 (“44호기 불량률 알려줘.”)
-   - CASE 02: DLStudio Skills × Hermes 연동 (“TG SEM 학습 잘되고 있어?”)
-   - 구축 과정 3단계: AI로 시스템 만들기 → Skill화 → AI 에이전트 연결
-3. **VS Code · Git 기초 설정** — 설치 확인 → 계정·초대 확인 → DAL 저장소 Clone → Git Pull → 막힐 때 확인할 것
+2. **기계개발3팀 Agent 구축 사례**
+   - CASE 01: 절곡기 공정 데이터 조회 에이전트 (“44호기 어때?”) — LangGraph · Ollama gemma4:31b · 조회 API를 Tool로 · System Prompt
+   - CASE 02: 딥러닝 모델 개발 플랫폼 Skill화를 통한 Agent(Hermes) 연동 (“TG SEM 학습 잘되고 있어?”)
+   - AI Agent 구축 과정 3단계: 시스템·데이터 준비 → Skill화 → AI 에이전트 연결
+   - 흩어진 AI 활용법(MCP · RAG · System Prompt)을 Skill로 묶기
+3. **VS Code · Git · Hermes 기초 설정** — 설치 → Hermes 설정·데이터 보호 → 계정·초대 확인 → DAL 저장소 Clone → Git Pull → 막힐 때 확인할 것
+
+4. **실습: 재고관리 Agent 만들기** — 부품 3,000개 재고관리 앱 → Skill화 → Hermes 연결 → 자연어로 요청해 보기 → 시연: 거래명세서(엑셀·PDF)로 자동 입고 ([week1/inventory](week1/inventory/README.md))
+5. **정리** — 문제 정의(DB 스키마 설계) → CRUD 앱 작성 → Skill화
 
 ### 슬라이드 보는 법
 
@@ -65,11 +70,36 @@ URL 끝에 `#5`처럼 번호를 붙이면 해당 슬라이드로 바로 이동�
 
 - [VS Code](https://code.visualstudio.com/) — 파일 열기 · 코드 편집 · 터미널
 - [Git](https://git-scm.com/downloads) — 저장소 복사 · 변경된 자료 받기
+- [Hermes Desktop](https://hermes-agent.nousresearch.com/desktop) — AI 에이전트 · Skill 실행 (Windows 설치 파일)
+- [Python](https://www.python.org/downloads/) — 실습 앱 실행. 설치 화면에서 **Add python.exe to PATH**를 체크합니다.
 
 설치 후 VS Code에서 **Terminal → New Terminal**을 열고 확인합니다.
 
-```bash
+```powershell
 git --version
+python --version
+python -m pip install pypdf   # PDF 거래명세서 읽기용
+```
+
+### Hermes 설정 · 데이터 보호
+
+1. 첫 실행 온보딩에서 **Choose provider later** 선택
+2. **Settings → Providers → Custom Endpoints** — Base URL `http://25.25.25.116:11434/v1`, API Key는 비움
+3. **Settings → Model → Main model** — `gemma4:31b` 선택 후 Apply
+
+데이터가 밖으로 나가지 않도록 다음을 확인합니다.
+
+- 첫 실행에 뜨는 **Share usage stats?** 창에서 **No thanks**를 고릅니다. (선택지: Share with Nous / Keep on this computer / No thanks)
+- **Settings**에서 **Collect usage stats**와 **Share usage stats with Nous**가 둘 다 꺼져 있는지 확인합니다.
+- 로컬 Ollama만 연결하고, 클라우드 Provider나 예비(fallback) Provider는 등록하지 않습니다.
+- 오류 카드의 **Send diagnostics**는 누르지 않습니다(누르면 진단 정보가 업로드됩니다).
+
+터미널에서 확인하거나 직접 끌 수도 있습니다.
+
+```powershell
+hermes config get telemetry      # shared_metrics: enabled: false, send: false 이면 정상
+hermes config set telemetry.shared_metrics.enabled false
+hermes config set telemetry.shared_metrics.send false
 ```
 
 ### 2. 처음 한 번: Clone
@@ -79,7 +109,7 @@ git --version
 1. VS Code 실행
 2. `Ctrl + Shift + P` → **Git: Clone** 선택
 3. 저장소 주소 입력: `https://github.com/TRIPLESONG90/DAL.git`
-4. 저장할 폴더를 선택한 뒤 **Open**으로 DAL 폴더 열기
+4. **문서** 폴더를 선택한 뒤 **Open** — `문서\DAL` 폴더가 생기고 VS Code에서 열립니다
 
 GitHub 로그인 창이 나타나면 초대받은 계정으로 인증합니다. 터미널을 쓴다면:
 
@@ -111,7 +141,7 @@ git pull origin main
 | `'git' is not recognized` | Git 설치 후 VS Code를 완전히 종료했다가 다시 실행 |
 | `Repository not found` / 로그인 반복 | 초대를 수락했는지, 초대받은 계정으로 로그인했는지 확인 |
 | `Your local changes ... would be overwritten` | 필요한 내용은 밖에 복사한 뒤 Source Control → Discard Changes 후 다시 Pull |
-| Explorer가 비어 있음 | File → Open Folder로 Clone한 DAL 폴더 열기 |
+| Explorer가 비어 있음 | File → Open Folder로 `문서\DAL` 폴더 열기 |
 
 ## 매주 진행 방식
 
