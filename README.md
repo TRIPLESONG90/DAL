@@ -12,7 +12,7 @@ AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9�
 | **기초 이해** | | |
 | 01 | 오리엔테이션 | 스터디 소개 · Git · VS Code |
 | 02 | AI와 LLM의 원리 | ML · DL · LLM · Transformer |
-| 03 | 컴퓨터와 대화하기 ① | GUI · CLI · Shell · SSH |
+| 03 | 컴퓨터와 대화하기 ① | GUI · CLI · Shell · SSH · Bandit |
 | **데이터·도구 연결** | | |
 | 04 | 컴퓨터와 대화하기 ② | DB · SQL · Storage · API |
 | 05 | LLM과 대화하기 | Prompt · Context · RAG |
@@ -33,6 +33,9 @@ DAL/
 └── week2/
     ├── week2.html   # 2주차 스터디 슬라이드 (AI는 어떻게 배우는가)
     └── practice/    # 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
+└── week3/
+    ├── week3.html   # 3주차 스터디 슬라이드 (SSH 소개와 Bandit 실습)
+    └── practice/    # 자체 명령어 연습기
 ```
 
 매주 스터디 자료가 `weekN/` 폴더로 추가됩니다.
@@ -70,9 +73,30 @@ DAL/
 | 전체 자료 묶음 | [DAL_Week2_Materials.zip](week2/DAL_Week2_Materials.zip) |
 | 상세 안내 | [week2/README.md](week2/README.md) |
 
+## 3주차 — 컴퓨터와 대화하기: SSH와 Bandit
+
+[week3/week3.html](week3/week3.html) · 60분 (설명 25 · 휴식 10 · 실습·회고 25) · 슬라이드 28장 (본 수업 24장 + 선택 부록 4장)
+
+1. **GUI·CLI와 실행 위치** — 터미널·셸 구분, 내 PC와 원격 서버 구분
+2. **SSH 접속** — 사용자·서버·포트, 로그인, 상태 확인, 종료와 재접속
+3. **기본 명령** — pwd · ls · cd · cat · 도움말 · 경로와 옵션
+4. **Bandit 실습** — Level 0 → 1 함께 풀기, bandit3 로그인 목표, 추가 도전 bandit5
+5. **회고와 Agent 연결** — 명령 선택, 실행 결과 확인, 다음 행동 결정
+
+| 자료 | 파일 |
+|---|---|
+| 강의 슬라이드 | [HTML](week3/week3.html) · [PDF](week3/DAL_Week3_SSH_Bandit.pdf) |
+| 강사 가이드 | [HTML](week3/teacher-notes.html) · [PDF](week3/DAL_Week3_Instructor_Guide.pdf) |
+| 실습 기록지 | [HTML](week3/worksheet.html) · [PDF](week3/DAL_Week3_Worksheet.pdf) |
+| 명령어 참고 | [요약](week3/commands.md) · [자체 연습기](week3/practice/terminal.html) |
+| 전체 자료 묶음 | [DAL_Week3_Materials.zip](week3/DAL_Week3_Materials.zip) |
+| 상세 안내 | [week3/README.md](week3/README.md) |
+
+실제 Bandit은 인터넷과 SSH 2220 포트 연결이 필요합니다. 수업 전 같은 네트워크에서 접속을 확인합니다. 자체 연습기는 인터넷 없이 기본 명령을 익히는 모의 환경입니다.
+
 ### 슬라이드 보는 법
 
-각 주차의 `week1.html` 또는 `week2.html`을 브라우저에서 열면 됩니다. 별도 설치나 인터넷 연결이 필요 없습니다.
+각 주차의 `week1.html`, `week2.html`, `week3.html`을 브라우저에서 열면 됩니다. 발표 화면은 별도 설치나 인터넷 연결 없이 볼 수 있으며, 실제 서버를 사용하는 실습은 각 주차의 접속 안내를 확인하세요.
 
 | 키 | 동작 |
 |---|---|

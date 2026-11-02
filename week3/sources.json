@@ -1,0 +1,76 @@
+{
+  "checked_on": "2026-11-02",
+  "sources": [
+    {
+      "id": "bandit",
+      "title": "OverTheWire Bandit",
+      "url": "https://overthewire.org/wargames/bandit/"
+    },
+    {
+      "id": "start",
+      "title": "Bandit Level 0",
+      "url": "https://overthewire.org/wargames/bandit/bandit0.html"
+    },
+    {
+      "id": "level1",
+      "title": "Bandit Level 0 to 1",
+      "url": "https://overthewire.org/wargames/bandit/bandit1.html"
+    },
+    {
+      "id": "level2",
+      "title": "Bandit Level 1 to 2",
+      "url": "https://overthewire.org/wargames/bandit/bandit2.html"
+    },
+    {
+      "id": "level3",
+      "title": "Bandit Level 2 to 3",
+      "url": "https://overthewire.org/wargames/bandit/bandit3.html"
+    },
+    {
+      "id": "level4",
+      "title": "Bandit Level 3 to 4",
+      "url": "https://overthewire.org/wargames/bandit/bandit4.html"
+    },
+    {
+      "id": "level5",
+      "title": "Bandit Level 4 to 5",
+      "url": "https://overthewire.org/wargames/bandit/bandit5.html"
+    },
+    {
+      "id": "rules",
+      "title": "OverTheWire 이용 안내",
+      "url": "https://overthewire.org/rules/"
+    },
+    {
+      "id": "ssh",
+      "title": "OpenSSH ssh 매뉴얼",
+      "url": "https://man.openbsd.org/ssh"
+    },
+    {
+      "id": "windows",
+      "title": "Microsoft OpenSSH 시작하기",
+      "url": "https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse"
+    },
+    {
+      "id": "ls",
+      "title": "GNU Coreutils ls",
+      "url": "https://www.gnu.org/s/coreutils/manual/html_node/ls-invocation.html"
+    },
+    {
+      "id": "cat",
+      "title": "GNU Coreutils cat",
+      "url": "https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html"
+    },
+    {
+      "id": "dash",
+      "title": "GNU Coreutils FAQ",
+      "url": "https://www.gnu.org/software/coreutils/faq/coreutils-faq.html"
+    },
+    {
+      "id": "network",
+      "title": "Microsoft Test-NetConnection",
+      "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection"
+    }
+  ],
+  "attribution": "Bandit 실습은 OverTheWire에서 제공합니다. 자체 연습기는 DAL이 만든 별도 모의 환경입니다."
+}
