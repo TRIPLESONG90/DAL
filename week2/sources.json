@@ -39,7 +39,7 @@
     ]
   },
   "notes": "practice/README.md is rewritten for this lecture package; other original practice code is reused.",
-  "revised": "2026-10-30",
+  "revised": "2026-11-02",
   "narrative": "사람이 f의 구조와 가정을 정하고 → 학습 알고리즘이 데이터로 θ를 조정하고 → 새로운 x의 y를 예측. 선형회귀의 실제 실습 데이터로 전 과정을 연결한 뒤 CNN 이미지 분류, GPT형 Transformer 다음 토큰 예측으로 확장.",
   "references": [
     [
@@ -85,5 +85,5 @@
     "new_input": 6,
     "new_prediction": 16.206902997095085
   },
-  "revision": "V3: actual Week1 writing and composition reference; concrete examples and actions; unchanged DAL theme"
+  "revision": "2026-11-02: 1주차 문체 기준 문장 정리"
 }
