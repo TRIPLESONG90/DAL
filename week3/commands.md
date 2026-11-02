@@ -1,5 +1,27 @@
 # 3주차 명령어 요약
 
+## 명령어 뒤에는 프로그램이 있습니다
+
+`ls`, `cat`, `mkdir`, `ssh`는 실행할 수 있는 프로그램의 이름입니다. 셸도 프로그램이며, 입력한 명령을 해석해 해당 프로그램을 실행하고 필요한 값을 전달합니다.
+
+| 입력한 부분 | `ls -l notes`에서의 의미 |
+|---|---|
+| `ls` | 실행할 프로그램 이름 |
+| `-l` | 자세한 목록을 요청하는 옵션 |
+| `notes` | 목록을 볼 폴더의 경로 |
+
+옵션도 인수의 한 종류입니다. `ls` 프로그램은 전달받은 `-l`과 `notes`를 해석해 목록을 출력합니다. `cd`는 셸 프로그램 안에 구현된 **내장 명령**으로, 현재 셸의 작업 폴더를 바꿉니다. 모든 명령이 별도의 실행 파일인 것은 아닙니다.
+
+실제 Linux **Bash**에서 확인합니다. 아래 명령은 자체 모의 연습기에서 지원하지 않습니다.
+
+```bash
+type -a ls cat ssh cd
+```
+
+`ls`, `cat`, `ssh`의 실행 파일 경로와 `cd is a shell builtin` 표시를 비교합니다. `ls`의 별칭(alias)이나 여러 경로가 함께 나올 수 있습니다. 경로와 출력 언어는 환경마다 다릅니다. Bash는 외부 프로그램을 찾을 때 `PATH`에 등록된 디렉터리를 검색합니다.
+
+출처: [GNU Bash 명령 검색과 실행](https://www.gnu.org/software/bash/manual/html_node/Command-Search-and-Execution.html), [셸 내장 명령](https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html), [type](https://www.gnu.org/s/bash/manual/html_node/Bash-Builtins.html#index-type).
+
 ## 내 PC에서 접속
 
 ```powershell

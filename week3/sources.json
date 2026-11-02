@@ -80,6 +80,21 @@
       "id": "network",
       "title": "Microsoft Test-NetConnection",
       "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection"
+    },
+    {
+      "id": "execution",
+      "title": "GNU Bash: Command Search and Execution",
+      "url": "https://www.gnu.org/software/bash/manual/html_node/Command-Search-and-Execution.html"
+    },
+    {
+      "id": "builtins",
+      "title": "GNU Bash: Shell Builtin Commands",
+      "url": "https://www.gnu.org/software/bash/manual/html_node/Shell-Builtin-Commands.html"
+    },
+    {
+      "id": "type",
+      "title": "GNU Bash: type",
+      "url": "https://www.gnu.org/s/bash/manual/html_node/Bash-Builtins.html#index-type"
     }
   ],
   "attribution": "Bandit 실습은 OverTheWire에서 제공합니다. 자체 연습기는 DAL이 만든 별도 모의 환경입니다."
