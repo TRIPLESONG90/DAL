@@ -1,0 +1,89 @@
+{
+  "created": "2026-10-30",
+  "course_minutes": 60,
+  "main_slides": 27,
+  "appendix_slides": 3,
+  "source": "https://github.com/TRIPLESONG90/DAL",
+  "practice_sources": {
+    "repository": "TRIPLESONG90/DAL",
+    "ref": "main",
+    "files": [
+      {
+        "file": "practice/README.md",
+        "source_path": "week2/practice/README.md",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/README.md",
+        "sha": "e7e8bab79c4210f373e4f7d867af434f42024fa6",
+        "byte_count": 3241
+      },
+      {
+        "file": "practice/gradient-descent.html",
+        "source_path": "week2/practice/gradient-descent.html",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/gradient-descent.html",
+        "sha": "8372c7b9bf373f233348fdd05947fcbc6c3223ba",
+        "byte_count": 8372
+      },
+      {
+        "file": "practice/cnn-filter.html",
+        "source_path": "week2/practice/cnn-filter.html",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/cnn-filter.html",
+        "sha": "9f182f25e3e189a4452aee834433a80856f21eb7",
+        "byte_count": 9348
+      },
+      {
+        "file": "practice/next_token.py",
+        "source_path": "week2/practice/next_token.py",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/next_token.py",
+        "sha": "f1e03653e481119029f808c0e3c62970d206e108",
+        "byte_count": 3863
+      }
+    ]
+  },
+  "notes": "practice/README.md is rewritten for this lecture package; other original practice code is reused.",
+  "revised": "2026-10-30",
+  "narrative": "사람이 f의 구조와 가정을 정하고 → 학습 알고리즘이 데이터로 θ를 조정하고 → 새로운 x의 y를 예측. 선형회귀의 실제 실습 데이터로 전 과정을 연결한 뒤 CNN 이미지 분류, GPT형 Transformer 다음 토큰 예측으로 확장.",
+  "references": [
+    [
+      "DAL 원본 자료",
+      "https://github.com/TRIPLESONG90/DAL/tree/main/week2"
+    ],
+    [
+      "Mitchell, 1980",
+      "https://www.cs.cmu.edu/~tom/pubs/NeedForBias_1980.pdf"
+    ],
+    [
+      "Google ML Crash Course",
+      "https://developers.google.com/machine-learning/crash-course/linear-regression"
+    ],
+    [
+      "D2L: 합성곱",
+      "https://d2l.ai/chapter_convolutional-neural-networks/conv-layer.html"
+    ],
+    [
+      "Vaswani et al., 2017",
+      "https://arxiv.org/abs/1706.03762"
+    ],
+    [
+      "Radford et al., 2019",
+      "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf"
+    ],
+    [
+      "Ollama Generate API",
+      "https://docs.ollama.com/api/generate"
+    ]
+  ],
+  "linear_example": {
+    "data_file": "restore/build/linear_example_v3.json",
+    "sample_count": 24,
+    "seed": 7,
+    "learning_rate": 0.01,
+    "final": {
+      "steps": 927,
+      "w": 1.941445319049205,
+      "b": 4.558231082799854,
+      "loss": 4.158663445640474
+    },
+    "new_input": 6,
+    "new_prediction": 16.206902997095085
+  },
+  "revision": "V3: actual Week1 writing and composition reference; concrete examples and actions; unchanged DAL theme"
+}

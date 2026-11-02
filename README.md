@@ -54,17 +54,25 @@ DAL/
 
 ## 2주차 — AI는 어떻게 배우는가
 
-[week2/week2.html](week2/week2.html) · 60분 (설명 25 · 휴식 10 · 실습 25) · 슬라이드 23장
+[week2/week2.html](week2/week2.html) · 60분 (설명 25 · 휴식 10 · 실습·회고 25) · 슬라이드 30장 (본 수업 27장 + 선택 부록 3장)
 
-1. **학습의 정의** — AI ⊃ ML ⊃ DL ⊃ LLM · Mitchell의 T·E·P · 함수 근사 f<sub>θ</sub> : X → Y · 경험적 위험 최소화와 일반화
-2. **고전 머신러닝** — 선형회귀(정규방정식) · 손실 함수(MSE · 교차 엔트로피) · 경사하강법 · 결정 트리(Gini · 엔트로피 · 정보 이득)
-3. **딥러닝과 언어 모델** — 신경망 · 역전파 · CNN(국소 연결 · 가중치 공유) · 합성곱 연산 · 언어 모델 · Self-Attention · GPT-3와 스케일링
-4. **정리 · 참고 문헌** — 가설 공간 · 손실 · 최적화로 본 네 가지 방법, 교과서와 주요 논문 12편
-5. **실습** ([week2/practice](week2/practice/README.md)) — 경사하강법 · 합성곱 필터 · 다음 토큰 확률 분포
+1. **모델을 함수로 보기** — 사람이 구조·가정(inductive bias)을 선택 → 데이터로 파라미터 학습 → 새 입력 예측
+2. **선형회귀** — 사용 횟수로 마모량 예측 · 직선 구조 · 손실 · 경사하강법 · 새 입력 예측
+3. **CNN 이미지 분류** — 국소 연결 · 가중치 공유 · 합성곱 필터 계산 · 데이터로 필터 학습
+4. **Transformer 언어 모델** — 문맥 연결 · 다음 토큰 예측 학습 · 토큰을 하나씩 생성하는 추론
+5. **실습** ([week2/practice](week2/practice/README.md)) — 경사하강법 · CNN 필터 · 실제 모델 또는 오프라인 다음 토큰 예제
+
+| 자료 | 파일 |
+|---|---|
+| 강의 슬라이드 | [HTML](week2/week2.html) · [PDF](week2/DAL_Week2_AI_Learning.pdf) · [편집용 PPTX](week2/DAL_Week2_AI_Learning.pptx) |
+| 강사 가이드 | [PDF](week2/DAL_Week2_Instructor_Guide.pdf) · [발표 대본](week2/teacher-notes.html) |
+| 실습 기록지 | [worksheet.html](week2/worksheet.html) |
+| 전체 자료 묶음 | [DAL_Week2_Materials.zip](week2/DAL_Week2_Materials.zip) |
+| 상세 안내 | [week2/README.md](week2/README.md) |
 
 ### 슬라이드 보는 법
 
-`week1.html`을 브라우저에서 열면 됩니다. 별도 설치나 인터넷 연결이 필요 없습니다.
+각 주차의 `week1.html` 또는 `week2.html`을 브라우저에서 열면 됩니다. 별도 설치나 인터넷 연결이 필요 없습니다.
 
 | 키 | 동작 |
 |---|---|
@@ -167,3 +175,4 @@ git pull origin main
 ## 주의 사항
 
 실습 자료는 공용 예제로 운영합니다. **회사 기밀자료와 계정 비밀번호는 저장소에 업로드하지 않습니다.**
+

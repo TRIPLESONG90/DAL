@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAL 2주차 · 다음 토큰 확률 실습</title>
+<style>
+:root{color-scheme:dark;--bg:#141518;--ink:#f3f3f4;--muted:#b9bdc6;--line:#45474e;--accent:#e10800;--accent-light:#ff8079}
+*{box-sizing:border-box}
+body{margin:0;border-top:5px solid var(--accent);background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",Arial,sans-serif;font-weight:400;line-height:1.6}
+main{max-width:1120px;margin:0 auto;padding:38px 32px 36px}
+p,h1,h2{margin:0}h1{font-size:clamp(28px,4vw,43px);font-weight:500;letter-spacing:-.04em;line-height:1.25;margin:9px 0 16px}
+h2{font-size:20px;font-weight:500;letter-spacing:-.025em}
+.kicker{color:var(--muted);font-size:13px;letter-spacing:.1em}
+.notice{border-left:5px solid var(--accent);padding:11px 18px;margin:23px 0 12px;background:#26272c;font-size:clamp(18px,2.6vw,24px);font-weight:500}
+.explain{font-size:15px;color:var(--muted)}
+.prompt{font-size:24px;font-weight:400;letter-spacing:-.025em;margin:28px 0 30px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.prompt span{color:var(--accent-light);white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.8fr);gap:48px}
+.control-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+label{font-size:18px}output{font-variant-numeric:tabular-nums;font-size:28px;color:var(--accent-light)}
+input[type=range]{width:100%;margin:15px 0 4px;accent-color:var(--accent);min-height:26px}
+.scale{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:10px}
+#mode{min-height:52px;font-size:15px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:23px 0}
+button{font:inherit;font-size:16px;padding:10px 19px;border-radius:3px;border:1px solid #656872;background:transparent;color:var(--ink);cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent)}
+button:hover{background:#36383e}button.primary:hover{background:#bc0800}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #ffb5b1;outline-offset:4px}
+.result{border-top:1px solid var(--line);padding-top:18px;min-height:151px}
+.result .label{color:var(--muted);font-size:14px}
+#last-token{font-size:34px;color:var(--ink);margin:4px 0;font-weight:500;line-height:1.5}
+#count-summary,#picked-detail{font-size:14px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:16px}
+th{text-align:left;color:var(--muted);font-size:13px;font-weight:400;padding:0 6px 12px;border-bottom:1px solid var(--line)}
+th:nth-child(n+2),td:nth-child(n+2){text-align:right;font-variant-numeric:tabular-nums}
+td{padding:14px 6px;border-bottom:1px solid #34363c;vertical-align:middle}
+td:first-child{width:37%}.token{font-size:19px;font-family:"Consolas","Malgun Gothic",monospace}
+.bar{height:5px;margin-top:5px;background:#34363c}
+.bar-inner{height:5px;background:var(--accent);transition:width .15s}
+tr.picked .token{color:var(--accent-light)}
+.reading{border-top:1px solid var(--line);margin-top:30px;padding-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.reading p{color:var(--muted);font-size:15px;margin-top:8px}
+.formula{font-family:"Consolas",monospace;font-size:15px;color:#e6e7e9;margin-top:12px}
+.foot{margin-top:25px;color:#9398a3;font-size:12px}
+@media(max-width:760px){main{padding:27px 20px}.layout,.reading{grid-template-columns:1fr;gap:26px}.prompt{font-size:20px}.notice{padding-left:12px}td{padding:12px 3px}.result{min-height:120px}}
+@media(prefers-reduced-motion:reduce){.bar-inner{transition:none}}
+@media print{body{background:white;color:black}.notice{background:#eee}.actions{display:none}.explain,.foot,.reading p,th,#mode,#count-summary,#picked-detail{color:#333}.formula{color:#222}main{max-width:none}.bar{background:#ddd}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<p class="kicker">DAL AI STUDY 2026 · WEEK 02</p>
+<h1>다음 토큰의 확률과 temperature</h1>
+<p class="notice">교육용 가상 데이터 · 실제 LLM 출력이 아님</p>
+<p class="explain">미리 정한 점수(logit)로 확률을 계산하는 오프라인 실습입니다. 모델이나 서버에 연결하지 않습니다.</p>
+</header>
+<p class="prompt">오늘 아침 출근길에 비가 와서 나는 <span>_____</span></p>
+<div class="layout">
+<section aria-label="후보와 선택 결과">
+<table>
+<thead><tr><th>후보 조각</th><th>가상 logit</th><th>계산 확률</th><th>선택 횟수</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+<p class="explain" style="margin-top:12px">␣는 공백을 뜻합니다. 후보 조각도 설명을 위해 정했으며, 실제 토크나이저의 분할 결과가 아닙니다.</p>
+</section>
+<section aria-label="온도와 샘플링 제어">
+<div class="control-row"><label for="temperature">Temperature</label><output id="temp-output" for="temperature">1.0</output></div>
+<input id="temperature" type="range" min="0" max="2" step="0.1" value="1" aria-describedby="mode">
+<div class="scale"><span>0 · 가장 높은 후보</span><span>2 · 확률이 더 고르게</span></div>
+<p id="mode"></p>
+<div class="actions">
+<button class="primary" id="sample-one" type="button">한 번 선택</button>
+<button id="sample-many" type="button">20번 선택</button>
+<button id="reset" type="button">초기화</button>
+</div>
+<div class="result" aria-live="polite" aria-atomic="true">
+<p class="label">마지막에 선택한 후보</p>
+<p id="last-token">아직 선택하지 않았어요</p>
+<p id="picked-detail"></p>
+<p id="count-summary">누적 0회</p>
+</div>
+</section>
+</div>
+<div class="reading">
+<section>
+<h2>관찰할 것</h2>
+<p>Temperature를 낮추면 높은 점수를 가진 후보에 확률이 모입니다. 높이면 후보 간 확률 차이가 줄어듭니다.</p>
+<p>한 번 선택한 결과와 20번의 선택 횟수를 비교해 보세요. 적은 횟수에서는 선택 비율이 계산 확률과 다를 수 있습니다. Temperature를 바꾸면 이전 횟수는 지워집니다.</p>
+</section>
+<section>
+<h2>확률을 읽는 방법</h2>
+<p>이 값은 정해진 후보 중 무엇을 고를지 나타냅니다. 문장이 사실인지, 업무 판단이 옳은지를 보장하는 확률은 아닙니다.</p>
+<p class="formula">T &gt; 0: pᵢ = exp(zᵢ / T) / Σⱼ exp(zⱼ / T)<br>T = 0: 가장 높은 logit의 후보 선택</p>
+</section>
+</div>
+<p class="foot">T &gt; 0에서는 브라우저 난수를 사용하므로 실행마다 결과가 달라질 수 있으며 재현성을 보장하지 않습니다. 이 예제의 T = 0은 고정 점수의 argmax로 구현했습니다. 실제 LLM의 동일 출력 여부는 모델·서버·실행 환경에도 영향을 받습니다.</p>
+</main>
+<script>
+"use strict";
+const candidates = [
+  {token:"␣우", logit:3},
+  {token:"␣택", logit:2},
+  {token:"␣잠", logit:1},
+  {token:"␣회", logit:0},
+  {token:"␣뛰", logit:-1}
+];
+let counts = candidates.map(() => 0);
+let picked = -1;
+let total = 0;
+const temperature = document.getElementById("temperature");
+const rows = document.getElementById("rows");
+const output = document.getElementById("temp-output");
+function probabilities(t) {
+  if (t === 0) {
+    const max = Math.max(...candidates.map(c => c.logit));
+    const first = candidates.findIndex(c => c.logit === max);
+    return candidates.map((_, i) => i === first ? 1 : 0);
+  }
+  const maximum = Math.max(...candidates.map(c => c.logit));
+  const weights = candidates.map(c => Math.exp((c.logit - maximum) / t));
+  const sum = weights.reduce((a,b) => a+b,0);
+  return weights.map(v => v/sum);
+}
+function render() {
+  const t = Number(temperature.value);
+  const p = probabilities(t);
+  output.textContent = t.toFixed(1);
+  document.getElementById("mode").textContent = t === 0
+    ? "이 실습에서는 가장 높은 logit의 후보를 선택합니다. 확률 1과 0으로 표시합니다."
+    : "계산한 확률을 따라 후보를 뽑습니다. 낮은 확률의 후보도 선택될 수 있습니다.";
+  rows.replaceChildren();
+  candidates.forEach((c,i) => {
+    const tr = document.createElement("tr");
+    if (i === picked) tr.className = "picked";
+    const cell = document.createElement("td");
+    const token = document.createElement("span");
+    token.className = "token"; token.textContent = c.token;
+    const bar = document.createElement("div"); bar.className = "bar";
+    const fill = document.createElement("div"); fill.className = "bar-inner"; fill.style.width = (p[i]*100)+"%";
+    bar.appendChild(fill);cell.append(token,bar);tr.appendChild(cell);
+    for (const text of [c.logit.toFixed(1),(p[i]*100).toFixed(1)+"%",String(counts[i])]) {
+      const td=document.createElement("td");td.textContent=text;tr.appendChild(td);
+    }
+    rows.appendChild(tr);
+  });
+  document.getElementById("last-token").textContent = picked < 0 ? "아직 선택하지 않았어요" : candidates[picked].token;
+  document.getElementById("picked-detail").textContent = picked < 0 ? "" : "현재 계산 확률 "+(p[picked]*100).toFixed(1)+"%";
+  document.getElementById("count-summary").textContent = "누적 "+total+"회";
+}
+function sample(n) {
+  const p = probabilities(Number(temperature.value));
+  for(let trial=0; trial<n; trial++) {
+    const value = Math.random();
+    let cumulative = 0;
+    picked = candidates.length-1;
+    for (let i=0; i<p.length; i++) {
+      cumulative += p[i];
+      if (value < cumulative) {picked=i;break;}
+    }
+    counts[picked]++;total++;
+  }
+  render();
+}
+function clearResults() {counts=candidates.map(()=>0);picked=-1;total=0;render();}
+temperature.addEventListener("input",clearResults);
+document.getElementById("sample-one").addEventListener("click",()=>sample(1));
+document.getElementById("sample-many").addEventListener("click",()=>sample(20));
+document.getElementById("reset").addEventListener("click",()=>{temperature.value="1";clearResults();});
+render();
+</script>
+</body>
+</html>
