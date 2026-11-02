@@ -67,6 +67,16 @@
       "url": "https://www.gnu.org/software/coreutils/faq/coreutils-faq.html"
     },
     {
+      "id": "shell",
+      "title": "GNU Bash: What is a shell?",
+      "url": "https://www.gnu.org/software/bash/manual/html_node/What-is-a-shell_003f.html"
+    },
+    {
+      "id": "powershell",
+      "title": "Microsoft: What is PowerShell?",
+      "url": "https://learn.microsoft.com/en-us/powershell/scripting/overview"
+    },
+    {
       "id": "network",
       "title": "Microsoft Test-NetConnection",
       "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection"
