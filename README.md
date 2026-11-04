@@ -1,9 +1,21 @@
 # DAL — AI STUDY 2026
 
-AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9주 동안 함께 이해하고 직접 써보는 사내 스터디 자료 저장소입니다.
+내 업무를 데이터와 API로 구조화하고 Skill로 제공하면, AI가 그 위에서 일할 수 있습니다. 이를 실현하기 위해 AI 원리부터 컴퓨터·데이터·도구 연결까지 9주 동안 직접 배우는 사내 스터디 자료 저장소입니다.
 
 > 각자의 아이디어 → AI로 구현 → Skill → 에이전트
 > 직무·전공에 관계없이, 각자의 관심사와 업무에 적용할 수 있는 활용 구조를 다룹니다.
+
+## DAL의 핵심 원리
+
+**사람은 자기 업무의 데이터·규칙·기능을 정의하고, AI Coding으로 CRUD 서비스를 마련합니다. 서비스 접근 방법과 처리 절차를 Skill로 제공하면, 기존 AI Agent가 도구를 사용해 업무를 수행할 수 있습니다.**
+
+- **2주차:** LLM은 출력을 생성하는 예측 모델이며, 그 자체가 외부 프로그램 실행 엔진은 아닙니다.
+- **3주차:** Shell과 SSH는 명령을 실제 실행하는 환경입니다. LLM의 명령 생성과 실제 실행을 구별합니다.
+- **4주차:** 업무의 데이터와 기능을 CRUD·API로 구조화해 AI가 접근할 수 있는 기반을 만듭니다.
+- **6~8주차:** Tool Calling·MCP로 기능을 연결하고, Skill에 업무 사용법과 절차를 정의합니다.
+- **9주차:** AI Coding으로 업무 서비스를 완성하고 기존 Agent에서 기능을 사용합니다.
+
+Skill은 실행 엔진이나 API가 아닙니다. 실제 실행 수단과 권한, 중요한 변경에 대한 승인, 실행 결과 검증이 필요합니다.
 
 ## 9주 로드맵
 
@@ -11,16 +23,16 @@ AI의 원리부터 컴퓨터·데이터·도구를 연결하는 방법까지, 9�
 |---|---|---|
 | **기초 이해** | | |
 | 01 | 오리엔테이션 | 스터디 소개 · Git · VS Code |
-| 02 | AI와 LLM의 원리 | ML · DL · LLM · Transformer |
-| 03 | 컴퓨터와 대화하기 ① | GUI · CLI · Shell · SSH · Bandit |
+| 02 | AI와 LLM의 원리 | 예측 모델과 실행 엔진의 차이 · ML · CNN · Transformer |
+| 03 | 컴퓨터와 대화하기 ① | 명령의 실제 실행 · GUI · CLI · Shell · SSH · Bandit |
 | **데이터·도구 연결** | | |
-| 04 | 컴퓨터와 대화하기 ② | DB · SQL · Storage · API |
+| 04 | 컴퓨터와 대화하기 ② | 업무 데이터 구조화 · CRUD · DB · SQL · API |
 | 05 | LLM과 대화하기 | Prompt · Context · RAG |
 | 06 | LLM과 외부 도구 연결 | Tool Calling · MCP |
 | **에이전트·구현** | | |
 | 07 | Agentic AI ① | Workflow · Planning · Agent Loop |
 | 08 | Agentic AI ② | Skills · Harness · Context Engineering |
-| 09 | AI로 프로그램 만들기 | AI Coding · GitLab · Docker |
+| 09 | AI로 프로그램 만들기 | 업무 서비스 완성 · Skill 연결 · AI Coding · GitLab · Docker |
 
 ## 저장소 구성
 
