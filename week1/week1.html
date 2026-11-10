@@ -776,8 +776,8 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="slide-inner">
 <div class="headline"><div class="section-tag">LAB / OVERVIEW</div><h2>실습: 재고관리 Agent 예제</h2><p class="lede">AI Agent 구축 3단계를 부품 3,000개 재고관리 앱으로 직접 해 봅니다.</p></div>
 <div class="lab3">
-<div class="card"><div class="step">① 시스템·데이터 준비</div><h3>재고관리 앱</h3><code>inventory.py</code><p>부품 3,000개 · 웹 화면 + 명령줄<br/>사람은 화면으로, 에이전트는 명령줄로</p></div>
-<div class="card mid"><div class="step">② Skill화</div><h3>사용 설명서</h3><code>skills/inventory/SKILL.md</code><p>검색 → 되묻기 → 점검 → 실행 → 보고<br/>삭제·대량 변경은 먼저 확인</p></div>
+<div class="card"><div class="step">① 시스템·데이터 준비</div><h3>BoltBox 부품재고</h3><code>inventory.py</code><p>부품 3,000개 · 웹 화면 + API<br/>사람은 화면으로, 에이전트는 API로</p></div>
+<div class="card mid"><div class="step">② Skill화</div><h3>사용 설명서</h3><code>skills/boltbox/SKILL.md</code><p>검색 → 되묻기 → 점검 → 실행 → 보고<br/>삭제·대량 변경은 먼저 확인</p></div>
 <div class="card"><div class="step">③ AI 에이전트 연결</div><h3>Hermes Desktop</h3><code>gemma4:31b</code><p>Skill을 넣고 자연어로 요청<br/>바뀐 재고가 웹 화면에 바로 반영</p></div>
 </div>
 <div class="lab-path"><b>자료 위치</b><code>DAL\week1\inventory</code><span>→ 복사 →</span><code>문서\inventory-lab</code><span>원본은 고치지 않습니다</span></div>
@@ -792,7 +792,7 @@ h2 {font-size:57px;font-weight:680;line-height:1.2;letter-spacing:-.055em}
 <div class="lab-step"><span class="index">01</span><div><strong>실습 폴더 복사</strong><em>문서\inventory-lab 에서 실습</em></div></div>
 <div class="lab-step"><span class="index">02</span><div><strong>앱 실행 · 브라우저 열기</strong><em>http://127.0.0.1:8000 · 검색과 부족만 필터 써 보기</em></div></div>
 <div class="lab-step"><span class="index">03</span><div><strong>Skill을 Hermes에 설치</strong><em>앱은 켜 둔 채 새 터미널에서 실행</em></div></div>
-<div class="lab-step"><span class="index">04</span><div><strong>Hermes 다시 열기</strong><em>Skills 탭에서 inventory 확인</em></div></div>
+<div class="lab-step"><span class="index">04</span><div><strong>Hermes 다시 열기</strong><em>Skills 탭에서 boltbox 확인</em></div></div>
 </div>
 <div class="lab-cmd"><div class="term-top">POWERSHELL</div>
 <pre><span class="c"># 1. 실습 폴더 복사 (원본은 그대로)</span>
@@ -804,7 +804,7 @@ cd inventory-lab
 python inventory.py serve
 
 <span class="c"># 3. (새 터미널, inventory-lab 폴더에서) Skill 설치</span>
-Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills</pre>
+Copy-Item -Recurse skills\boltbox $env:LOCALAPPDATA\hermes\skills</pre>
 <button class="copy" data-copy="# 1. 실습 폴더 복사 (원본은 그대로)
 cd &quot;$HOME\Documents&quot;
 Copy-Item -Recurse DAL\week1\inventory inventory-lab
@@ -814,7 +814,7 @@ cd inventory-lab
 python inventory.py serve
 
 # 3. (새 터미널, inventory-lab 폴더에서) Skill 설치
-Copy-Item -Recurse skills\inventory $env:LOCALAPPDATA\hermes\skills">명령어 복사</button></div>
+Copy-Item -Recurse skills\boltbox $env:LOCALAPPDATA\hermes\skills">명령어 복사</button></div>
 </div>
 </div>
 <div class="subline"><span>LAB / 설치</span><span class="page">23 / 28</span></div>

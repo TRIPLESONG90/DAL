@@ -1,12 +1,14 @@
-"""재고관리 실습 앱 — 웹 화면과 명령줄(CLI)을 함께 제공합니다.
+"""BoltBox(볼트박스) — 실습용 가짜 사내 부품재고 서비스. 웹 화면, HTTP API, 명령줄(CLI)을 함께 제공합니다.
 
 Python 표준 라이브러리만 사용하므로 별도 설치 없이 실행됩니다.
 데이터는 이 파일 옆의 inventory.json에 저장되며, 처음 실행할 때 예시 품목 3,000개로 만들어집니다.
 
-    python inventory.py list --search "베어링 6204"   # 품목 검색
-    python inventory.py list --low                    # 안전재고 미만 (급한 순)
-    python inventory.py out "베어링 6204ZZ" 3
-    python inventory.py serve                         # 웹 화면: http://127.0.0.1:8000
+    python inventory.py serve                         # 웹 화면 + API: http://127.0.0.1:8000
+    curl.exe -s http://127.0.0.1:8000/api             # API 사용법 (주소 목록)
+    curl.exe -s -G http://127.0.0.1:8000/api/items --data-urlencode "q=베어링 6204"
+    curl.exe -s http://127.0.0.1:8000/api/out --data-urlencode "name=베어링 6204ZZ" -d qty=3
+
+    python inventory.py list --search "베어링 6204"   # 같은 일을 명령줄로
 """
 import argparse
 import datetime
@@ -15,10 +17,11 @@ import os
 import random
 import sys
 import tempfile
+import threading
 import unicodedata
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from itertools import product
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import unquote_to_bytes, urlparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.environ.get("INVENTORY_DATA", os.path.join(HERE, "inventory.json"))
@@ -173,7 +176,7 @@ def stock_in(db, name, qty, note="", allow_duplicate=False):
         dup = next((h for h in db["history"] if h["action"] == "in" and h["name"] == name and h.get("note") == note), None)
         if dup:
             raise InventoryError(f"이미 입고된 항목입니다: {note} · {name} {dup['qty']}{item['unit']} ({dup['time'].replace('T', ' ')}). "
-                                 "다시 입고하려면 --allow-duplicate를 붙이세요.")
+                                 "다시 입고하려면 allow_duplicate=1(명령줄은 --allow-duplicate)을 붙이세요.")
     before = item["qty"]
     item["qty"] += qty
     _log(db, "in", name, qty, before, item["qty"], note)
@@ -209,6 +212,17 @@ def history(db, name=None, limit=20, note=None):
     rows = [h for h in db["history"]
             if (name is None or h["name"] == name) and (not note or note in h.get("note", ""))]
     return rows[-limit:][::-1]
+
+
+def summary(db):
+    """전체·부족 품목 수와 오늘 입고·출고 건수."""
+    today = datetime.date.today().isoformat()
+    todays = [h for h in db["history"] if h["time"].startswith(today)]
+    return {
+        "items": len(db["items"]),
+        "low": sum(1 for v in db["items"].values() if v["qty"] < v["min"]),
+        "today": {a: sum(1 for h in todays if h["action"] == a) for a in ("in", "out")},
+    }
 
 
 # ── 문서 읽기 (거래명세서 등) ──────────────────────────────────────────────
@@ -335,7 +349,7 @@ def main(argv=None):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-    p = argparse.ArgumentParser(prog="inventory.py", description="재고관리 실습 앱")
+    p = argparse.ArgumentParser(prog="inventory.py", description="BoltBox 부품재고 (실습용)")
     p.add_argument("--json", action="store_true", help="결과를 JSON으로 출력 (에이전트용)")
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("list", help="재고 목록")
@@ -395,11 +409,59 @@ def main(argv=None):
     return 0
 
 
-# ── 웹 화면 ───────────────────────────────────────────────────────────────
+# ── HTTP API + 웹 화면 ────────────────────────────────────────────────────
+#
+# 웹 화면과 에이전트가 같은 API를 씁니다. 요청 값은 쿼리 문자열(GET), 폼(curl -d / --data-urlencode)
+# 또는 JSON 본문(POST) 어느 쪽으로 보내도 됩니다. 응답은 항상 JSON이고, 실패하면 {"error": "..."}입니다.
+
+API = {
+    "GET /api": "이 사용법",
+    "GET /api/health": "앱이 켜져 있는지 확인 → {ok, items}",
+    "GET /api/items?q=&low=1&limit=50": "품목 검색 (q의 단어를 모두 포함, low=1이면 안전재고 미만만 급한 순) → {total, shown, items}",
+    "GET /api/summary": "현황 요약 → {items: 전체 품목 수, low: 부족 품목 수, today: {in, out}: 오늘 입고·출고 건수}",
+    "GET /api/history?name=&note=&limit=20": "입출고 기록 (최근 것부터, note는 메모에 이 글자가 들어간 기록)",
+    "POST /api/read  path": "거래명세서 등 표 문서 읽기 (.xlsx, .csv, .pdf — 이 PC의 파일 경로) → {file, sheets}",
+    "POST /api/in  name, qty, note, allow_duplicate": "입고 (같은 note로 같은 품목을 다시 입고하면 오류, allow_duplicate=1이면 허용)",
+    "POST /api/out  name, qty, note": "출고 (재고보다 많으면 오류)",
+    "POST /api/add  name, qty, min, unit": "품목 추가",
+    "POST /api/min  name, min": "안전재고 변경",
+    "POST /api/remove  name": "품목 삭제",
+}
+
+_write_lock = threading.Lock()  # 동시에 들어온 변경 요청이 서로의 결과를 덮어쓰지 않게 합니다.
+
+
+def _text(raw):
+    """요청 바이트를 글자로 바꿉니다. Windows 명령줄에서 보낸 한글(CP949)도 받아 줍니다."""
+    for enc in ("utf-8", "cp949"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    raise InventoryError("요청 글자를 읽을 수 없습니다. UTF-8로 보내 주세요.")
+
+
+def _form(raw):
+    """a=1&b=2 형식(쿼리 문자열, 폼 본문)을 사전으로 바꿉니다."""
+    out = {}
+    for part in raw.split(b"&"):
+        if part:
+            key, _, value = part.partition(b"=")
+            out[_text(unquote_to_bytes(key.replace(b"+", b" ")))] = _text(unquote_to_bytes(value.replace(b"+", b" ")))
+    return out
+
+
+def _flag(value):
+    return str(value).strip().lower() in ("1", "true", "yes", "on")
+
+
+def _limit(value, default):
+    return default if value in (None, "") else _count(value, "limit")
+
 
 class Handler(BaseHTTPRequestHandler):
     def _send(self, status, body, ctype="application/json; charset=utf-8"):
-        data = body.encode("utf-8") if isinstance(body, str) else json.dumps(body, ensure_ascii=False).encode("utf-8")
+        data = body.encode("utf-8") if isinstance(body, str) else json.dumps(body, ensure_ascii=False, indent=2).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(data)))
@@ -407,40 +469,71 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
-    def do_GET(self):
+    def _url(self):
+        # http.server는 요청 줄을 latin-1로 읽으므로, 원래 바이트로 되돌려 한글 쿼리를 바르게 읽습니다.
         url = urlparse(self.path)
-        if url.path == "/":
-            self._send(200, PAGE, "text/html; charset=utf-8")
-        elif url.path == "/api/items":
-            q = parse_qs(url.query)
-            self._send(200, list_items(load(), q.get("low", [""])[0] == "1", q.get("q", [""])[0], 200))
-        elif url.path == "/api/history":
-            name = parse_qs(url.query).get("name", [None])[0]
-            self._send(200, history(load(), name, 10))
-        else:
-            self._send(404, {"error": "없는 주소입니다."})
+        return url.path.rstrip("/") or "/", _form(url.query.encode("latin-1", "replace"))
+
+    def _body(self):
+        raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
+        if not raw.strip():
+            return {}
+        if "json" in (self.headers.get("Content-Type") or "") or raw.lstrip()[:1] == b"{":
+            body = json.loads(_text(raw))
+            if not isinstance(body, dict):
+                raise ValueError
+            return body
+        return _form(raw)
+
+    def _not_found(self):
+        self._send(404, {"error": f"없는 주소입니다: {self.command} {self.path} — GET /api 로 사용법을 확인하세요."})
+
+    def do_GET(self):
+        try:
+            path, q = self._url()
+            if path == "/":
+                return self._send(200, PAGE, "text/html; charset=utf-8")
+            if path == "/api":
+                return self._send(200, API)
+            if path == "/api/health":
+                return self._send(200, {"ok": True, "items": len(load()["items"])})
+            if path == "/api/summary":
+                return self._send(200, summary(load()))
+            if path == "/api/items":
+                return self._send(200, list_items(load(), _flag(q.get("low", "")), q.get("q") or q.get("search"), _limit(q.get("limit"), 50)))
+            if path == "/api/history":
+                return self._send(200, history(load(), q.get("name") or None, _limit(q.get("limit"), 20), q.get("note")))
+            self._not_found()
+        except InventoryError as e:
+            self._send(400, {"error": str(e)})
 
     def do_POST(self):
         ops = {
             "/api/add": lambda db, b: add_item(db, b.get("name"), b.get("qty", 0), b.get("min", 0), b.get("unit", "개")),
-            "/api/in": lambda db, b: stock_in(db, b.get("name"), b.get("qty")),
-            "/api/out": lambda db, b: stock_out(db, b.get("name"), b.get("qty")),
-            "/api/min": lambda db, b: set_min(db, b.get("name"), b.get("qty")),
+            "/api/in": lambda db, b: stock_in(db, b.get("name"), b.get("qty"), b.get("note", ""), _flag(b.get("allow_duplicate", ""))),
+            "/api/out": lambda db, b: stock_out(db, b.get("name"), b.get("qty"), b.get("note", "")),
+            "/api/min": lambda db, b: set_min(db, b.get("name"), b.get("min", b.get("qty"))),
             "/api/remove": lambda db, b: remove_item(db, b.get("name")),
         }
-        op = ops.get(urlparse(self.path).path)
-        if not op:
-            return self._send(404, {"error": "없는 주소입니다."})
         try:
-            body = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
-            db = load()
-            result = op(db, body)
-            save(db)
+            path, q = self._url()
+            body = {**q, **self._body()}
+            if path == "/api/read":
+                if not body.get("path"):
+                    raise InventoryError("읽을 파일 경로(path)를 보내 주세요.")
+                return self._send(200, read_document(body["path"]))
+            op = ops.get(path)
+            if not op:
+                return self._not_found()
+            with _write_lock:
+                db = load()
+                result = op(db, body)
+                save(db)
             self._send(200, result)
         except InventoryError as e:
             self._send(400, {"error": str(e)})
         except (ValueError, TypeError):
-            self._send(400, {"error": "요청 형식이 올바르지 않습니다."})
+            self._send(400, {"error": "요청 형식이 올바르지 않습니다. GET /api 로 사용법을 확인하세요."})
 
     def log_message(self, *args):
         pass
@@ -449,7 +542,7 @@ class Handler(BaseHTTPRequestHandler):
 def serve(port):
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     load()  # 데이터 파일이 없으면 예시 품목으로 만듭니다.
-    print(f"재고관리 앱 실행 중: http://127.0.0.1:{port}  (종료: Ctrl + C)")
+    print(f"BoltBox 실행 중: http://127.0.0.1:{port}  ·  API 사용법: http://127.0.0.1:{port}/api  (종료: Ctrl + C)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -459,109 +552,272 @@ def serve(port):
 
 PAGE = r"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>재고관리 실습</title>
+<title>BoltBox 부품재고</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23E5321C'/%3E%3Cpath d='M18 5 9 18h6l-2 9 9-13h-6z' fill='white'/%3E%3C/svg%3E">
 <style>
-  :root {--red:#E10800;--ink:#F3F3F4;--dim:#A9ACB2;--line:#3A3C41;--bg:#16171A;--panel:#1F2023;--surface:#27292D}
+  :root {
+    --bg:#0E1014; --panel:#161920; --raise:#1D2129; --line:#272C36; --line2:#343A46;
+    --ink:#EDEFF3; --dim:#9AA2AF; --faint:#687080;
+    --brand:#E5321C; --brand-soft:rgba(229,50,28,.14);
+    --ok:#34D399; --ok-soft:rgba(52,211,153,.13); --warn:#FBBF24; --warn-soft:rgba(251,191,36,.13);
+    --bad:#F87171; --bad-soft:rgba(248,113,113,.14); --info:#60A5FA; --info-soft:rgba(96,165,250,.13);
+    --radius:14px; --shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 8px 24px rgba(0,0,0,.25);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:#F4F5F7; --panel:#FFFFFF; --raise:#F7F8FA; --line:#E6E8EC; --line2:#D5D9E0;
+      --ink:#14171C; --dim:#5B6472; --faint:#8A92A0;
+      --brand-soft:rgba(229,50,28,.09); --ok:#0E9F6E; --ok-soft:rgba(14,159,110,.1); --warn:#C27C00; --warn-soft:rgba(194,124,0,.1);
+      --bad:#DC2626; --bad-soft:rgba(220,38,38,.09); --info:#2563EB; --info-soft:rgba(37,99,235,.09);
+      --shadow:0 1px 2px rgba(16,24,40,.05), 0 4px 16px rgba(16,24,40,.05);
+    }
+  }
   * {box-sizing:border-box}
-  body {margin:0;background:var(--bg);color:var(--ink);font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif}
-  header {border-top:4px solid var(--red);padding:22px 28px 18px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap}
-  h1 {margin:0;font-size:24px;letter-spacing:-.02em}
-  .live {font-size:13px;color:var(--dim)} .live b {color:var(--red)}
-  main {display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;padding:0 28px 28px}
-  @media (max-width:900px) {main {grid-template-columns:1fr}}
-  section {background:var(--panel);border:1px solid var(--line);padding:18px 20px}
-  h2 {margin:0 0 14px;font-size:14px;letter-spacing:.08em;color:var(--red)}
-  table {width:100%;border-collapse:collapse;font-size:15px}
-  th {text-align:left;font-weight:600;color:var(--dim);font-size:13px;padding:8px 10px;border-bottom:1px solid var(--line)}
-  td {padding:10px;border-bottom:1px solid var(--line)}
-  td.num {font-variant-numeric:tabular-nums}
-  tr.low td.qty {color:#FF6B63;font-weight:700}
-  tr.flash td {animation:flash 1.2s ease-out}
-  @keyframes flash {from {background:#4A2427}}
-  .badge {font-size:12px;padding:3px 8px;border-radius:2px;background:#2D3A2E;color:#9FD3A4}
-  .badge.low {background:#4A2427;color:#FFB4AE}
-  .ops {display:flex;gap:6px;align-items:center}
-  input {background:var(--surface);color:var(--ink);border:1px solid #4B4D53;padding:7px 9px;font:inherit;font-size:14px;border-radius:2px;min-width:0}
-  .ops input {width:64px}
-  button {background:var(--surface);color:var(--ink);border:1px solid #4B4D53;padding:7px 11px;font:inherit;font-size:13px;border-radius:2px;cursor:pointer;white-space:nowrap}
-  button:hover {border-color:#8A8C92} button.primary {background:var(--red);border-color:var(--red)}
-  form {display:grid;gap:8px} form .row {display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-  ol {list-style:none;margin:0;padding:0;font-size:13px} li {padding:8px 0;border-bottom:1px solid var(--line);color:var(--dim)} li b {color:var(--ink);font-weight:600}
-  .msg {min-height:20px;font-size:13px;margin-top:10px;color:#FFB4AE}
-  aside {display:grid;gap:20px;align-content:start}
-  .filters {display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:12px;font-size:14px;color:var(--dim)}
-  .filters #q {flex:1;min-width:220px} .filters label {display:flex;gap:6px;align-items:center;cursor:pointer}
-  #count {margin-left:auto;font-variant-numeric:tabular-nums}
+  body {margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Pretendard','Pretendard Variable','Noto Sans KR','Malgun Gothic',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap {max-width:1440px;margin:0 auto;padding:0 28px 40px}
+  .num {font-variant-numeric:tabular-nums}
+
+  /* 머리글 */
+  header {display:flex;align-items:center;gap:14px;padding:22px 0 20px;flex-wrap:wrap}
+  .logo {width:42px;height:42px;border-radius:12px;background:linear-gradient(145deg,#FF5A3D,var(--brand) 60%,#B71C0C);display:grid;place-items:center;box-shadow:0 6px 18px rgba(229,50,28,.35)}
+  .brand h1 {margin:0;font-size:22px;letter-spacing:-.02em;line-height:1.1}
+  .brand p {margin:2px 0 0;font-size:13px;color:var(--dim)}
+  .head-right {margin-left:auto;display:flex;align-items:center;gap:10px}
+  .pill {display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--dim);background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+  .dot {width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:pulse 2s infinite}
+  .pill.off .dot {background:var(--bad);animation:none}
+  @keyframes pulse {70% {box-shadow:0 0 0 7px transparent} 100% {box-shadow:0 0 0 0 transparent}}
+  a.pill {text-decoration:none;color:var(--ink)} a.pill:hover {border-color:var(--line2)}
+
+  /* 요약 카드 */
+  .kpis {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+  .kpi {background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi .label {font-size:13px;color:var(--dim);display:flex;align-items:center;gap:8px}
+  .kpi .label i {width:8px;height:8px;border-radius:3px;background:var(--c,var(--faint))}
+  .kpi .value {font-size:30px;font-weight:700;letter-spacing:-.03em;margin-top:4px}
+  .kpi .value small {font-size:14px;font-weight:500;color:var(--dim);margin-left:4px}
+  .kpi.alert {cursor:pointer} .kpi.alert:hover {border-color:var(--bad)}
+  .kpi.alert .value {color:var(--bad)}
+
+  /* 본문 */
+  main {display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;align-items:start}
+  .card {background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-head {display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 20px 0}
+  .card h2 {margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em}
+  .card-body {padding:14px 20px 20px}
+
+  .toolbar {display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 20px 10px}
+  .search {position:relative;flex:1;min-width:200px}
+  .search svg {position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint)}
+  .search input {width:100%;padding-left:38px;height:40px}
+  .toggle {display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--dim);cursor:pointer;user-select:none;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--raise)}
+  .toggle input {appearance:none;width:30px;height:18px;border-radius:999px;background:var(--line2);position:relative;margin:0;cursor:pointer;transition:background .15s}
+  .toggle input::after {content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
+  .toggle input:checked {background:var(--bad)} .toggle input:checked::after {transform:translateX(12px)}
+  .toggle:has(input:checked) {color:var(--ink);border-color:var(--bad)}
+  .chips {display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 12px}
+  header .brand {min-width:0}
+  .chip {font-size:13px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--dim);cursor:pointer}
+  .chip:hover {color:var(--ink);border-color:var(--line2)}
+  .chip.on {background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #count {font-size:13px;color:var(--faint);margin-left:auto}
+
+  .table-wrap {overflow-x:auto;border-top:1px solid var(--line)}
+  table {width:100%;border-collapse:collapse;font-size:14.5px;min-width:640px}
+  th {text-align:left;font-weight:600;color:var(--faint);font-size:12px;letter-spacing:.04em;padding:10px 12px;background:var(--raise);border-bottom:1px solid var(--line);position:sticky;top:0}
+  th:first-child, td:first-child {padding-left:20px} th:last-child, td:last-child {padding-right:20px}
+  td {padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+  tbody tr:hover td {background:var(--raise)}
+  tbody tr:last-child td {border-bottom:0}
+  td.name {font-weight:600}
+  .stock {display:flex;align-items:center;gap:10px;min-width:150px}
+  .stock b {min-width:58px;font-weight:700}
+  .bar {flex:1;height:6px;border-radius:999px;background:var(--line);overflow:hidden;max-width:110px}
+  .bar span {display:block;height:100%;border-radius:inherit;background:var(--ok);transition:width .4s ease}
+  .bar.warn span {background:var(--warn)} .bar.bad span {background:var(--bad)}
+  tr.low .stock b {color:var(--bad)}
+  .badge {display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+  .badge::before {content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+  .badge.low {background:var(--bad-soft);color:var(--bad)}
+  tr.flash td {animation:flash 1.6s ease-out}
+  @keyframes flash {0%,30% {background:var(--brand-soft)}}
+  .ops {display:flex;gap:6px;align-items:center;justify-content:flex-end}
+  .ops input {width:62px;height:32px;text-align:right}
+  .empty {padding:40px 20px;text-align:center;color:var(--faint)}
+
+  input {background:var(--raise);color:var(--ink);border:1px solid var(--line);padding:7px 10px;font:inherit;font-size:14px;border-radius:10px;min-width:0;outline:none;transition:border-color .15s, box-shadow .15s}
+  input:focus {border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  input::placeholder {color:var(--faint)}
+  button {font:inherit;font-size:13px;font-weight:600;height:32px;padding:0 12px;border-radius:9px;cursor:pointer;white-space:nowrap;border:1px solid var(--line2);background:var(--raise);color:var(--ink);transition:background .15s, border-color .15s, transform .05s}
+  button:active {transform:translateY(1px)}
+  button[data-op=in] {color:var(--ok);border-color:transparent;background:var(--ok-soft)} button[data-op=in]:hover {border-color:var(--ok)}
+  button[data-op=out] {color:var(--warn);border-color:transparent;background:var(--warn-soft)} button[data-op=out]:hover {border-color:var(--warn)}
+  button.primary {height:40px;background:var(--brand);border-color:var(--brand);color:#fff} button.primary:hover {filter:brightness(1.08)}
+
+  aside {display:grid;gap:18px;position:sticky;top:18px}
+  form {display:grid;gap:10px}
+  form label {display:grid;gap:5px;font-size:12px;color:var(--dim)}
+  form input {height:40px}
+  form .row {display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+  /* 최근 기록 */
+  .feed {list-style:none;margin:0;padding:0;max-height:520px;overflow:auto}
+  .feed li {display:grid;grid-template-columns:auto 1fr;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .feed li:last-child {border-bottom:0}
+  .tag {font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:7px;height:fit-content;background:var(--raise);color:var(--dim);min-width:44px;text-align:center}
+  .tag.in {background:var(--ok-soft);color:var(--ok)} .tag.out {background:var(--warn-soft);color:var(--warn)}
+  .tag.add {background:var(--info-soft);color:var(--info)} .tag.remove {background:var(--bad-soft);color:var(--bad)}
+  .feed .what {font-size:14px;font-weight:600;line-height:1.35}
+  .feed .meta {font-size:12.5px;color:var(--faint);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+  .feed .note {color:var(--dim);background:var(--raise);border-radius:6px;padding:0 6px}
+  .feed .empty {padding:20px 0}
+
+  /* 알림 */
+  #toasts {position:fixed;right:20px;bottom:20px;display:grid;gap:8px;z-index:10}
+  .toast {background:var(--panel);border:1px solid var(--line2);border-left:4px solid var(--ok);border-radius:10px;padding:11px 14px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:rise .25s ease-out;max-width:380px}
+  .toast.err {border-left-color:var(--bad)}
+  @keyframes rise {from {opacity:0;transform:translateY(8px)}}
+
+  @media (max-width:1100px) {main {grid-template-columns:minmax(0,1fr)} aside {position:static;grid-template-columns:1fr 1fr}}
+  @media (max-width:720px) {.wrap {padding:0 16px 28px} .kpis {grid-template-columns:1fr 1fr} aside {grid-template-columns:1fr} .head-right .pill:not(.live) {display:none}}
 </style></head><body>
-<header><h1>재고관리 실습</h1><span class="live"><b>●</b> 2초마다 자동 갱신 — 에이전트가 바꾼 내용도 바로 보입니다</span></header>
+<div class="wrap">
+<header>
+  <div class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13.5 2 5 13.5h5.5L9 22l9-12.5h-5.6L13.5 2Z" fill="#fff"/></svg></div>
+  <div class="brand"><h1>BoltBox</h1><p>부품재고 · 실습용 가짜 서비스</p></div>
+  <div class="head-right">
+    <span class="pill live" id="live"><span class="dot"></span><span id="liveText">실시간 · 2초마다 갱신</span></span>
+    <a class="pill" href="/api" target="_blank">API 사용법 ↗</a>
+  </div>
+</header>
+
+<section class="kpis">
+  <div class="kpi" style="--c:var(--info)"><div class="label"><i></i>전체 품목</div><div class="value num" id="kItems">—</div></div>
+  <div class="kpi alert" style="--c:var(--bad)" id="kLowCard" title="부족 품목만 보기"><div class="label"><i></i>안전재고 미만</div><div class="value num" id="kLow">—</div></div>
+  <div class="kpi" style="--c:var(--ok)"><div class="label"><i></i>오늘 입고</div><div class="value num" id="kIn">—</div></div>
+  <div class="kpi" style="--c:var(--warn)"><div class="label"><i></i>오늘 출고</div><div class="value num" id="kOut">—</div></div>
+</section>
+
 <main>
-  <section><h2>재고 현황</h2>
-    <div class="filters"><input id="q" type="search" placeholder="품목 검색 (예: 베어링 6204)"><label><input id="low" type="checkbox"> 부족만 (급한 순)</label><span id="count"></span></div>
-    <table><thead><tr><th>품목</th><th>재고</th><th>안전재고</th><th>상태</th><th>입고 / 출고</th></tr></thead><tbody id="items"></tbody></table>
-    <div class="msg" id="msg"></div>
+  <section class="card">
+    <div class="card-head"><h2>재고 현황</h2><span id="count" class="num"></span></div>
+    <div class="toolbar">
+      <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="품목 검색 — 예: 베어링 6204, 볼트 M6 SUS" autocomplete="off"></div>
+      <label class="toggle"><input id="low" type="checkbox"> 부족만 (급한 순)</label>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="table-wrap">
+      <table><thead><tr><th>품목</th><th>재고</th><th>안전재고</th><th>상태</th><th style="text-align:right">입고 / 출고</th></tr></thead><tbody id="items"></tbody></table>
+    </div>
   </section>
   <aside>
-    <section><h2>품목 추가</h2>
-      <form id="add"><input name="name" placeholder="품목명" required>
-        <div class="row"><input name="qty" type="number" min="0" placeholder="재고"><input name="min" type="number" min="0" placeholder="안전재고"><input name="unit" placeholder="단위(개)"></div>
-        <button class="primary">추가</button></form>
+    <section class="card"><div class="card-head"><h2>품목 추가</h2></div>
+      <div class="card-body"><form id="add">
+        <label>품목명<input name="name" placeholder="예: 베어링 6206ZZ" required></label>
+        <div class="row"><label>재고<input name="qty" type="number" min="0" placeholder="0"></label><label>안전재고<input name="min" type="number" min="0" placeholder="0"></label><label>단위<input name="unit" placeholder="개"></label></div>
+        <button class="primary">추가</button></form></div>
     </section>
-    <section><h2>최근 기록</h2><ol id="history"></ol></section>
+    <section class="card"><div class="card-head"><h2>최근 기록</h2></div><div class="card-body"><ol class="feed" id="history"></ol></div></section>
   </aside>
 </main>
+</div>
+<div id="toasts"></div>
 <script>
-const LABEL = {add:'품목 추가', in:'입고', out:'출고', min:'안전재고 변경', remove:'품목 삭제'};
+const LABEL = {add:'추가', in:'입고', out:'출고', min:'안전재고', remove:'삭제'};
+const CHIPS = ['전체', '볼트', '너트', '베어링', '오링', '피팅', '센서', '케이블', '벨트', '윤활유'];
+const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let last = {}, lastSig = '';
+const fmt = n => Number(n).toLocaleString('ko-KR');
+let last = {}, lastSig = '', lastHist = '';
+
 async function api(path, body) {
   const r = await fetch(path, body ? {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)} : {});
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || '요청에 실패했습니다.');
   return data;
 }
+function toast(text, err) {
+  const el = document.createElement('div');
+  el.className = 'toast' + (err ? ' err' : ''); el.textContent = text;
+  $('toasts').appendChild(el); setTimeout(() => el.remove(), err ? 5000 : 2600);
+}
+function bar(it) {
+  if (!it.min) return '<div class="bar"><span style="width:100%"></span></div>';
+  const pct = Math.min(it.qty / (it.min * 2), 1) * 100;
+  const cls = it.qty < it.min ? 'bad' : it.qty < it.min * 1.5 ? 'warn' : '';
+  return `<div class="bar ${cls}"><span style="width:${pct.toFixed(1)}%"></span></div>`;
+}
+function renderChips() {
+  const q = $('q').value.trim();
+  $('chips').innerHTML = CHIPS.map(c => `<button type="button" class="chip ${(c === '전체' ? !q : q === c) ? 'on' : ''}" data-chip="${c}">${c}</button>`).join('');
+}
+function feedItem(h) {
+  const sign = h.action === 'in' ? '+' : h.action === 'out' ? '−' : '';
+  const change = h.action === 'remove' ? '품목 삭제' : h.action === 'min' ? `안전재고 ${h.before} → ${h.after}` : `${sign}${fmt(h.qty)}${esc(h.unit || '')} · ${h.before} → ${h.after}`;
+  return `<li><span class="tag ${h.action}">${esc(LABEL[h.action] || h.action)}</span><div>
+    <div class="what">${esc(h.name)}</div>
+    <div class="meta"><span class="num">${change}</span><span class="num">${esc(h.time.replace('T', ' ').slice(5, 16))}</span>${h.note ? `<span class="note">${esc(h.note)}</span>` : ''}</div></div></li>`;
+}
+
 async function refresh() {
   try {
-    const params = new URLSearchParams({q: document.getElementById('q').value, low: document.getElementById('low').checked ? '1' : ''});
-    const [res, hist] = await Promise.all([api('/api/items?' + params), api('/api/history')]);
-    const items = res.items;
-    document.getElementById('count').textContent = res.total > res.shown ? `${res.total.toLocaleString()}개 중 ${res.shown}개 표시` : `${res.total.toLocaleString()}개`;
+    const params = new URLSearchParams({q: $('q').value, low: $('low').checked ? '1' : '', limit: 200});
+    const [res, hist, sum] = await Promise.all([api('/api/items?' + params), api('/api/history?limit=12'), api('/api/summary')]);
+    $('live').classList.remove('off'); $('liveText').textContent = '실시간 · 2초마다 갱신';
+    $('kItems').innerHTML = fmt(sum.items) + '<small>개</small>';
+    $('kLow').innerHTML = fmt(sum.low) + '<small>개</small>';
+    $('kIn').innerHTML = fmt(sum.today.in) + '<small>건</small>';
+    $('kOut').innerHTML = fmt(sum.today.out) + '<small>건</small>';
+    $('count').textContent = res.total > res.shown ? `${fmt(res.total)}개 중 ${res.shown}개 표시` : `${fmt(res.total)}개`;
+
     // 같은 데이터면 다시 그리지 않고, 표 안 입력칸을 쓰는 중에도 건너뜁니다.
-    const sig = JSON.stringify(items);
+    const items = res.items, sig = JSON.stringify(items);
     const typing = document.activeElement && document.activeElement.closest('#items');
     if (sig !== lastSig && !typing) {
-    lastSig = sig;
-    document.getElementById('items').innerHTML = items.map(it => {
-      const changed = last[it.name] !== undefined && last[it.name] !== it.qty;
-      return `<tr class="${it.low ? 'low' : ''} ${changed ? 'flash' : ''}" data-name="${esc(it.name)}">
-        <td>${esc(it.name)}</td><td class="num qty">${it.qty}${esc(it.unit)}</td><td class="num">${it.min}${esc(it.unit)}</td>
-        <td><span class="badge ${it.low ? 'low' : ''}">${it.low ? '부족' : '정상'}</span></td>
-        <td><div class="ops"><input type="number" min="1" value="1"><button data-op="in">입고</button><button data-op="out">출고</button></div></td></tr>`;
-    }).join('');
-    last = {...last, ...Object.fromEntries(items.map(it => [it.name, it.qty]))};
+      lastSig = sig;
+      $('items').innerHTML = items.length ? items.map(it => {
+        const changed = last[it.name] !== undefined && last[it.name] !== it.qty;
+        return `<tr class="${it.low ? 'low' : ''} ${changed ? 'flash' : ''}" data-name="${esc(it.name)}">
+          <td class="name">${esc(it.name)}</td>
+          <td><div class="stock"><b class="num">${fmt(it.qty)}${esc(it.unit)}</b>${bar(it)}</div></td>
+          <td class="num" style="color:var(--dim)">${fmt(it.min)}${esc(it.unit)}</td>
+          <td><span class="badge ${it.low ? 'low' : ''}">${it.low ? '부족' : '정상'}</span></td>
+          <td><div class="ops"><input type="number" min="1" value="1" aria-label="수량"><button data-op="in">입고</button><button data-op="out">출고</button></div></td></tr>`;
+      }).join('') : '<tr><td colspan="5" class="empty">해당하는 품목이 없습니다.</td></tr>';
+      last = {...last, ...Object.fromEntries(items.map(it => [it.name, it.qty]))};
     }
-    document.getElementById('history').innerHTML = hist.map(h =>
-      `<li>${esc(h.time.replace('T', ' ').slice(5, 16))} · <b>${esc(LABEL[h.action] || h.action)}</b> ${esc(h.name)} ${h.qty}${esc(h.unit || '')} (${h.before} → ${h.after})${h.note ? ' · ' + esc(h.note) : ''}</li>`).join('') || '<li>기록이 없습니다.</li>';
-  } catch (e) { document.getElementById('msg').textContent = '앱 서버에 연결할 수 없습니다. 터미널에서 serve가 실행 중인지 확인하세요.'; }
+    const hsig = JSON.stringify(hist);
+    if (hsig !== lastHist) { lastHist = hsig; $('history').innerHTML = hist.map(feedItem).join('') || '<li class="empty">기록이 없습니다.</li>'; }
+  } catch (e) {
+    $('live').classList.add('off'); $('liveText').textContent = '연결 끊김 — serve 실행 확인';
+  }
 }
-document.getElementById('items').addEventListener('click', async e => {
+
+$('items').addEventListener('click', async e => {
   const op = e.target.dataset.op; if (!op) return;
   const tr = e.target.closest('tr'), qty = Number(tr.querySelector('input').value);
-  try { await api('/api/' + op, {name: tr.dataset.name, qty}); document.getElementById('msg').textContent = ''; }
-  catch (err) { document.getElementById('msg').textContent = err.message; }
+  try { const r = await api('/api/' + op, {name: tr.dataset.name, qty}); toast(`${LABEL[op]} ${r.name} ${qty}${r.unit} → 재고 ${fmt(r.qty)}${r.unit}`); }
+  catch (err) { toast(err.message, true); }
   refresh();
 });
-document.getElementById('add').addEventListener('submit', async e => {
+$('add').addEventListener('submit', async e => {
   e.preventDefault(); const f = new FormData(e.target);
   try {
-    await api('/api/add', {name: f.get('name'), qty: Number(f.get('qty') || 0), min: Number(f.get('min') || 0), unit: f.get('unit') || '개'});
-    e.target.reset(); document.getElementById('msg').textContent = '';
-  } catch (err) { document.getElementById('msg').textContent = err.message; }
+    const r = await api('/api/add', {name: f.get('name'), qty: Number(f.get('qty') || 0), min: Number(f.get('min') || 0), unit: f.get('unit') || '개'});
+    e.target.reset(); toast(`품목을 추가했습니다: ${r.name}`);
+  } catch (err) { toast(err.message, true); }
   refresh();
 });
+$('chips').addEventListener('click', e => {
+  const c = e.target.dataset.chip; if (!c) return;
+  $('q').value = c === '전체' ? '' : c; renderChips(); refresh();
+});
+$('kLowCard').addEventListener('click', () => { $('low').checked = !$('low').checked; refresh(); });
 let searchTimer = 0;
-document.getElementById('q').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(refresh, 250); });
-document.getElementById('low').addEventListener('change', refresh);
-refresh(); setInterval(refresh, 2000);
+$('q').addEventListener('input', () => { renderChips(); clearTimeout(searchTimer); searchTimer = setTimeout(refresh, 250); });
+$('low').addEventListener('change', refresh);
+renderChips(); refresh(); setInterval(refresh, 2000);
 </script></body></html>"""
 
 
