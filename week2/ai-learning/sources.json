@@ -10,37 +10,37 @@
     "files": [
       {
         "file": "practice/README.md",
-        "source_path": "week2/practice/README.md",
-        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/README.md",
+        "source_path": "week2/ai-learning/practice/README.md",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/ai-learning/practice/README.md",
         "sha": "e7e8bab79c4210f373e4f7d867af434f42024fa6",
         "byte_count": 3241
       },
       {
         "file": "practice/gradient-descent.html",
-        "source_path": "week2/practice/gradient-descent.html",
-        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/gradient-descent.html",
+        "source_path": "week2/ai-learning/practice/gradient-descent.html",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/ai-learning/practice/gradient-descent.html",
         "sha": "8372c7b9bf373f233348fdd05947fcbc6c3223ba",
         "byte_count": 8372
       },
       {
         "file": "practice/cnn-filter.html",
-        "source_path": "week2/practice/cnn-filter.html",
-        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/cnn-filter.html",
+        "source_path": "week2/ai-learning/practice/cnn-filter.html",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/ai-learning/practice/cnn-filter.html",
         "sha": "9f182f25e3e189a4452aee834433a80856f21eb7",
         "byte_count": 9348
       },
       {
         "file": "practice/next_token.py",
-        "source_path": "week2/practice/next_token.py",
-        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/practice/next_token.py",
+        "source_path": "week2/ai-learning/practice/next_token.py",
+        "url": "https://github.com/TRIPLESONG90/DAL/blob/main/week2/ai-learning/practice/next_token.py",
         "sha": "f1e03653e481119029f808c0e3c62970d206e108",
         "byte_count": 3863
       }
     ]
   },
   "notes": "practice/README.md is rewritten for this lecture package; other original practice code is reused.",
-  "revised": "2026-11-02",
-  "narrative": "사람이 f의 구조와 가정을 정하고 → 학습 알고리즘이 데이터로 θ를 조정하고 → 새로운 x의 y를 예측. 선형회귀의 실제 실습 데이터로 전 과정을 연결한 뒤 CNN 이미지 분류, GPT형 Transformer 다음 토큰 예측으로 확장.",
+  "revised": "2026-11-11",
+  "narrative": "AI 모델의 공통 원리를 짧게 확인한 뒤 Transformer를 언어와 문맥의 관계로 쉽게 설명한다. LLM을 Text to Text 모델로 정리하고, 도구 호출과 Agent 실행 환경이 텍스트를 문서 작성과 프로그램 조작으로 연결하는 과정을 구분한다.",
   "references": [
     [
       "DAL 원본 자료",
@@ -69,6 +69,14 @@
     [
       "Ollama Generate API",
       "https://docs.ollama.com/api/generate"
+    ],
+    [
+      "OpenAI Tools guide",
+      "https://developers.openai.com/api/docs/guides/tools"
+    ],
+    [
+      "OpenAI Function Calling guide",
+      "https://developers.openai.com/api/docs/guides/function-calling"
     ]
   ],
   "linear_example": {
@@ -85,5 +93,5 @@
     "new_input": 6,
     "new_prediction": 16.206902997095085
   },
-  "revision": "2026-11-02: 1주차 문체 기준 문장 정리"
+  "revision": "2026-11-11: 2주차 서사를 '모델 원리 → Transformer의 언어적 이해 → Text to Text → 도구와 Agent'로 전면 개편"
 }

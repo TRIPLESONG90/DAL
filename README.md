@@ -43,8 +43,8 @@ DAL/
     ├── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
     └── inventory/   # 실습: 재고관리 앱 → Skill화 → 에이전트 연결
 └── week2/
-    ├── week2.html   # 2주차 스터디 슬라이드 (AI는 어떻게 배우는가)
-    └── practice/    # 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
+    ├── week2.html   # 2주차 스터디 슬라이드 (LLM을 이해하는 가장 단순한 관점: Text to Text)
+    └── ai-learning/ # 강의 부속 자료 · 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
 └── week3/
     ├── week3.html   # 3주차 스터디 슬라이드 (SSH 소개와 Bandit 실습)
     └── practice/    # 자체 명령어 연습기
@@ -67,23 +67,23 @@ DAL/
 4. **실습: 재고관리 Agent 만들기** — 부품 3,000개 재고관리 앱 → Skill화 → Hermes 연결 → 자연어로 요청해 보기 → 시연: 거래명세서(엑셀·PDF)로 자동 입고 ([week1/inventory](week1/inventory/README.md))
 5. **스터디 목표: 내 업무를 Agent로** — 어떤 업무든 문제 정의(DB 스키마 설계) → CRUD 앱 작성 → Skill화 순서로 만듭니다
 
-## 2주차 — AI는 어떻게 배우는가
+## 2주차 — LLM을 이해하는 가장 단순한 관점: Text to Text
 
-[week2/week2.html](week2/week2.html) · 60분 (설명 25 · 휴식 10 · 실습·회고 25) · 슬라이드 30장 (본 수업 27장 + 선택 부록 3장)
+[week2/week2.html](week2/week2.html) · 약 62분 · 슬라이드 33장 (본 수업 30장 + 선택 부록 3장)
 
-1. **모델을 함수로 보기** — 사람이 구조·가정(inductive bias)을 선택 → 데이터로 파라미터 학습 → 새 입력 예측
-2. **선형회귀** — 사용 횟수로 마모량 예측 · 직선 구조 · 손실 · 경사하강법 · 새 입력 예측
-3. **CNN 이미지 분류** — 국소 연결 · 가중치 공유 · 합성곱 필터 계산 · 데이터로 필터 학습
-4. **Transformer 언어 모델** — 문맥 연결 · 다음 토큰 예측 학습 · 토큰을 하나씩 생성하는 추론
-5. **실습** ([week2/practice](week2/practice/README.md)) — 경사하강법 · CNN 필터 · 실제 모델 또는 오프라인 다음 토큰 예제
+1. **AI 모델의 원리** — 입력·모델·출력, 학습과 추론, 선형회귀와 CNN을 짧은 보조 사례로 이해
+2. **Transformer의 언어적 이해** — 토큰·임베딩·Attention을 문맥과 관계의 관점에서 쉽게 설명
+3. **LLM은 Text to Text** — 앞 문맥에서 다음 토큰을 반복 예측해 텍스트를 만드는 모델
+4. **도구 호출과 Agent** — 모델의 구조화된 요청을 프로그램이 권한 안에서 실제 행동으로 연결
+5. **실습** ([week2/ai-learning/practice](week2/ai-learning/practice/README.md)) — 모델의 구조와 파라미터 · 문맥과 다음 토큰 · 도구 호출 설계
 
 | 자료 | 파일 |
 |---|---|
-| 강의 슬라이드 | [HTML](week2/week2.html) · [PDF](week2/DAL_Week2_AI_Learning.pdf) · [편집용 PPTX](week2/DAL_Week2_AI_Learning.pptx) |
-| 강사 가이드 | [PDF](week2/DAL_Week2_Instructor_Guide.pdf) · [발표 대본](week2/teacher-notes.html) |
-| 실습 기록지 | [worksheet.html](week2/worksheet.html) |
-| 전체 자료 묶음 | [DAL_Week2_Materials.zip](week2/DAL_Week2_Materials.zip) |
-| 상세 안내 | [week2/README.md](week2/README.md) |
+| 강의 슬라이드 | [HTML](week2/week2.html) · [PDF](week2/ai-learning/DAL_Week2_AI_Learning.pdf) · [편집용 PPTX](week2/ai-learning/DAL_Week2_AI_Learning.pptx) |
+| 강사 가이드 | [PDF](week2/ai-learning/DAL_Week2_Instructor_Guide.pdf) · [발표 대본](week2/ai-learning/teacher-notes.html) |
+| 실습 기록지 | [worksheet.html](week2/ai-learning/worksheet.html) |
+| 전체 자료 묶음 | [DAL_Week2_Materials.zip](week2/ai-learning/DAL_Week2_Materials.zip) |
+| 상세 안내 | [week2/ai-learning/README.md](week2/ai-learning/README.md) |
 
 ## 3주차 — 컴퓨터와 대화하기: SSH와 Bandit
 

@@ -1,0 +1,6 @@
+# Local browser/runtime validation artifacts
+tmp/
+
+# Python bytecode caches
+__pycache__/
+*.py[cod]
