@@ -79,10 +79,10 @@ DAL/
 
 | 자료 | 파일 |
 |---|---|
-| 강의 슬라이드 | [HTML](week2/week2.html) · [PDF](week2/ai-learning/DAL_Week2_AI_Learning.pdf) · [편집용 PPTX](week2/ai-learning/DAL_Week2_AI_Learning.pptx) |
-| 강사 가이드 | [PDF](week2/ai-learning/DAL_Week2_Instructor_Guide.pdf) · [발표 대본](week2/ai-learning/teacher-notes.html) |
-| 실습 기록지 | [worksheet.html](week2/ai-learning/worksheet.html) |
-| 전체 자료 묶음 | [DAL_Week2_Materials.zip](week2/ai-learning/DAL_Week2_Materials.zip) |
+| 강의 슬라이드 | [HTML](week2/week2.html) |
+| 강사 가이드 | [HTML 발표 대본](week2/ai-learning/teacher-notes.html) |
+| 실습 기록지 | [HTML](week2/ai-learning/worksheet.html) |
+| 실습 파일 | [practice](week2/ai-learning/practice/README.md) |
 | 상세 안내 | [week2/ai-learning/README.md](week2/ai-learning/README.md) |
 
 ## 3주차 — 컴퓨터와 대화하기: SSH와 Bandit

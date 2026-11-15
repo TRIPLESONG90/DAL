@@ -1,15 +1,15 @@
 # DAL 2주차 강의 자료
 
 ## 시작
-저장소에서는 상위 폴더의 `../week2.html`을 브라우저에서 여세요. 배포 ZIP을 풀었다면 압축 폴더의 `week2.html`을 여세요. 기존 DAL 발표 화면의 색상, 글꼴, 레이아웃과 컨트롤을 사용합니다.
+상위 폴더의 `../week2.html`을 브라우저에서 여세요. 기존 DAL 발표 화면의 색상, 글꼴, 레이아웃과 컨트롤을 사용합니다.
 
 - 방향키 / PageUp·PageDown: 이전·다음
 - O: 목차 / F: 전체 화면
 - Home / End: 처음 / 마지막
 - 인쇄: PDF 저장 또는 인쇄
-- 발표 대본: teacher-notes.html 또는 DAL_Week2_Instructor_Guide.pdf
+- 발표 대본: teacher-notes.html
 - 실습 기록지: worksheet.html
-- 슬라이드 1~27: 60분 수업 / 28~30: 선택 부록
+- 슬라이드 1~30: 본 수업 / 31~33: 선택 부록
 
 ## 수업 진행
 설명 25분, 휴식 10분, 실습 준비 1분, 실습 3개 각 7분, 회고 2분, 다음 주 안내 1분입니다.
@@ -31,14 +31,12 @@ LLM이 만든 문서 내용·코드·도구 호출 요청을 실제 파일 저�
 
 ## 파일
 - ../week2.html: 원본 DAL 스타일의 브라우저 강의 자료
-- DAL_Week2_AI_Learning.pptx: 편집 가능한 PowerPoint, 발표자 노트 포함
-- DAL_Week2_AI_Learning.pdf: 슬라이드 PDF
-- DAL_Week2_Instructor_Guide.pdf / teacher-notes.html: 발표 대본, 질문·예상 답, 시간표
+- teacher-notes.html: 발표 대본, 질문·예상 답, 시간표
 - worksheet.html: 실습 기록지
 - practice/: 경사하강법, 실제 모델·오프라인 다음 토큰 예제, 선택 CNN 필터 예제
 - fonts/: Noto Sans KR 글꼴과 OFL 라이선스
 
-PPTX 편집 시 fonts 폴더의 글꼴을 설치하세요. 실제 Ollama 실습은 사내망/VPN과 서버 응답 확인이 필요합니다. 연결이 어려우면 가상 데이터임을 설명하고 오프라인 예제를 사용하세요.
+강의 자료는 HTML을 기준으로 관리합니다. PDF·PPTX·ZIP 중복 산출물은 저장소에 포함하지 않습니다. 실제 Ollama 실습은 사내망/VPN과 서버 응답 확인이 필요합니다. 연결이 어려우면 가상 데이터임을 설명하고 오프라인 예제를 사용하세요.
 
 ## 자료 기준
 2026-10-30 확인한 DAL 자료를 바탕으로 작성했습니다. 참고 자료와 개념별 출처는 발표자 노트에 있습니다. 표·그래프의 교육용 숫자와 실제 서버 응답은 구별합니다.
