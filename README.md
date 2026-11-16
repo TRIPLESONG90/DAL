@@ -73,12 +73,12 @@ DAL/
 
 ## 2주차 — AI와 LLM의 원리: 텍스트가 명령이 되기까지
 
-[week2/week2.html](week2/week2.html) · 약 60분 · 슬라이드 36장 (본 수업 32장 + 선택 부록·출처 4장) · 대상: 개발 경험이 없는 사무직
+[week2/week2.html](week2/week2.html) · 약 60분 · 슬라이드 38장 (본 수업 34장 + 선택 부록·출처 4장) · 대상: 개발 경험이 없는 사무직
 
 1. **AI 모델이란** — 입력을 출력으로 바꾸는 상자, y = f(x)와 loss, 모델 종류별 입력과 출력, 학습과 사용(추론)에서 일어나는 일을 움직이는 장면으로 설명
-2. **LLM은 Text to Text** — 다음에 올 말 맞히기, 문맥과 토큰, LLM의 학습과 추론 장면, 그럴듯함과 사실의 차이
+2. **LLM은 Text to Text** — 다음에 올 말 맞히기, 문맥과 토큰, LLM의 학습과 추론 장면, Attention 시각화, Transformer 한 장 그림, 그럴듯함과 사실의 차이
 3. **텍스트를 명령으로** — 프로그램(하네스), 도구 목록, 정해진 양식의 요청서, 결과 되돌려 주기, Agent, 확인과 권한
-4. **실습** ([week2/ai-learning/practice](week2/ai-learning/practice/README.md)) — 브라우저로 직선 맞추기 · Python으로 다음 말 후보 보기 · Hermes Desktop으로 글이 명령이 되는 순간 보기
+4. **실습** ([week2/ai-learning/practice](week2/ai-learning/practice/README.md)) — 브라우저로 직선 맞추기(+ Python으로 손글씨 숫자 분류) · Python으로 다음 말 후보 보기 · Hermes Desktop으로 글이 명령이 되는 순간 보기
 
 | 자료 | 파일 |
 |---|---|
