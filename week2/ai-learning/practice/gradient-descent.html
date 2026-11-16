@@ -25,7 +25,7 @@
   .msg.ok {color:var(--good)}
   ol {margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.75;color:#C3C6CC}
 </style></head><body>
-<header><h1>실습 1. 모델은 숫자를 맞추며 배운다 — 데이터에 맞는 직선 찾기</h1><p>금형 사용 횟수(x)로 마모량(y)을 예측하는 모델 <b>y = f(x) = w·x + b</b>입니다. 점들에 맞는 w(기울기)와 b(y절편)를 찾는 것이 학습입니다. (예시 데이터)</p></header>
+<header><h1>실습 1. 모델은 숫자를 맞추며 배운다 — 데이터에 맞는 직선 찾기</h1><p>처리 문서 수(x)로 처리 시간(y)을 예측하는 모델 <b>y = f(x) = w·x + b</b>입니다. 점들에 맞는 w(기울기)와 b(y절편)를 찾는 것이 학습입니다. (예시 데이터)</p></header>
 <main>
   <div>
     <section><h2>데이터와 직선</h2><canvas id="plot" width="900" height="420"></canvas>
@@ -46,19 +46,19 @@
       <ol><li>학습률 0.01로 자동 학습 → loss가 줄어드는지</li><li>학습률을 가장 작게 → 아주 느린지</li><li>학습률 0.035 이상 → loss가 튕겨 커지는지</li></ol>
     </section>
     <section style="margin-top:20px"><h2>3. 새 입력 넣어 보기 (추론)</h2>
-      <label>사용 횟수 x <b id="lx"></b></label><input id="x" type="range" min="0" max="10" step="0.5" value="6">
-      <div class="stats" style="grid-template-columns:1fr"><div class="stat loss"><span>마모량 예측 y = w·x + b</span><b id="sy">0</b></div></div>
+      <label>처리 문서 수 x <b id="lx"></b></label><input id="x" type="range" min="0" max="10" step="1" value="6">
+      <div class="stats" style="grid-template-columns:1fr"><div class="stat loss"><span>처리 시간 예측 y = w·x + b</span><b id="sy">0</b></div></div>
       <div class="tip">x를 바꿔도 w와 b는 그대로입니다. 이미 맞춘 숫자로 계산만 합니다. 이것이 <b>추론</b>입니다.</div>
     </section>
   </aside>
 </main>
 <script>
-// 예시 데이터: 마모량 ≈ 2.0 × 사용 횟수 + 5 + 잡음 (고정 시드라 누구나 같은 점)
+// 예시 데이터: 처리 시간 ≈ 2.0 × 처리 문서 수 + 5 + 잡음 (고정 시드라 누구나 같은 점)
 let seed = 7;
 const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const gauss = () => Math.sqrt(-2 * Math.log(rand())) * Math.cos(2 * Math.PI * rand());
 const X = [], Y = [];
-for (let i = 0; i < 24; i++) { const x = 0.4 + rand() * 9.4; X.push(x); Y.push(2.0 * x + 5 + gauss() * 2.2); }
+for (let i = 0; i < 24; i++) { const x = 1 + Math.floor(rand() * 10); X.push(x); Y.push(2.0 * x + 5 + gauss() * 2.2); }
 const n = X.length;
 
 let w = 0, b = 0, steps = 0, timer = 0, hist = [];
@@ -79,7 +79,7 @@ function draw() {
   g.strokeStyle = '#3A3C41'; g.fillStyle = '#9699A1'; g.font = '13px Malgun Gothic'; g.lineWidth = 1;
   for (let y = 0; y <= 30; y += 5) { g.beginPath(); g.moveTo(P, sy(y)); g.lineTo(W - 16, sy(y)); g.stroke(); g.fillText(y, 14, sy(y) + 4); }
   for (let x = 0; x <= 10; x += 2) g.fillText(x, sx(x) - 4, H - P + 20);
-  g.fillText('사용 횟수 (천 회)', W - 140, H - 8); g.fillText('마모량 (μm)', P + 8, 14);
+  g.fillText('처리 문서 수 (건)', W - 140, H - 8); g.fillText('처리 시간 (분)', P + 8, 14);
   g.save(); g.beginPath(); g.rect(P, 0, W - P, H - P); g.clip();
   g.setLineDash([5, 4]); g.strokeStyle = 'rgba(225,8,0,.75)';
   X.forEach((x, i) => { g.beginPath(); g.moveTo(sx(x), sy(Y[i])); g.lineTo(sx(x), sy(w * x + b)); g.stroke(); });
@@ -91,7 +91,7 @@ function draw() {
   g.save(); g.beginPath(); g.rect(P, 0, W - P, H - P); g.clip(); g.setLineDash([3, 4]); g.strokeStyle = '#FFD166'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(sx(qx), sy(0)); g.lineTo(sx(qx), sy(qy)); g.lineTo(sx(0), sy(qy)); g.stroke(); g.setLineDash([]);
   g.fillStyle = '#FFD166'; g.beginPath(); g.arc(sx(qx), sy(qy), 7, 0, 7); g.fill(); g.restore();
-  $('lx').textContent = qx.toFixed(1); $('sy').textContent = qy.toFixed(1);
+  $('lx').textContent = qx + '건'; $('sy').textContent = qy.toFixed(1) + '분';
 
   const L = loss();
   $('sw').textContent = w.toFixed(2); $('sb').textContent = b.toFixed(2);
