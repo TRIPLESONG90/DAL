@@ -43,14 +43,18 @@ DAL/
     ├── week1.html   # 1주차 스터디 슬라이드 (오리엔테이션)
     └── inventory/   # 실습: 재고관리 앱 → Skill화 → 에이전트 연결
 └── week2/
-    ├── week2.html   # 2주차 스터디 슬라이드 (LLM을 이해하는 가장 단순한 관점: Text to Text)
+    ├── week2.html   # 2주차 스터디 슬라이드 (AI와 LLM의 원리: 텍스트가 명령이 되기까지)
     └── ai-learning/ # 강의 부속 자료 · 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
 └── week3/
     ├── week3.html   # 3주차 스터디 슬라이드 (SSH 소개와 Bandit 실습)
     └── practice/    # 자체 명령어 연습기
+└── tools/
+    └── edit-server.mjs  # 슬라이드 편집 내용을 HTML 파일에 바로 저장하는 로컬 서버
 ```
 
 매주 스터디 자료가 `weekN/` 폴더로 추가됩니다.
+
+슬라이드 글자·배치를 고쳐 파일에 바로 저장하려면 `tools/edit-week2.cmd`를 더블클릭(또는 `node tools/edit-server.mjs`)한 뒤, 열린 화면에서 **배치 편집(E)** → 글자 더블클릭으로 고칩니다.
 
 ## 1주차 — 오리엔테이션
 
@@ -67,20 +71,18 @@ DAL/
 4. **실습: 재고관리 Agent 만들기** — 부품 3,000개 재고관리 앱 → Skill화 → Hermes 연결 → 자연어로 요청해 보기 → 시연: 거래명세서(엑셀·PDF)로 자동 입고 ([week1/inventory](week1/inventory/README.md))
 5. **스터디 목표: 내 업무를 Agent로** — 어떤 업무든 문제 정의(DB 스키마 설계) → CRUD 앱 작성 → Skill화 순서로 만듭니다
 
-## 2주차 — LLM을 이해하는 가장 단순한 관점: Text to Text
+## 2주차 — AI와 LLM의 원리: 텍스트가 명령이 되기까지
 
-[week2/week2.html](week2/week2.html) · 약 62분 · 슬라이드 33장 (본 수업 30장 + 선택 부록 3장)
+[week2/week2.html](week2/week2.html) · 약 60분 · 슬라이드 36장 (본 수업 32장 + 선택 부록·출처 4장) · 대상: 개발 경험이 없는 사무직
 
-1. **AI 모델의 원리** — 입력·모델·출력, 학습과 추론, 선형회귀와 CNN을 짧은 보조 사례로 이해
-2. **Transformer의 언어적 이해** — 토큰·임베딩·Attention을 문맥과 관계의 관점에서 쉽게 설명
-3. **LLM은 Text to Text** — 앞 문맥에서 다음 토큰을 반복 예측해 텍스트를 만드는 모델
-4. **도구 호출과 Agent** — 모델의 구조화된 요청을 프로그램이 권한 안에서 실제 행동으로 연결
-5. **실습** ([week2/ai-learning/practice](week2/ai-learning/practice/README.md)) — 모델의 구조와 파라미터 · 문맥과 다음 토큰 · 도구 호출 설계
+1. **AI 모델이란** — 입력을 출력으로 바꾸는 상자, y = f(x)와 loss, 모델 종류별 입력과 출력, 학습과 사용(추론)에서 일어나는 일을 움직이는 장면으로 설명
+2. **LLM은 Text to Text** — 다음에 올 말 맞히기, 문맥과 토큰, LLM의 학습과 추론 장면, 그럴듯함과 사실의 차이
+3. **텍스트를 명령으로** — 프로그램(하네스), 도구 목록, 정해진 양식의 요청서, 결과 되돌려 주기, Agent, 확인과 권한
+4. **실습** ([week2/ai-learning/practice](week2/ai-learning/practice/README.md)) — 브라우저로 직선 맞추기 · Python으로 다음 말 후보 보기 · Hermes Desktop으로 글이 명령이 되는 순간 보기
 
 | 자료 | 파일 |
 |---|---|
 | 강의 슬라이드 | [HTML](week2/week2.html) |
-| 강사 가이드 | [HTML 발표 대본](week2/ai-learning/teacher-notes.html) |
 | 실습 기록지 | [HTML](week2/ai-learning/worksheet.html) |
 | 실습 파일 | [practice](week2/ai-learning/practice/README.md) |
 | 상세 안내 | [week2/ai-learning/README.md](week2/ai-learning/README.md) |

@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>실습 ① 경사하강법</title>
+<title>실습 1. 모델은 숫자를 맞추며 배운다</title>
 <style>
   :root {--red:#E10800;--ink:#F3F3F4;--dim:#A9ACB2;--line:#3A3C41;--bg:#16171A;--panel:#1F2023;--surface:#27292D;--good:#9FD3A4}
   * {box-sizing:border-box}
@@ -25,25 +25,30 @@
   .msg.ok {color:var(--good)}
   ol {margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.75;color:#C3C6CC}
 </style></head><body>
-<header><h1>실습 ① 경사하강법 — 데이터에 맞는 직선 찾기</h1><p>금형 사용 횟수(x)로 마모량(y)을 예측하는 직선 <b>y = w·x + b</b>를 찾습니다. (예시 데이터)</p></header>
+<header><h1>실습 1. 모델은 숫자를 맞추며 배운다 — 데이터에 맞는 직선 찾기</h1><p>금형 사용 횟수(x)로 마모량(y)을 예측하는 모델 <b>y = f(x) = w·x + b</b>입니다. 점들에 맞는 w(기울기)와 b(시작값)를 찾는 것이 학습입니다. (예시 데이터)</p></header>
 <main>
   <div>
     <section><h2>데이터와 직선</h2><canvas id="plot" width="900" height="420"></canvas>
-      <div class="stats"><div class="stat"><span>기울기 w</span><b id="sw">0</b></div><div class="stat"><span>시작값 b</span><b id="sb">0</b></div><div class="stat loss"><span>손실 (평균 제곱 오차)</span><b id="sl">0</b></div><div class="stat"><span>학습 걸음</span><b id="ss">0</b></div></div>
+      <div class="stats"><div class="stat"><span>기울기 w</span><b id="sw">0</b></div><div class="stat"><span>시작값 b</span><b id="sb">0</b></div><div class="stat loss"><span>loss (틀린 정도)</span><b id="sl">0</b></div><div class="stat"><span>학습 걸음</span><b id="ss">0</b></div></div>
     </section>
-    <section style="margin-top:20px"><h2>손실 변화</h2><canvas id="lossplot" width="900" height="180"></canvas></section>
+    <section style="margin-top:20px"><h2>LOSS 변화</h2><canvas id="lossplot" width="900" height="180"></canvas></section>
   </div>
   <aside>
     <section><h2>1. 손으로 맞춰 보기</h2>
       <label>기울기 w <b id="lw"></b></label><input id="w" type="range" min="-2" max="6" step="0.01">
       <label>시작값 b <b id="lb"></b></label><input id="b" type="range" min="-10" max="30" step="0.1">
-      <div class="tip">빨간 점선이 <b>오차</b>(실제 − 예측)입니다. 손실이 가장 작아지는 w, b를 찾아보세요.</div>
+      <div class="tip">빨간 점선이 정답과 예측의 <b>차이</b>입니다. 이 차이를 모두 모은 숫자가 loss입니다. loss가 가장 작아지는 w, b를 찾아보세요.</div>
     </section>
-    <section style="margin-top:20px"><h2>2. 경사하강법에 맡기기</h2>
-      <label>학습률 <b id="llr"></b></label><input id="lr" type="range" min="-3.3" max="-1.2" step="0.05">
+    <section style="margin-top:20px"><h2>2. 자동 학습에 맡기기</h2>
+      <label>학습률 (한 걸음의 크기) <b id="llr"></b></label><input id="lr" type="range" min="-3.3" max="-1.2" step="0.05">
       <div class="btns"><button id="step">한 걸음</button><button id="run" class="primary">자동 학습</button><button id="reset">처음으로</button></div>
       <div class="msg" id="msg"></div>
-      <ol><li>학습률 0.01로 자동 학습 → 손실이 줄어드는지</li><li>학습률을 가장 작게 → 아주 느린지</li><li>학습률 0.035 이상 → 손실이 튕겨 커지는지</li></ol>
+      <ol><li>학습률 0.01로 자동 학습 → loss가 줄어드는지</li><li>학습률을 가장 작게 → 아주 느린지</li><li>학습률 0.035 이상 → loss가 튕겨 커지는지</li></ol>
+    </section>
+    <section style="margin-top:20px"><h2>3. 새 입력 넣어 보기 (추론)</h2>
+      <label>사용 횟수 x <b id="lx"></b></label><input id="x" type="range" min="0" max="10" step="0.5" value="6">
+      <div class="stats" style="grid-template-columns:1fr"><div class="stat loss"><span>마모량 예측 y = w·x + b</span><b id="sy">0</b></div></div>
+      <div class="tip">x를 바꿔도 w와 b는 그대로입니다. 이미 맞춘 숫자로 계산만 합니다. 이것이 <b>추론</b>입니다.</div>
     </section>
   </aside>
 </main>
@@ -81,6 +86,12 @@ function draw() {
   g.setLineDash([]); g.strokeStyle = '#F3F3F4'; g.lineWidth = 3;
   g.beginPath(); g.moveTo(sx(0), sy(b)); g.lineTo(sx(10), sy(w * 10 + b)); g.stroke(); g.restore();
   g.fillStyle = '#E6E8EA'; X.forEach((x, i) => { g.beginPath(); g.arc(sx(x), sy(Y[i]), 5, 0, 7); g.fill(); });
+  // 새 입력(추론): x에서 직선까지 올라가 예측값을 읽는다
+  const qx = Number($('x').value), qy = w * qx + b;
+  g.save(); g.beginPath(); g.rect(P, 0, W - P, H - P); g.clip(); g.setLineDash([3, 4]); g.strokeStyle = '#FFD166'; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(sx(qx), sy(0)); g.lineTo(sx(qx), sy(qy)); g.lineTo(sx(0), sy(qy)); g.stroke(); g.setLineDash([]);
+  g.fillStyle = '#FFD166'; g.beginPath(); g.arc(sx(qx), sy(qy), 7, 0, 7); g.fill(); g.restore();
+  $('lx').textContent = qx.toFixed(1); $('sy').textContent = qy.toFixed(1);
 
   const L = loss();
   $('sw').textContent = w.toFixed(2); $('sb').textContent = b.toFixed(2);
@@ -94,15 +105,15 @@ function draw() {
     const vals = hist.map(v => Math.log10(Math.max(v, 1e-3))), hi = Math.max(...vals, 2), lo = Math.min(...vals, 0);
     lg.strokeStyle = '#E10800'; lg.lineWidth = 2; lg.beginPath();
     vals.forEach((v, i) => { const px = 40 + i / (vals.length - 1) * (lc.width - 56), py = 12 + (hi - v) / (hi - lo || 1) * (lc.height - 36); i ? lg.lineTo(px, py) : lg.moveTo(px, py); });
-    lg.stroke(); lg.fillStyle = '#9699A1'; lg.font = '12px Malgun Gothic'; lg.fillText('손실 (로그 눈금) · 오른쪽으로 갈수록 학습이 진행됨', 40, lc.height - 6);
+    lg.stroke(); lg.fillStyle = '#9699A1'; lg.font = '12px Malgun Gothic'; lg.fillText('loss (로그 눈금) · 오른쪽으로 갈수록 학습이 진행됨', 40, lc.height - 6);
   }
 }
 
 function record() {
   hist.push(loss()); if (hist.length > 400) hist.shift();
   const L = loss(), m = $('msg');
-  if (!isFinite(L) || L > 1e6) { m.className = 'msg'; m.textContent = '손실이 폭발했습니다 — 학습률이 너무 커서 최저점을 건너뛰며 튕겨 나갔습니다. 처음으로 돌아가 학습률을 줄이세요.'; stop(); }
-  else if (steps > 5 && Math.abs(hist[hist.length - 2] - L) < 1e-4) { m.className = 'msg ok'; m.textContent = `수렴했습니다 — 더 걸어도 손실이 거의 줄지 않습니다. (w ≈ ${w.toFixed(2)}, b ≈ ${b.toFixed(2)})`; stop(); }
+  if (!isFinite(L) || L > 1e6) { m.className = 'msg'; m.textContent = 'loss가 끝없이 커졌습니다. 한 걸음이 너무 커서 가장 낮은 곳을 건너뛰며 튕겨 나갔습니다. 처음으로 돌아가 학습률을 줄이세요.'; stop(); }
+  else if (steps > 5 && Math.abs(hist[hist.length - 2] - L) < 1e-4) { m.className = 'msg ok'; m.textContent = `학습이 끝났습니다. 더 걸어도 loss가 거의 줄지 않습니다. (w ≈ ${w.toFixed(2)}, b ≈ ${b.toFixed(2)})`; stop(); }
   else { m.className = 'msg'; m.textContent = ''; }
 }
 function stop() { clearInterval(timer); timer = 0; $('run').textContent = '자동 학습'; }
@@ -110,6 +121,7 @@ function stop() { clearInterval(timer); timer = 0; $('run').textContent = '자�
 $('w').oninput = e => { w = Number(e.target.value); hist = []; draw(); };
 $('b').oninput = e => { b = Number(e.target.value); hist = []; draw(); };
 $('lr').oninput = draw;
+$('x').oninput = draw;
 $('step').onclick = () => { gradStep(); record(); draw(); };
 $('run').onclick = () => {
   if (timer) return stop();

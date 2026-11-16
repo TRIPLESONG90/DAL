@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DAL 2주차 · 다음 토큰 확률 실습</title>
+<title>DAL 2주차 · 실습 2 오프라인 예제</title>
 <style>
 :root{color-scheme:dark;--bg:#141518;--ink:#f3f3f4;--muted:#b9bdc6;--line:#45474e;--accent:#e10800;--accent-light:#ff8079}
 *{box-sizing:border-box}
@@ -46,129 +46,126 @@ tr.picked .token{color:var(--accent-light)}
 @media(max-width:760px){main{padding:27px 20px}.layout,.reading{grid-template-columns:1fr;gap:26px}.prompt{font-size:20px}.notice{padding-left:12px}td{padding:12px 3px}.result{min-height:120px}}
 @media(prefers-reduced-motion:reduce){.bar-inner{transition:none}}
 @media print{body{background:white;color:black}.notice{background:#eee}.actions{display:none}.explain,.foot,.reading p,th,#mode,#count-summary,#picked-detail{color:#333}.formula{color:#222}main{max-width:none}.bar{background:#ddd}}
+.sentences{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.sentences button.on{background:var(--accent);border-color:var(--accent)}
+.steps{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:15px}
+.steps li{margin-top:4px}
 </style>
 </head>
 <body>
 <main>
 <header>
-<p class="kicker">DAL AI STUDY 2026 · WEEK 02</p>
-<h1>다음 토큰의 확률과 temperature</h1>
-<p class="notice">교육용 가상 데이터 · 실제 LLM 출력이 아님</p>
-<p class="explain">미리 정한 점수(logit)로 확률을 계산하는 오프라인 실습입니다. 모델이나 서버에 연결하지 않습니다.</p>
+<p class="kicker">DAL AI STUDY 2026 · WEEK 02 · 실습 2 (오프라인)</p>
+<h1>앞의 글이 다음 말을 바꾼다</h1>
+<p class="notice">설명용 가상 숫자 · 실제 LLM의 출력이 아님</p>
+<p class="explain">서버에 연결하지 않고, 미리 정해 둔 점수로 다음 말을 고르는 과정을 흉내 냅니다. 실제 모델은 next_token.py로 봅니다.</p>
 </header>
-<p class="prompt">오늘 아침 출근길에 비가 와서 나는 <span>_____</span></p>
+<div class="sentences" id="sentences" aria-label="앞의 글 고르기"></div>
+<p class="prompt"><span id="context"></span> <span>_____</span></p>
 <div class="layout">
 <section aria-label="후보와 선택 결과">
 <table>
-<thead><tr><th>후보 조각</th><th>가상 logit</th><th>계산 확률</th><th>선택 횟수</th></tr></thead>
+<thead><tr><th>다음 말 후보</th><th>점수</th><th>확률</th><th>뽑힌 횟수</th></tr></thead>
 <tbody id="rows"></tbody>
 </table>
-<p class="explain" style="margin-top:12px">␣는 공백을 뜻합니다. 후보 조각도 설명을 위해 정했으며, 실제 토크나이저의 분할 결과가 아닙니다.</p>
+<p class="explain" style="margin-top:12px">점수가 높을수록 확률이 큽니다. 후보와 점수는 설명을 위해 정한 것입니다.</p>
 </section>
-<section aria-label="온도와 샘플링 제어">
-<div class="control-row"><label for="temperature">Temperature</label><output id="temp-output" for="temperature">1.0</output></div>
+<section aria-label="무작위 정도와 뽑기">
+<div class="control-row"><label for="temperature">Temperature (무작위 정도)</label><output id="temp-output" for="temperature">1.0</output></div>
 <input id="temperature" type="range" min="0" max="2" step="0.1" value="1" aria-describedby="mode">
-<div class="scale"><span>0 · 가장 높은 후보</span><span>2 · 확률이 더 고르게</span></div>
+<div class="scale"><span>0 · 항상 1등 후보</span><span>2 · 여러 후보를 고르게</span></div>
 <p id="mode"></p>
 <div class="actions">
-<button class="primary" id="sample-one" type="button">한 번 선택</button>
-<button id="sample-many" type="button">20번 선택</button>
-<button id="reset" type="button">초기화</button>
+<button class="primary" id="sample-one" type="button">한 번 뽑기</button>
+<button id="sample-many" type="button">20번 뽑기</button>
+<button id="reset" type="button">처음으로</button>
 </div>
 <div class="result" aria-live="polite" aria-atomic="true">
-<p class="label">마지막에 선택한 후보</p>
-<p id="last-token">아직 선택하지 않았어요</p>
+<p class="label">방금 뽑힌 말</p>
+<p id="last-token">아직 뽑지 않았습니다</p>
 <p id="picked-detail"></p>
-<p id="count-summary">누적 0회</p>
+<p id="count-summary">지금까지 0번</p>
 </div>
 </section>
 </div>
 <div class="reading">
 <section>
-<h2>관찰할 것</h2>
-<p>Temperature를 낮추면 높은 점수를 가진 후보에 확률이 모입니다. 높이면 후보 간 확률 차이가 줄어듭니다.</p>
-<p>한 번 선택한 결과와 20번의 선택 횟수를 비교해 보세요. 적은 횟수에서는 선택 비율이 계산 확률과 다를 수 있습니다. Temperature를 바꾸면 이전 횟수는 지워집니다.</p>
+<h2>해 볼 것</h2>
+<ol class="steps">
+<li>위의 문장 버튼을 바꿔 눌러, 앞의 글에 따라 후보와 확률이 달라지는지 봅니다.</li>
+<li>Temperature를 0으로 두고 20번 뽑습니다. 항상 같은 말이 나옵니다.</li>
+<li>Temperature를 2로 올리고 20번 뽑습니다. 확률이 낮던 말도 뽑힙니다.</li>
+</ol>
 </section>
 <section>
 <h2>확률을 읽는 방법</h2>
-<p>이 값은 정해진 후보 중 무엇을 고를지 나타냅니다. 문장이 사실인지, 업무 판단이 옳은지를 보장하는 확률은 아닙니다.</p>
-<p class="formula">T &gt; 0: pᵢ = exp(zᵢ / T) / Σⱼ exp(zⱼ / T)<br>T = 0: 가장 높은 logit의 후보 선택</p>
+<p>이 확률은 여러 후보 중에서 무엇을 고를지를 나타냅니다. 그 말이 사실인지, 업무상 옳은 판단인지를 보장하는 숫자는 아닙니다.</p>
+<p>Temperature는 모델을 다시 학습시키는 것이 아닙니다. 같은 점수에서 얼마나 무작위로 뽑을지만 바꿉니다.</p>
 </section>
 </div>
-<p class="foot">T &gt; 0에서는 브라우저 난수를 사용하므로 실행마다 결과가 달라질 수 있으며 재현성을 보장하지 않습니다. 이 예제의 T = 0은 고정 점수의 argmax로 구현했습니다. 실제 LLM의 동일 출력 여부는 모델·서버·실행 환경에도 영향을 받습니다.</p>
+<p class="foot">Temperature가 0보다 크면 뽑을 때마다 결과가 달라질 수 있습니다. 실제 LLM은 후보가 훨씬 많고, 말 대신 더 작은 조각(토큰) 단위로 고릅니다.</p>
 </main>
 <script>
 "use strict";
-const candidates = [
-  {token:"␣우", logit:3},
-  {token:"␣택", logit:2},
-  {token:"␣잠", logit:1},
-  {token:"␣회", logit:0},
-  {token:"␣뛰", logit:-1}
+// 설명용으로 정한 문장과 후보 점수. 실제 모델의 값이 아니다.
+const sentences = [
+  {label:"비가 오는 날", context:"오늘 아침 출근길에 비가 와서 나는", candidates:[["우산을",3],["택시를",2],["서둘러",1],["집에",0],["자전거를",-1.5]]},
+  {label:"날씨가 좋은 날", context:"오늘 아침 출근길에 날씨가 좋아서 나는", candidates:[["걸어서",3],["자전거를",2.2],["천천히",1],["택시를",-0.5],["우산을",-2]]},
+  {label:"회의가 끝난 뒤", context:"회의가 끝나고 나는 회의록을", candidates:[["작성했다",3.2],["정리했다",2.4],["공유했다",1.2],["읽었다",0],["먹었다",-3]]}
 ];
-let counts = candidates.map(() => 0);
-let picked = -1;
-let total = 0;
+let current = 0, counts = [], picked = -1, total = 0;
 const temperature = document.getElementById("temperature");
 const rows = document.getElementById("rows");
 const output = document.getElementById("temp-output");
+const candidates = () => sentences[current].candidates;
 function probabilities(t) {
-  if (t === 0) {
-    const max = Math.max(...candidates.map(c => c.logit));
-    const first = candidates.findIndex(c => c.logit === max);
-    return candidates.map((_, i) => i === first ? 1 : 0);
-  }
-  const maximum = Math.max(...candidates.map(c => c.logit));
-  const weights = candidates.map(c => Math.exp((c.logit - maximum) / t));
-  const sum = weights.reduce((a,b) => a+b,0);
-  return weights.map(v => v/sum);
+  const scores = candidates().map(c => c[1]);
+  const max = Math.max(...scores);
+  if (t === 0) { const first = scores.indexOf(max); return scores.map((_, i) => i === first ? 1 : 0); }
+  const weights = scores.map(v => Math.exp((v - max) / t));
+  const sum = weights.reduce((a, b) => a + b, 0);
+  return weights.map(v => v / sum);
 }
 function render() {
-  const t = Number(temperature.value);
-  const p = probabilities(t);
+  const t = Number(temperature.value), p = probabilities(t);
   output.textContent = t.toFixed(1);
+  document.getElementById("context").textContent = sentences[current].context;
   document.getElementById("mode").textContent = t === 0
-    ? "이 실습에서는 가장 높은 logit의 후보를 선택합니다. 확률 1과 0으로 표시합니다."
-    : "계산한 확률을 따라 후보를 뽑습니다. 낮은 확률의 후보도 선택될 수 있습니다.";
+    ? "점수가 가장 높은 후보만 고릅니다. 몇 번을 뽑아도 같은 말이 나옵니다."
+    : "확률에 따라 뽑습니다. 확률이 낮은 후보도 가끔 뽑힙니다.";
   rows.replaceChildren();
-  candidates.forEach((c,i) => {
+  candidates().forEach((c, i) => {
     const tr = document.createElement("tr");
     if (i === picked) tr.className = "picked";
-    const cell = document.createElement("td");
-    const token = document.createElement("span");
-    token.className = "token"; token.textContent = c.token;
+    const cell = document.createElement("td"), token = document.createElement("span");
+    token.className = "token"; token.textContent = c[0];
     const bar = document.createElement("div"); bar.className = "bar";
-    const fill = document.createElement("div"); fill.className = "bar-inner"; fill.style.width = (p[i]*100)+"%";
-    bar.appendChild(fill);cell.append(token,bar);tr.appendChild(cell);
-    for (const text of [c.logit.toFixed(1),(p[i]*100).toFixed(1)+"%",String(counts[i])]) {
-      const td=document.createElement("td");td.textContent=text;tr.appendChild(td);
-    }
+    const fill = document.createElement("div"); fill.className = "bar-inner"; fill.style.width = (p[i] * 100) + "%";
+    bar.appendChild(fill); cell.append(token, bar); tr.appendChild(cell);
+    for (const text of [c[1].toFixed(1), (p[i] * 100).toFixed(1) + "%", String(counts[i])]) { const td = document.createElement("td"); td.textContent = text; tr.appendChild(td); }
     rows.appendChild(tr);
   });
-  document.getElementById("last-token").textContent = picked < 0 ? "아직 선택하지 않았어요" : candidates[picked].token;
-  document.getElementById("picked-detail").textContent = picked < 0 ? "" : "현재 계산 확률 "+(p[picked]*100).toFixed(1)+"%";
-  document.getElementById("count-summary").textContent = "누적 "+total+"회";
+  document.getElementById("last-token").textContent = picked < 0 ? "아직 뽑지 않았습니다" : sentences[current].context + " " + candidates()[picked][0];
+  document.getElementById("picked-detail").textContent = picked < 0 ? "" : "이 말이 뽑힐 확률 " + (p[picked] * 100).toFixed(1) + "%";
+  document.getElementById("count-summary").textContent = "지금까지 " + total + "번";
+  document.querySelectorAll("#sentences button").forEach((b, i) => b.classList.toggle("on", i === current));
 }
 function sample(n) {
   const p = probabilities(Number(temperature.value));
-  for(let trial=0; trial<n; trial++) {
-    const value = Math.random();
-    let cumulative = 0;
-    picked = candidates.length-1;
-    for (let i=0; i<p.length; i++) {
-      cumulative += p[i];
-      if (value < cumulative) {picked=i;break;}
-    }
-    counts[picked]++;total++;
+  for (let trial = 0; trial < n; trial++) {
+    const value = Math.random(); let cumulative = 0; picked = p.length - 1;
+    for (let i = 0; i < p.length; i++) { cumulative += p[i]; if (value < cumulative) { picked = i; break; } }
+    counts[picked]++; total++;
   }
   render();
 }
-function clearResults() {counts=candidates.map(()=>0);picked=-1;total=0;render();}
-temperature.addEventListener("input",clearResults);
-document.getElementById("sample-one").addEventListener("click",()=>sample(1));
-document.getElementById("sample-many").addEventListener("click",()=>sample(20));
-document.getElementById("reset").addEventListener("click",()=>{temperature.value="1";clearResults();});
-render();
+function clearResults() { counts = candidates().map(() => 0); picked = -1; total = 0; render(); }
+sentences.forEach((s, i) => { const b = document.createElement("button"); b.type = "button"; b.textContent = s.label; b.addEventListener("click", () => { current = i; clearResults(); }); document.getElementById("sentences").appendChild(b); });
+temperature.addEventListener("input", clearResults);
+document.getElementById("sample-one").addEventListener("click", () => sample(1));
+document.getElementById("sample-many").addEventListener("click", () => sample(20));
+document.getElementById("reset").addEventListener("click", () => { temperature.value = "1"; clearResults(); });
+clearResults();
 </script>
 </body>
 </html>
