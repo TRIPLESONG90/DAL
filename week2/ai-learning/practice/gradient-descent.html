@@ -25,18 +25,18 @@
   .msg.ok {color:var(--good)}
   ol {margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.75;color:#C3C6CC}
 </style></head><body>
-<header><h1>실습 1. 모델은 숫자를 맞추며 배운다 — 데이터에 맞는 직선 찾기</h1><p>금형 사용 횟수(x)로 마모량(y)을 예측하는 모델 <b>y = f(x) = w·x + b</b>입니다. 점들에 맞는 w(기울기)와 b(시작값)를 찾는 것이 학습입니다. (예시 데이터)</p></header>
+<header><h1>실습 1. 모델은 숫자를 맞추며 배운다 — 데이터에 맞는 직선 찾기</h1><p>금형 사용 횟수(x)로 마모량(y)을 예측하는 모델 <b>y = f(x) = w·x + b</b>입니다. 점들에 맞는 w(기울기)와 b(y절편)를 찾는 것이 학습입니다. (예시 데이터)</p></header>
 <main>
   <div>
     <section><h2>데이터와 직선</h2><canvas id="plot" width="900" height="420"></canvas>
-      <div class="stats"><div class="stat"><span>기울기 w</span><b id="sw">0</b></div><div class="stat"><span>시작값 b</span><b id="sb">0</b></div><div class="stat loss"><span>loss (틀린 정도)</span><b id="sl">0</b></div><div class="stat"><span>학습 걸음</span><b id="ss">0</b></div></div>
+      <div class="stats"><div class="stat"><span>기울기 w</span><b id="sw">0</b></div><div class="stat"><span>y절편 b</span><b id="sb">0</b></div><div class="stat loss"><span>loss (틀린 정도)</span><b id="sl">0</b></div><div class="stat"><span>학습 걸음</span><b id="ss">0</b></div></div>
     </section>
     <section style="margin-top:20px"><h2>LOSS 변화</h2><canvas id="lossplot" width="900" height="180"></canvas></section>
   </div>
   <aside>
     <section><h2>1. 손으로 맞춰 보기</h2>
       <label>기울기 w <b id="lw"></b></label><input id="w" type="range" min="-2" max="6" step="0.01">
-      <label>시작값 b <b id="lb"></b></label><input id="b" type="range" min="-10" max="30" step="0.1">
+      <label>y절편 b <b id="lb"></b></label><input id="b" type="range" min="-10" max="30" step="0.1">
       <div class="tip">빨간 점선이 정답과 예측의 <b>차이</b>입니다. 이 차이를 모두 모은 숫자가 loss입니다. loss가 가장 작아지는 w, b를 찾아보세요.</div>
     </section>
     <section style="margin-top:20px"><h2>2. 자동 학습에 맡기기</h2>
