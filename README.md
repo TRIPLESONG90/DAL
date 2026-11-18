@@ -10,7 +10,7 @@
 **사람은 자기 업무의 데이터·규칙·기능을 정의하고, AI Coding으로 CRUD 서비스를 마련합니다. 서비스 접근 방법과 처리 절차를 Skill로 제공하면, 기존 AI Agent가 도구를 사용해 업무를 수행할 수 있습니다.**
 
 - **2주차:** LLM은 출력을 생성하는 예측 모델이며, 그 자체가 외부 프로그램 실행 엔진은 아닙니다.
-- **3주차:** Shell과 SSH는 명령을 실제 실행하는 환경입니다. LLM의 명령 생성과 실제 실행을 구별합니다.
+- **3주차:** 컴퓨터는 터미널의 텍스트 명령으로 모두 조작할 수 있고, SSH로 다른 PC의 터미널에 접속해 그 PC도 조작할 수 있습니다.
 - **4주차:** 업무의 데이터와 기능을 CRUD·API로 구조화해 AI가 접근할 수 있는 기반을 만듭니다.
 - **6~8주차:** Tool Calling·MCP로 기능을 연결하고, Skill에 업무 사용법과 절차를 정의합니다.
 - **9주차:** AI Coding으로 업무 서비스를 완성하고 기존 Agent에서 기능을 사용합니다.
@@ -47,7 +47,7 @@ DAL/
     └── ai-learning/ # 강의 부속 자료 · 실습: 경사하강법 · CNN 필터 · 다음 단어 확률
 └── week3/
     ├── week3.html   # 3주차 스터디 슬라이드 (SSH 소개와 Bandit 실습)
-    └── practice/    # 자체 명령어 연습기
+    └── ssh-bandit/  # 강의 부속 자료 · 실습: 실제 Bandit 접속 · 자체 명령어 연습기
 └── tools/
     └── edit-server.mjs  # 슬라이드 편집 내용을 HTML 파일에 바로 저장하는 로컬 서버
 ```
@@ -89,22 +89,20 @@ DAL/
 
 ## 3주차 — 컴퓨터와 대화하기: SSH와 Bandit
 
-[week3/week3.html](week3/week3.html) · 60분 (설명 25 · 휴식 10 · 실습·회고 25) · 슬라이드 28장 (본 수업 24장 + 선택 부록 4장)
+[week3/week3.html](week3/week3.html) · 60분 (설명 25 · 휴식 10 · 실습·회고 25) · 슬라이드 17장
 
-1. **컴퓨터 조작을 언어로 표현** — ls·cat·ssh도 프로그램임을 이해, 프로그램 이름·인수·셸 내장 명령 구분
-2. **명령을 원격으로 전달** — SSH로 원격 컴퓨터에서 실행, 사용자·서버·포트와 접속 상태 확인
-3. **기본 명령** — pwd · ls · cd · cat · 도움말 · 경로와 옵션
-4. **Bandit 실습** — Level 0 → 1 함께 풀기, bandit3 로그인 목표, 추가 도전 bandit5
-5. **자연어와 Agent 연결** — 사람의 요청, LLM의 명령 구성, 도구 실행, 결과 확인
+1. **터미널로 컴퓨터 조작** — 클릭하던 일(폴더 열기·파일 보기·프로그램 실행)을 명령 한 줄로, 명령 = 프로그램 + 입력값
+2. **SSH로 다른 PC의 터미널에 접속** — 텍스트로 원격 접속, 접속 전후 `hostname`으로 실행되는 컴퓨터 확인
+3. **기본 명령** — pwd · ls · cd · cat
+4. **Bandit 실습** — Level 0 → 1 함께 풀기, bandit3 로그인 목표, 추가 도전 bandit5 ([week3/ssh-bandit/practice](week3/ssh-bandit/practice/README.md))
+5. **자연어와 Agent 연결** — LLM이 만든 명령 한 줄을 도구가 터미널에서 실행
 
 | 자료 | 파일 |
 |---|---|
-| 강의 슬라이드 | [HTML](week3/week3.html) · [PDF](week3/DAL_Week3_SSH_Bandit.pdf) |
-| 강사 가이드 | [HTML](week3/teacher-notes.html) · [PDF](week3/DAL_Week3_Instructor_Guide.pdf) |
-| 실습 기록지 | [HTML](week3/worksheet.html) · [PDF](week3/DAL_Week3_Worksheet.pdf) |
-| 명령어 참고 | [요약](week3/commands.md) · [자체 연습기](week3/practice/terminal.html) |
-| 전체 자료 묶음 | [DAL_Week3_Materials.zip](week3/DAL_Week3_Materials.zip) |
-| 상세 안내 | [week3/README.md](week3/README.md) |
+| 강의 슬라이드 | [HTML](week3/week3.html) |
+| 실습 기록지 | [HTML](week3/ssh-bandit/worksheet.html) |
+| 실습 파일 | [practice](week3/ssh-bandit/practice/README.md) · [자체 연습기](week3/ssh-bandit/practice/terminal.html) |
+| 상세 안내 | [week3/ssh-bandit/README.md](week3/ssh-bandit/README.md) |
 
 실제 Bandit은 인터넷과 SSH 2220 포트 연결이 필요합니다. 수업 전 같은 네트워크에서 접속을 확인합니다. 자체 연습기는 인터넷 없이 기본 명령을 익히는 모의 환경입니다.
 
